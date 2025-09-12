@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import Service from "./Service";
 import Time from "../models/Time";
+import { dateOnlyIsoString } from "../utils/date";
 
 type TimeParams = {
   membershipId: string;
@@ -9,9 +10,9 @@ type TimeParams = {
   teamId: string;
   projectId: string;
   taskId?: string | null;
-  date: string;
+  date: Date;
   duration?: number;
-  comment?: string;
+  comment?: string | null;
 };
 
 export default class TimeService extends Service {
@@ -35,7 +36,7 @@ export default class TimeService extends Service {
       teamId,
       projectId,
       taskId,
-      date: date,
+      date: dateOnlyIsoString(date),
       duration,
       comment,
       history: [

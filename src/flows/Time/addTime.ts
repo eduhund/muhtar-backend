@@ -67,6 +67,10 @@ export default async function addTime(
       ? await memberships.getMembershipById(membershipId)
       : currentMembership;
 
+  if (!membership) {
+    throw new BussinessError("NOT_FOUND", "Membership not found");
+  }
+
   const project = await projects.getProjectById(projectId);
   if (!project) throw new BussinessError("NOT_FOUND", "Project not found");
 
