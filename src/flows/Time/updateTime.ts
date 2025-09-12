@@ -8,7 +8,7 @@ import BussinessError from "../../utils/Rejection";
 type updateTimeParams = {
   membershipId?: string;
   projectId?: string;
-  subproject?: string | null;
+  taskId?: string | null;
   date?: Date;
   duration?: number;
   comment?: string;
@@ -62,7 +62,7 @@ export default async function updateTime(
   {
     membershipId,
     projectId,
-    subproject,
+    taskId,
     date,
     duration,
     comment,
@@ -98,7 +98,7 @@ export default async function updateTime(
     {
       membershipId,
       projectId,
-      subproject,
+      taskId,
       date,
       duration,
       comment,

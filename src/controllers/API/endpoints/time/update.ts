@@ -5,14 +5,14 @@ export default async function updateTime(req: any, res: any, next: any) {
   try {
     const { id } = req.params;
     const { currentUser } = req.data;
-    const { membershipId, projectId, subproject, date, duration, comment } =
+    const { membershipId, projectId, taskId, date, duration, comment } =
       req.body;
     await updateTimeFlow(
       id,
       {
         membershipId,
         projectId,
-        subproject,
+        taskId,
         date,
         duration,
         comment,

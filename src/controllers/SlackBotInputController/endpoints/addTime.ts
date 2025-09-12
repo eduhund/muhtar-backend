@@ -4,21 +4,14 @@ import { errorHandler } from "../responses";
 export default async function addTime(req: any, res: any, next: any) {
   try {
     const { currentUser } = req.data;
-    const {
-      membershipId,
-      teamId,
-      projectId,
-      subproject,
-      date,
-      duration,
-      comment,
-    } = req.body;
+    const { membershipId, teamId, projectId, taskId, date, duration, comment } =
+      req.body;
     const data = await addTimeFlow(
       {
         membershipId,
         teamId,
         projectId,
-        subproject,
+        taskId,
         date,
         duration,
         comment,

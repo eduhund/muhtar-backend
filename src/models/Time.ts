@@ -5,7 +5,7 @@ export default class Time extends BaseModel {
   membershipId: string;
   teamId: string;
   projectId: string;
-  subproject: string | null;
+  taskId: string | null;
   ts: number;
   date: string;
   duration: number;
@@ -17,7 +17,7 @@ export default class Time extends BaseModel {
     membershipId,
     teamId,
     projectId,
-    subproject = null,
+    taskId = null,
     ts,
     date,
     duration = 0,
@@ -29,7 +29,7 @@ export default class Time extends BaseModel {
     this.membershipId = membershipId;
     this.teamId = teamId;
     this.projectId = projectId;
-    this.subproject = subproject;
+    this.taskId = taskId;
     this.ts = ts;
     this.date = date;
     this.duration = duration;
@@ -72,9 +72,9 @@ export default class Time extends BaseModel {
     return this;
   }
 
-  changeSubproject(newSubproject: string | null) {
-    this.subproject = newSubproject;
-    this.saveChanges("subproject");
+  changeTaskId(newTaskId: string | null) {
+    this.taskId = newTaskId;
+    this.saveChanges("taskId");
     return this;
   }
 

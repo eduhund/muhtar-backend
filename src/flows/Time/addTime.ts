@@ -9,7 +9,7 @@ type AddTimeParams = {
   membershipId: string;
   teamId: string;
   projectId: string;
-  subproject?: string | null;
+  taskId?: string | null;
   date: Date;
   duration: number;
   comment: string | null;
@@ -47,7 +47,7 @@ export default async function addTime(
     membershipId,
     teamId,
     projectId,
-    subproject,
+    taskId,
     date,
     duration,
     comment,
@@ -79,7 +79,7 @@ export default async function addTime(
     membershipId: membership.getId(),
     teamId,
     projectId,
-    subproject,
+    taskId,
     date,
     duration,
     comment,

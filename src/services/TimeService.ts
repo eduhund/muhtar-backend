@@ -8,7 +8,7 @@ type TimeParams = {
   createdBy?: string;
   teamId: string;
   projectId: string;
-  subproject?: string | null;
+  taskId?: string | null;
   date: string;
   duration?: number;
   comment?: string;
@@ -20,7 +20,7 @@ export default class TimeService extends Service {
       membershipId,
       teamId,
       projectId,
-      subproject = null,
+      taskId = null,
       date,
       duration = 0,
       comment = "",
@@ -34,7 +34,7 @@ export default class TimeService extends Service {
       membershipId,
       teamId,
       projectId,
-      subproject,
+      taskId,
       date: date,
       duration,
       comment,
