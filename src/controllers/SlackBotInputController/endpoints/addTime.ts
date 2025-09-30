@@ -20,6 +20,7 @@ export default async function addTime(req: any, res: any, next: any) {
     );
     return next({ data });
   } catch (e) {
+    console.error(e);
     return next(errorHandler(e));
   }
 }

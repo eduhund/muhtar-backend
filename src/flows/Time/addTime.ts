@@ -52,20 +52,20 @@ export default async function addTime(
     duration,
     comment,
   }: AddTimeParams,
-  currentUser: User
+  actor: User
 ) {
-  const currentMembership = await memberships.getMembership({
-    userId: currentUser.getId(),
-    teamId: teamId,
+  const actorUserId = actor.getId();
+  const actorMembership = await memberships.getMembership({
+    userId: actorUserId,
+    teamId,
   });
-  if (!currentMembership) {
+  if (!actorMembership) {
     throw new BussinessError("FORBIDDEN", "You are not a member of this team");
   }
-
   const membership =
-    membershipId && currentMembership.getId() !== membershipId
+    membershipId && membershipId !== actorMembership?.getId()
       ? await memberships.getMembershipById(membershipId)
-      : currentMembership;
+      : actorMembership;
 
   if (!membership) {
     throw new BussinessError("NOT_FOUND", "Membership not found");
@@ -77,7 +77,7 @@ export default async function addTime(
   const team = await teams.getTeamById(teamId);
   if (!team) throw new BussinessError("NOT_FOUND", "Team not found");
 
-  await canAddTime(currentMembership, membership, project);
+  await canAddTime(actorMembership, membership, project);
 
   const timeData = {
     membershipId: membership.getId(),
@@ -89,11 +89,10 @@ export default async function addTime(
     comment,
   };
 
-  const newTime = await time.addTime(timeData, currentMembership);
+  const newTime = await time.addTime(timeData, actorMembership);
 
   const richTime = await getRichTime({
     time: newTime,
-    currentMembership,
     membership,
     project,
     team,
