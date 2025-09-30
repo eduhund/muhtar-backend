@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import BussinessError from "../../utils/Rejection";
-import log from "../../utils/log";
 import { memberships } from "../../services";
+
+function getBearerToken(header: string | undefined) {
+  if (!header) return null;
+  const matches = header.match(/Bearer (.+)/);
+  if (!matches) return null;
+  return matches[1];
+}
 
 const { SLACK_BOT_IN_TOKEN } = process.env;
 if (!SLACK_BOT_IN_TOKEN || SLACK_BOT_IN_TOKEN === "") {
@@ -10,12 +16,10 @@ if (!SLACK_BOT_IN_TOKEN || SLACK_BOT_IN_TOKEN === "") {
 
 export async function checkBot(req: any, res: Response, next: NextFunction) {
   try {
-    const { ["x-slack-bot-token"]: botToken } = req.headers;
+    const botToken = getBearerToken(req.headers["authorization"]);
 
     if (botToken && botToken === SLACK_BOT_IN_TOKEN) {
-      log.info("Authorization with API key");
-      const { ["x-slack-user-id"]: userId, ["x-slack-team-id"]: teamId } =
-        req.headers;
+      const { userId, teamId } = req.body;
       const currentUser = await memberships.getMembershipBySlackId(
         userId,
         teamId
