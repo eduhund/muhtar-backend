@@ -49,6 +49,13 @@ export default class MembershipService extends Service {
     return data ? new Membership(data) : null;
   }
 
+  async getUserByMembershipId(_id: string) {
+    const membership = await this.getMembershipById(_id);
+    if (!membership) return null;
+    const user = await this.userService.getUserById(membership.userId);
+    return user;
+  }
+
   async getMembershipBySlackId(userId: string, teamId: string) {
     const data = await this._findOne({
       "connections.slack.userId": userId,

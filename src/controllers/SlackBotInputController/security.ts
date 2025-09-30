@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import BussinessError from "../../utils/Rejection";
-import { memberships } from "../../services";
+import { memberships, users } from "../../services";
 
 function getBearerToken(header: string | undefined) {
   if (!header) return null;
@@ -19,11 +19,11 @@ export async function checkBot(req: any, res: Response, next: NextFunction) {
     const botToken = getBearerToken(req.headers["authorization"]);
 
     if (botToken && botToken === SLACK_BOT_IN_TOKEN) {
-      const { userId, teamId } = req.body;
-      const currentUser = await memberships.getMembershipBySlackId(
-        userId,
-        teamId
-      );
+      const { membershipId } = req.body;
+      const currentUser = await memberships.getUserByMembershipId(membershipId);
+      if (!currentUser) {
+        throw new BussinessError("FORBIDDEN", "Membership not found");
+      }
 
       req.data = { currentUser, isBotAction: true };
 
