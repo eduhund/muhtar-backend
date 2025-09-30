@@ -26,13 +26,13 @@ export default class MongoAdapter {
     await this.db.collection(collection).insertOne(doc);
   }
 
-  async update(collection: string, _id: Symbol, update: any) {
+  async update(collection: string, _id: string, update: any) {
     await this.db
       .collection(collection)
       .updateOne({ _id }, { $set: update }, { upsert: true });
   }
 
-  async delete(collection: string, id: string) {
-    await this.db.collection(collection).deleteOne({ id });
+  async delete(collection: string, _id: string) {
+    await this.db.collection(collection).deleteOne({ _id });
   }
 }

@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-import MongoAdapter from "../../adapters/dbAdapter";
+import MongoAdapter from "./adapter";
 import log from "../../utils/log";
 
 const { DB_URL, DB_NAME } = process.env;
