@@ -52,9 +52,9 @@ export default async function addTime(
     duration,
     comment,
   }: AddTimeParams,
-  actor: User
+  actorUser: User
 ) {
-  const actorUserId = actor.getId();
+  const actorUserId = actorUser.getId();
   const actorMembership = await memberships.getMembership({
     userId: actorUserId,
     teamId,

@@ -3,7 +3,7 @@ import { errorHandler } from "../responses";
 
 export default async function addTime(req: any, res: any, next: any) {
   try {
-    const { currentUser } = req.data;
+    const { actorUser } = req.data;
     const { membershipId, teamId, projectId, taskId, date, duration, comment } =
       req.body;
     const data = await addTimeFlow(
@@ -16,7 +16,7 @@ export default async function addTime(req: any, res: any, next: any) {
         duration,
         comment,
       },
-      currentUser
+      actorUser
     );
     return next({ data });
   } catch (e) {
