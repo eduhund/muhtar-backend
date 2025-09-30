@@ -28,3 +28,10 @@ export function setToken(userId: string): string {
   writeFile("/temp/", "tokens.json", tokens);
   return aceessToken;
 }
+
+export function getBearerToken(header: string | undefined) {
+  if (!header) return null;
+  const matches = header.match(/Bearer (.+)/);
+  if (!matches) return null;
+  return matches[1];
+}

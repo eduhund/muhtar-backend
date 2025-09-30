@@ -1,8 +1,7 @@
 import { Router } from "express";
 
 import addTime from "./addTime";
-import { checkBot } from "../security";
-import { checkActor } from "../actor";
+import { checkBot, checkActor } from "../middlewares";
 
 const router = Router();
 router.use(checkBot);
