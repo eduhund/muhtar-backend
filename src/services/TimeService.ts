@@ -28,7 +28,6 @@ export default class TimeService extends Service {
     }: TimeParams,
     currentMembership: any
   ) {
-    console.log(date);
     const time = new Time({
       _id: uuidv4(),
       ts: Date.now(),

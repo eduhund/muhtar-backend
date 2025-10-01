@@ -3,7 +3,7 @@ import cors from "cors";
 import log from "../../utils/log";
 import apiRouter from "../../controllers/API";
 import slackBotRouter from "../../controllers/SlackBotInputController";
-import { handlePath } from "./utils";
+import { handlePath, handleResponse } from "./utils";
 
 const { SERVER_PORT = 8081 } = process.env;
 
@@ -16,6 +16,7 @@ server.use(express.json());
 server.use(apiRouter);
 server.use(slackBotRouter);
 
+server.use(handleResponse);
 server.use(handlePath);
 
 async function start() {

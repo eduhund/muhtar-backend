@@ -1,5 +1,5 @@
 import { addTimeFlow } from "../../../flows";
-import { errorHandler } from "../responses";
+import { errorHandler } from "../errorHandler";
 
 export default async function addTime(req: any, res: any, next: any) {
   try {
