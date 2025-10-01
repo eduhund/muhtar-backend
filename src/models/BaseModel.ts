@@ -5,10 +5,10 @@ export default class BaseModel {
   _dbAdapter: any;
   _collection: string;
   _id: string;
-  constructor(id: string, collection: string) {
+  constructor(_id: string, collection: string) {
     this._dbAdapter = adapter;
     this._collection = collection;
-    this._id = id;
+    this._id = _id;
   }
 
   getId() {
@@ -34,14 +34,18 @@ export default class BaseModel {
   }
 
   toJSON() {
-    const result: Record<string, any> = { id: this._id };
-
+    const result: Record<string, any> = {};
     for (const key of Object.keys(this)) {
       if (!key.startsWith("_") && typeof this[key] !== "function") {
         result[key] = this[key];
       }
     }
+    return result;
+  }
 
+  toPublicJSON() {
+    const result = this.toJSON();
+    result.id = this._id;
     return result;
   }
 }
