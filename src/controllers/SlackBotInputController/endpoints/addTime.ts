@@ -12,7 +12,7 @@ export default async function addTime(req: any, res: any, next: any) {
         teamId,
         projectId,
         taskId,
-        date,
+        date: new Date(date),
         duration,
         comment,
       },
