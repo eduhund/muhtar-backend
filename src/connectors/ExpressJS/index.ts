@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import log from "../../utils/log";
 import apiRouter from "../../controllers/API";
-import slackBotRouter from "../../controllers/SlackBotInputController";
+import slackBotRouter from "../../controllers/BotAPI";
 import { handlePath, handleResponse } from "./utils";
 
 const { SERVER_PORT = 8081 } = process.env;
