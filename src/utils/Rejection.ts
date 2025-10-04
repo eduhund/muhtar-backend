@@ -1,4 +1,5 @@
-export default class Rejection extends Error {
+export default class BusinessError extends Error {
+  type = "BUSINESS";
   constructor(
     public code: string,
     public message: string,
@@ -6,5 +7,8 @@ export default class Rejection extends Error {
   ) {
     super(message);
     this.name = "Rejection";
+    if (details) {
+      this.details = details;
+    }
   }
 }

@@ -17,8 +17,9 @@ export function handleResponse(
   const error = message.error || message;
 
   switch (error?.type) {
-    case "BUSSINESS":
+    case "BUSINESS":
       delete error.type;
+      delete error.name;
       log.warn(error);
       res.status(400).send({ OK: false, error });
       return;
