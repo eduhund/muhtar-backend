@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { checkAuth } from "./security";
 //import endpoints from "../endpoints";
-
 import { handleResponse } from "./responses";
 
 const apiRouter = Router();
