@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import addTime from "./addTime";
+import addTime from "../../endpoints/addTime";
 import { checkBot, checkActor } from "../middlewares";
 
 const router = Router();
