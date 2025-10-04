@@ -1,18 +1,25 @@
-import bcrypt from "bcrypt";
+import crypto from "crypto";
 
-const SALT_ROUNDS = 10;
+function generateHash(data: string) {
+  return crypto.createHash("sha256").update(data).digest("hex");
+}
 
-export async function hash(data: string) {
-  const salt = await bcrypt.genSalt(SALT_ROUNDS);
-  const hash = await bcrypt.hash(data, salt);
+function generateSalt() {
+  return crypto.randomBytes(16).toString("hex");
+}
+
+export function createHash(data: string) {
+  const salt = generateSalt();
+  const dataToHash = salt + data;
+  const hash = generateHash(dataToHash);
   return { hash, salt };
 }
 
-export async function compare(
+export function compareHash(
   inputData: string,
   storedHash: string,
   storedSalt: string
 ) {
-  const saltedInput = await bcrypt.hash(inputData, storedSalt);
-  return await bcrypt.compare(saltedInput, storedHash);
+  const saltedInput = storedSalt + inputData;
+  return storedHash === generateHash(saltedInput);
 }

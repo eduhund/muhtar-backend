@@ -1,18 +1,40 @@
 import { Request, Response, NextFunction } from "express";
-import { checkAccessToken, getBearerToken } from "../../utils/tokens";
-import { users } from "../../services";
+import {
+  checkAccessToken,
+  checkApiKey,
+  getBearerToken,
+} from "../../utils/tokens";
+import { memberships, users } from "../../services";
 import BussinessError from "../../utils/Rejection";
 
-async function getUserByAccessToken(token: string) {
+async function getUserByToken(token: string) {
   const tokenData = checkAccessToken(token);
 
-  if (!tokenData)
-    throw new BussinessError("UNAUTHORIZED", "Invalid or expired token");
+  let currentUser = null;
 
-  const { userId } = tokenData;
+  if (tokenData) {
+    const { userId } = tokenData;
+    currentUser = await users.getUserById(userId);
+  }
 
-  const currentUser = await users.getUserById(userId);
-  if (!currentUser) throw new BussinessError("UNAUTHORIZED", "User not found");
+  const apiKey = await checkApiKey(token);
+
+  if (apiKey) {
+    if (apiKey.userId) {
+      currentUser = await users.getUserById(apiKey.userId);
+    } else if (apiKey.membershipId) {
+      const currentMembership = await memberships.getMembershipById(
+        apiKey.membershipId
+      );
+      if (currentMembership) {
+        currentUser = await users.getUserById(currentMembership.userId);
+      }
+    }
+  }
+
+  if (currentUser) return currentUser;
+
+  throw new BussinessError("UNAUTHORIZED", "Invalid or expired token");
 }
 
 export async function checkUserAuth(
@@ -30,9 +52,13 @@ export async function checkUserAuth(
         "You not provided a valid access token or API key"
       );
     }
-    const currentUser = await getUserByAccessToken(token);
+    const actorUser = await getUserByToken(token);
 
-    req.data = { currentUser };
+    if (!actorUser) {
+      throw new BussinessError("UNAUTHORIZED", "User not found");
+    }
+
+    req.data = { actorUser };
 
     return next();
   } catch (e) {

@@ -1,5 +1,5 @@
 import BaseModel from "./BaseModel";
-import { compare } from "../utils/hash";
+import { compareHash } from "../utils/hash";
 
 export type ApiKeyParams = {
   hash: string;
@@ -58,6 +58,6 @@ export default class ApiKey extends BaseModel {
   }
 
   async verifyKey(key: string) {
-    return await compare(key, this.hash, this.salt);
+    return await compareHash(key, this.hash, this.salt);
   }
 }

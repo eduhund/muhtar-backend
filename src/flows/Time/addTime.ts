@@ -50,7 +50,7 @@ export default async function addTime(
   if (!membership) {
     throw new BussinessError("NOT_FOUND", "Membership not found");
   }
-  const teamId = membership.getTeamId();
+  const { teamId } = membership;
 
   const actorMembership = await memberships.getMembership({
     userId: actorUser.getId(),
