@@ -7,7 +7,6 @@ import { dateOnlyIsoString } from "../utils/date";
 type TimeParams = {
   membershipId: string;
   createdBy?: string;
-  teamId: string;
   projectId: string;
   taskId?: string | null;
   date: Date;
@@ -19,7 +18,6 @@ export default class TimeService extends Service {
   async addTime(
     {
       membershipId,
-      teamId,
       projectId,
       taskId = null,
       date,
@@ -33,7 +31,6 @@ export default class TimeService extends Service {
       ts: Date.now(),
       isDeleted: false,
       membershipId,
-      teamId,
       projectId,
       taskId,
       date: dateOnlyIsoString(date),
@@ -51,17 +48,8 @@ export default class TimeService extends Service {
     return time;
   }
 
-  async getTime({
-    teamId,
-    projectId,
-    membershipId,
-    date,
-    from,
-    to,
-    withDeleted,
-  }: any) {
+  async getTime({ projectId, membershipId, date, from, to, withDeleted }: any) {
     const data = await this._findMany({
-      teamId,
       projectId,
       membershipId,
       date,

@@ -7,7 +7,6 @@ import BussinessError from "../../utils/Rejection";
 
 type AddTimeParams = {
   membershipId: string;
-  teamId: string;
   projectId: string;
   taskId?: string | null;
   date: Date;
@@ -43,33 +42,25 @@ async function canAddTime(
 }
 
 export default async function addTime(
-  {
-    membershipId,
-    teamId,
-    projectId,
-    taskId,
-    date,
-    duration,
-    comment,
-  }: AddTimeParams,
+  { membershipId, projectId, taskId, date, duration, comment }: AddTimeParams,
   actorUser: User
 ) {
-  const actorUserId = actorUser.getId();
-  const actorMembership = await memberships.getMembership({
-    userId: actorUserId,
-    teamId,
-  });
-  if (!actorMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
-  }
-  const membership =
-    membershipId && membershipId !== actorMembership?.getId()
-      ? await memberships.getMembershipById(membershipId)
-      : actorMembership;
+  const membership = await memberships.getMembershipById(membershipId);
 
   if (!membership) {
     throw new BussinessError("NOT_FOUND", "Membership not found");
   }
+  const teamId = membership.getTeamId();
+
+  const actorMembership = await memberships.getMembership({
+    userId: actorUser.getId(),
+    teamId,
+  });
+  if (!actorMembership)
+    throw new BussinessError(
+      "FORBIDDEN",
+      "You are not allowed to add time to this project"
+    );
 
   const project = await projects.getProjectById(projectId);
   if (!project) throw new BussinessError("NOT_FOUND", "Project not found");
@@ -81,7 +72,6 @@ export default async function addTime(
 
   const timeData = {
     membershipId: membership.getId(),
-    teamId,
     projectId,
     taskId,
     date,

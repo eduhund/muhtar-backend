@@ -1,15 +1,13 @@
-import { addTimeFlow } from "../../flows";
-import { errorHandler } from "../BotAPI/errorHandler";
+import { addTimeFlow } from "../../../flows";
 
 export default async function addTime(req: any, res: any, next: any) {
   try {
     const { actorUser } = req.data;
-    const { membershipId, teamId, projectId, taskId, date, duration, comment } =
+    const { membershipId, projectId, taskId, date, duration, comment } =
       req.body;
     const data = await addTimeFlow(
       {
         membershipId,
-        teamId,
         projectId,
         taskId,
         date: new Date(date),
@@ -20,6 +18,6 @@ export default async function addTime(req: any, res: any, next: any) {
     );
     return next({ data });
   } catch (e) {
-    return next(errorHandler(e));
+    next(e);
   }
 }

@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import log from "../../utils/log";
 import apiRouter from "../../controllers/API";
-import slackBotRouter from "../../controllers/BotAPI";
 import { handlePath, handleResponse } from "./utils";
 
 const { SERVER_PORT = 8081 } = process.env;
@@ -13,8 +12,7 @@ server.use(cors());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.use(apiRouter);
-server.use(slackBotRouter);
+server.use("/api", apiRouter);
 
 server.use(handleResponse);
 server.use(handlePath);

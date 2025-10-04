@@ -1,13 +1,10 @@
 import { Router } from "express";
-import { checkAuth } from "./security";
-//import endpoints from "../endpoints";
-import { handleResponse } from "./responses";
+import { checkUserAuth } from "./security";
+import { addTime } from "./endpoints";
 
 const apiRouter = Router();
 
-apiRouter.use(checkAuth);
-
-//apiRouter.use("/api/v1", endpoints);
-apiRouter.use(handleResponse);
+apiRouter.use(checkUserAuth);
+apiRouter.post("/addTime", addTime);
 
 export default apiRouter;
