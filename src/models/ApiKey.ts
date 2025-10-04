@@ -1,0 +1,63 @@
+import BaseModel from "./BaseModel";
+import { compare } from "../utils/hash";
+
+export type ApiKeyParams = {
+  hash: string;
+  salt: string;
+  userId?: string | null;
+  membershipId?: string | null;
+  teamId?: string | null;
+  serviceId?: string | null;
+  scopes?: string[];
+  createdAt?: Date;
+  creationType?: string;
+  expiresAt?: Date | null;
+  revokedAt?: Date | null;
+};
+
+export default class ApiKey extends BaseModel {
+  hash: string;
+  salt: string;
+  userId: string | null;
+  membershipId: string | null;
+  teamId: string | null;
+  serviceId: string | null;
+  scopes: string[];
+  createdAt: Date;
+  creationType: string;
+  expiresAt: Date | null;
+  revokedAt: Date | null;
+  constructor(data: ApiKeyParams & { _id: string }) {
+    super(data._id, "apiKeys");
+    this.hash = data.hash;
+    this.salt = data.salt;
+    this.userId = data.userId ?? null;
+    this.membershipId = data.membershipId ?? null;
+    this.teamId = data.teamId ?? null;
+    this.serviceId = data.serviceId ?? null;
+    this.scopes = data.scopes ?? [];
+    this.createdAt = data.createdAt ?? new Date();
+    this.creationType = data.creationType ?? "auto";
+    this.expiresAt = data.expiresAt ?? null;
+    this.revokedAt = data.revokedAt ?? null;
+  }
+
+  isRevoked() {
+    return this.revokedAt !== null;
+  }
+
+  isExpired() {
+    if (this.expiresAt === null) {
+      return false;
+    }
+    return new Date() > this.expiresAt;
+  }
+
+  isActive() {
+    return !this.isRevoked() && !this.isExpired();
+  }
+
+  async verifyKey(key: string) {
+    return await compare(key, this.hash, this.salt);
+  }
+}

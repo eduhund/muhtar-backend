@@ -1,2 +1,4 @@
 import addTime from "./addTime";
-export { addTime };
+import getTeamProjects from "./getTeamProjects";
+
+export { addTime, getTeamProjects };

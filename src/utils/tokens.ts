@@ -1,3 +1,4 @@
+import { apiKeys } from "../services";
 import { readFile, writeFile } from "./fs";
 
 export type Token = {
@@ -15,11 +16,18 @@ function createToken() {
 
 const tokens = readFile("/temp/", "tokens.json") || {};
 
-export function checkToken(token: string): Token | null {
+export async function checkApiKey(token: string) {
+  const [id, key] = token.split(".");
+  const existingKey = await apiKeys.findApiKey(id);
+  if (!existingKey || !existingKey.isActive()) return false;
+  return existingKey.verifyKey(key);
+}
+
+export function checkAccessToken(token: string): Token | null {
   return tokens?.[token] || null;
 }
 
-export function setToken(userId: string): string {
+export function setAccessToken(userId: string): string {
   const aceessToken = createToken();
   tokens[aceessToken] = {
     userId,

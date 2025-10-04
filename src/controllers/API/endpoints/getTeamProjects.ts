@@ -1,7 +1,6 @@
-import { getProjectsFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
+import { getProjectsFlow } from "../../../flows";
 
-export default async function getProjects(req: any, res: any, next: any) {
+export default async function getTeamProjects(req: any, res: any, next: any) {
   try {
     const { currentUser } = req.data;
     const { teamId, membershipId, status } = req.query;
@@ -11,6 +10,6 @@ export default async function getProjects(req: any, res: any, next: any) {
     );
     return next({ data });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

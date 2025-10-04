@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { checkToken, getBearerToken } from "../../utils/tokens";
+import { checkAccessToken, getBearerToken } from "../../utils/tokens";
 import { users } from "../../services";
 import BussinessError from "../../utils/Rejection";
 
 async function getUserByAccessToken(token: string) {
-  const tokenData = checkToken(token);
+  const tokenData = checkAccessToken(token);
 
   if (!tokenData)
     throw new BussinessError("UNAUTHORIZED", "Invalid or expired token");
