@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { checkAuth } from "../../security";
 import getTimeList from "./getTimeList";
 import getTime from "./getTime";
 import add from "./add";
@@ -8,8 +7,6 @@ import archive from "./archive";
 import restore from "./restore";
 
 const router = Router();
-
-router.use(checkAuth);
 
 router.get("/", getTimeList);
 router.get("/:id", getTime);

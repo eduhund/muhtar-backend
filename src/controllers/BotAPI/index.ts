@@ -1,5 +1,5 @@
 import { Router } from "express";
-import endpoints from "./endpoints";
+import endpoints from "./integrations/slack";
 
 const { SLACK_BOT_IN_ENDPOINT = "bot" } = process.env;
 

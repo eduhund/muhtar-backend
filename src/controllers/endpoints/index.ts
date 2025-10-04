@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { checkAuth } from "../security";
+import { checkAuth } from "../API/security";
 
 import projectsRouter from "./projects";
 import teamsRouter from "./teams";

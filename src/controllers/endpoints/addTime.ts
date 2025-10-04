@@ -1,5 +1,5 @@
-import { addTimeFlow } from "../../../flows";
-import { errorHandler } from "../errorHandler";
+import { addTimeFlow } from "../../flows";
+import { errorHandler } from "../BotAPI/errorHandler";
 
 export default async function addTime(req: any, res: any, next: any) {
   try {
