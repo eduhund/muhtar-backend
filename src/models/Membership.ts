@@ -13,7 +13,6 @@ const ACCESS_ROLES = ["guest", "user", "manager", "admin", "owner"];
 export default class Membership extends BaseModel {
   userId: string;
   teamId: string;
-  name: string;
   accessRole: MembershipAccessRole;
   workRole: string;
   status: MembershipStatus;
@@ -29,7 +28,6 @@ export default class Membership extends BaseModel {
     super(data._id, "memberships");
     this.userId = data.userId;
     this.teamId = data.teamId;
-    this.name = data.name;
     this.accessRole = data.accessRole ?? "member";
     this.workRole = data.workRole ?? "staff";
     this.status = data.status ?? data.userId ? "active" : "pending";
