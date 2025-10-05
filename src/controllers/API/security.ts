@@ -11,6 +11,7 @@ async function getUserByToken(token: string) {
   const tokenData = checkAccessToken(token);
 
   let currentUser = null;
+  let currentMembership = null;
 
   if (tokenData) {
     const { userId } = tokenData;
@@ -32,7 +33,7 @@ async function getUserByToken(token: string) {
     }
   }
 
-  if (currentUser) return currentUser;
+  if (currentUser) return { currentUser };
 
   throw new BussinessError("UNAUTHORIZED", "Invalid or expired token");
 }
@@ -62,6 +63,6 @@ export async function checkUserAuth(
 
     return next();
   } catch (e) {
-    return next();
+    return next(e);
   }
 }

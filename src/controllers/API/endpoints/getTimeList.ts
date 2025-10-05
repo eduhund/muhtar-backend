@@ -1,6 +1,5 @@
-import { getTimeListFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
-import BussinessError from "../../../../utils/Rejection";
+import { getTimeListFlow } from "../../../flows";
+import BussinessError from "../../../utils/Rejection";
 
 export default async function getTimeList(req: any, res: any, next: any) {
   try {
@@ -18,6 +17,6 @@ export default async function getTimeList(req: any, res: any, next: any) {
     );
     return next({ data });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

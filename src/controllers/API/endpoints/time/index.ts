@@ -1,5 +1,5 @@
 import { Router } from "express";
-import getTimeList from "./getTimeList";
+import getTimeList from "../getTimeList";
 import getTime from "./getTime";
 import add from "./add";
 import update from "./update";

@@ -46,11 +46,14 @@ export default async function getProjects(
 
   const projectQuery: any = {
     teamId,
-    membershipId:
+  };
+
+  if (membershipId) {
+    projectQuery.membershipId =
       canGetTeamProjects(currentMembership) && membershipId
         ? membershipId
-        : currentMembershipId,
-  };
+        : currentMembershipId;
+  }
 
   const projectList = await projects.getProjects(projectQuery);
 

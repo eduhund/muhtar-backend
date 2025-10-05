@@ -1,5 +1,4 @@
 import { loginFlow } from "../../../flows";
-import { errorHandler } from "../responses";
 
 export default async function login(req: any, res: any, next: any) {
   try {
@@ -7,6 +6,6 @@ export default async function login(req: any, res: any, next: any) {
     const accessToken = await loginFlow({ email, password });
     return next({ data: { accessToken } });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }
