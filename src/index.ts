@@ -11,7 +11,7 @@ import { setWorkdays } from "./utils/isDayOff";
     await mongo.connect();
     await setWorkdays();
     log.info("All systems running. Let's rock!");
-    sendDailyTimeTrackReminder();
+    //sendDailyTimeTrackReminder();
   } catch (e) {
     log.error("Hewston, we have a problem!");
     log.debug(e);
