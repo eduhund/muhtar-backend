@@ -152,7 +152,7 @@ export default class Membership extends BaseModel {
   getAccessRoleIndex() {
     const index = ACCESS_ROLES.indexOf(this.accessRole);
     if (index === -1) {
-      this.accessRole = "guest";
+      this.accessRole = ACCESS_ROLES[0] as MembershipAccessRole;
       this.saveChanges("accessRole");
       return 0;
     }
