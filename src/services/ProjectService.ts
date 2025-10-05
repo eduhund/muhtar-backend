@@ -75,12 +75,24 @@ export default class ProjectService extends Service {
     );
   }
 
-  async getProjectMembershipRole(projectId: string, membershipId: string) {
+  async getProjectMembershipAccessRole(
+    projectId: string,
+    membershipId: string
+  ) {
     const projectMemberships = await this.getProjectMemberships(projectId);
     return (
       projectMemberships.find(
         (member: any) => member.membershipId === membershipId
-      )?.role || null
+      )?.accessRole || null
+    );
+  }
+
+  async getProjectMembershipWorkRole(projectId: string, membershipId: string) {
+    const projectMemberships = await this.getProjectMemberships(projectId);
+    return (
+      projectMemberships.find(
+        (member: any) => member.membershipId === membershipId
+      )?.workRole || null
     );
   }
 }

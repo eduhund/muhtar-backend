@@ -24,7 +24,7 @@ export default class MembershipService extends Service {
   }
 
   async getMembership({ userId, teamId }: { userId: string; teamId: string }) {
-    const data = await this._findOne({ _id: userId, teamId });
+    const data = await this._findOne({ userId, teamId });
     return data ? new Membership(data) : null;
   }
 

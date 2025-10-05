@@ -21,7 +21,7 @@ async function canAddTime(
 ) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
 
-  const projectActorMembershipRole = project.getProjectMembershipRole(
+  const projectActorMembershipRole = project.getProjectMembershipAccessRole(
     currentMembership.getId()
   );
 
