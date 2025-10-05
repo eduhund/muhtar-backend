@@ -73,6 +73,7 @@ export default async function addTime(
   const timeData = {
     membershipId: membership.getId(),
     projectId,
+    teamId,
     taskId,
     date,
     duration,
