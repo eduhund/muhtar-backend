@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { getProjects, getTimeList } from "./endpoints";
+import membershipApiRouter from "./MembershipAPI";
 
 const apiRouter = Router();
 
-apiRouter.get("/getProjects", getProjects);
-apiRouter.get("/getTimeList", getTimeList);
+apiRouter.use("/membership", membershipApiRouter);
 
 export default apiRouter;

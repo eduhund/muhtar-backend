@@ -5,9 +5,9 @@ import {
   checkAccessToken,
   checkApiKey,
   getBearerToken,
-} from "../../utils/tokens";
-import { memberships } from "../../services";
-import BussinessError from "../../utils/Rejection";
+} from "../../../utils/tokens";
+import { memberships } from "../../../services";
+import BussinessError from "../../../utils/Rejection";
 
 async function checkToken(token: string) {
   const tokenData = checkAccessToken(token);
