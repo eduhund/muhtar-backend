@@ -2,7 +2,8 @@ import { apiKeys } from "../services";
 import { readFile, writeFile } from "./fs";
 
 export type Token = {
-  userId: string;
+  userId?: string;
+  membershipId?: string;
   ts: number;
 };
 

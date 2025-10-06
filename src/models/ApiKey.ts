@@ -58,6 +58,6 @@ export default class ApiKey extends BaseModel {
   }
 
   async verifyKey(key: string) {
-    return await compareHash(key, this.hash, this.salt);
+    return compareHash(key, this.hash, this.salt);
   }
 }
