@@ -54,7 +54,7 @@ export async function getRichTime({ time, membership, project, team }: any) {
     };
   }
 
-  if (!project) {
+  if (project) {
     richTime.project = {
       id: project.getId(),
       name: project.name,
