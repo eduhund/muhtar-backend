@@ -52,8 +52,10 @@ function buildQuery({
   if (date) {
     query.date = date;
   } else {
-    if (from) query.from = from;
-    if (to) query.to = to;
+    const dateQuery: any = {};
+    if (from) dateQuery.$gte = from;
+    if (to) dateQuery.$lt = to;
+    if (Object.keys(dateQuery).length > 0) query.date = dateQuery;
   }
   if (withDeleted !== undefined) query.isDeleted = false;
   return query;
