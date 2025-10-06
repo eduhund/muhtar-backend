@@ -1,9 +1,8 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import User from "../../models/User";
-import { memberships, projects, time } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { projects, time } from "../../services";
+import { BusinessError } from "../../utils/Rejection";
 
 async function canRestoreTime(
   currentMembership: Membership,
@@ -20,32 +19,27 @@ async function canRestoreTime(
 
   if (currentMembership.getId() === existingTime.membershipId) return true;
 
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to restore time entry"
   );
 }
 
-export default async function restoreTime(id: string, currentUser: User) {
+export default async function restoreTime(
+  id: string,
+  actorMembership: Membership
+) {
   const existingTime = await time.getTimeById(id);
   if (!existingTime) {
-    throw new BussinessError("NOT_FOUND", `Time entry not found`);
-  }
-
-  const currentMembership = await memberships.getMembership({
-    userId: currentUser.getId(),
-    teamId: existingTime.teamId,
-  });
-  if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
   const project = await projects.getProjectById(existingTime.projectId);
-  if (!project) throw new BussinessError("NOT_FOUND", "Project not found");
+  if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
-  await canRestoreTime(currentMembership, existingTime, project);
+  await canRestoreTime(actorMembership, existingTime, project);
 
-  await existingTime.restore(currentMembership);
+  await existingTime.restore(actorMembership);
 
   return {};
 }
