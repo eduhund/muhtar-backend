@@ -2,7 +2,7 @@ import { addTimeFlow } from "../../../flows";
 
 export default async function addTime(req: any, res: any, next: any) {
   try {
-    const { actorUser } = req.data;
+    const { actorMembership } = req.data;
     const { membershipId, projectId, taskId, date, duration, comment } =
       req.body;
     const data = await addTimeFlow(
@@ -14,7 +14,7 @@ export default async function addTime(req: any, res: any, next: any) {
         duration,
         comment,
       },
-      actorUser
+      actorMembership
     );
     return next({ data });
   } catch (e) {

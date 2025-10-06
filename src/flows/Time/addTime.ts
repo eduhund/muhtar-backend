@@ -1,6 +1,5 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import User from "../../models/User";
 import { projects, teams, time, memberships } from "../../services";
 import { getRichTime } from "../../utils/getRichObject";
 import BussinessError from "../../utils/Rejection";
@@ -43,7 +42,7 @@ async function canAddTime(
 
 export default async function addTime(
   { membershipId, projectId, taskId, date, duration, comment }: AddTimeParams,
-  actorUser: User
+  actorMembership: Membership
 ) {
   const membership = await memberships.getMembershipById(membershipId);
 
@@ -51,16 +50,6 @@ export default async function addTime(
     throw new BussinessError("NOT_FOUND", "Membership not found");
   }
   const { teamId } = membership;
-
-  const actorMembership = await memberships.getMembership({
-    userId: actorUser.getId(),
-    teamId,
-  });
-  if (!actorMembership)
-    throw new BussinessError(
-      "FORBIDDEN",
-      "You are not allowed to add time to this project"
-    );
 
   const project = await projects.getProjectById(projectId);
   if (!project) throw new BussinessError("NOT_FOUND", "Project not found");
