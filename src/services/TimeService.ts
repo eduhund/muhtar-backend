@@ -15,6 +15,50 @@ type TimeParams = {
   comment?: string | null;
 };
 
+type TimeInputParams = {
+  teamId: string;
+  projectId?: string;
+  membershipId?: string;
+  date?: string;
+  from?: string;
+  to?: string;
+  withDeleted?: boolean;
+};
+
+type TimeQueryParams = {
+  teamId: string;
+  projectId?: string;
+  membershipId?: string;
+  date?: string;
+  from?: string;
+  to?: string;
+  isDeleted?: boolean;
+};
+
+function buildQuery({
+  teamId,
+  projectId,
+  membershipId,
+  date,
+  from,
+  to,
+  withDeleted,
+}: TimeInputParams): Partial<TimeQueryParams> {
+  const query: Partial<TimeQueryParams> = {
+    teamId,
+  };
+  if (projectId) query.projectId = projectId;
+  if (membershipId) query.membershipId = membershipId;
+  if (date) {
+    query.date = date;
+  } else {
+    if (from) query.from = from;
+    if (to) query.to = to;
+  }
+  if (withDeleted !== undefined) query.isDeleted = false;
+  return query;
+}
+
 export default class TimeService extends Service {
   async addTime(
     {
@@ -51,15 +95,9 @@ export default class TimeService extends Service {
     return time;
   }
 
-  async getTime({ projectId, membershipId, date, from, to, withDeleted }: any) {
-    const data = await this._findMany({
-      projectId,
-      membershipId,
-      date,
-      from,
-      to,
-      isDeleted: withDeleted,
-    });
+  async getTimeList(params: TimeInputParams) {
+    const query = buildQuery(params);
+    const data = await this._findMany(query);
     return data.map((time: any) => new Time(time));
   }
 

@@ -1,10 +1,8 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import User from "../../models/User";
 import { projects, time, teams, memberships } from "../../services";
 import { getRichTime } from "../../utils/getRichObject";
-import BussinessError from "../../utils/Rejection";
 
 type GetTimeListParams = {
   projectId?: string;
@@ -15,75 +13,50 @@ type GetTimeListParams = {
   withDeleted?: boolean;
 };
 
-type TimeListQuery = GetTimeListParams & { teamId: string };
-
-function canGetTeamTime(actorMembership: Membership) {
-  return actorMembership.isOwner() || actorMembership.isAdmin();
-}
-
-function buildQuery({
-  teamId,
-  projectId,
-  membershipId,
-  date,
-  from,
-  to,
-  withDeleted,
-}: TimeListQuery): Partial<TimeListQuery> {
-  const query: Partial<TimeListQuery> = {
-    teamId,
-    withDeleted: withDeleted || false,
-  };
-  if (projectId) query.projectId = projectId;
-  if (membershipId) query.membershipId = membershipId;
-  if (date) {
-    query.date = date;
-  } else {
-    if (from) query.from = from;
-    if (to) query.to = to;
-  }
-  return query;
-}
-
 export default async function getTimeList(
-  { projectId, membershipId, from, to, withDeleted }: GetTimeListParams,
+  { projectId, membershipId, date, from, to, withDeleted }: GetTimeListParams,
   actorMembership: Membership
 ) {
   const { teamId } = actorMembership;
-  const currentMembershipId = actorMembership.getId();
+  const actorMembershipId = actorMembership.getId();
 
   let timeList = [];
 
-  if (canGetTeamTime(actorMembership)) {
-    timeList = await time.getTime(
-      buildQuery({ teamId, projectId, membershipId, from, to, withDeleted })
-    );
+  if (actorMembership.isOwner() || actorMembership.isAdmin()) {
+    timeList = await time.getTimeList({
+      teamId,
+      projectId,
+      membershipId,
+      date,
+      from,
+      to,
+      withDeleted,
+    });
   } else {
     const currentMembershipProjectList =
-      await projects.getProjectsByMembershipId(currentMembershipId);
+      await projects.getProjectsByMembershipId(actorMembershipId);
     const timePerProject = await Promise.all(
       currentMembershipProjectList.map(async (project: Project) => {
         const thisProjectId = project.getId();
         if (thisProjectId !== projectId) return [];
 
-        const projectRole =
-          project.getProjectMembershipRole(currentMembershipId);
+        const projectRole = project.getProjectMembershipRole(actorMembershipId);
 
         if (projectRole === "manager") {
-          return await time.getTime(
-            buildQuery({
-              teamId,
-              projectId: thisProjectId,
-              membershipId,
-              from,
-              to,
-              withDeleted,
-            })
-          );
+          return await time.getTimeList({
+            teamId,
+            projectId: thisProjectId,
+            membershipId,
+            date,
+            from,
+            to,
+            withDeleted,
+          });
         } else if (projectRole === "user") {
-          return await time.getTime({
-            thisProjectId,
-            membershipId: currentMembershipId,
+          return await time.getTimeList({
+            teamId,
+            projectId: thisProjectId,
+            membershipId: actorMembershipId,
           });
         } else {
           return [];
