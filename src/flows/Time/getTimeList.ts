@@ -7,7 +7,6 @@ import { getRichTime } from "../../utils/getRichObject";
 import BussinessError from "../../utils/Rejection";
 
 type GetTimeListParams = {
-  teamId: string;
   projectId?: string;
   membershipId?: string;
   date?: string;
@@ -15,6 +14,8 @@ type GetTimeListParams = {
   to?: string;
   withDeleted?: boolean;
 };
+
+type TimeListQuery = GetTimeListParams & { teamId: string };
 
 function canGetTeamTime(actorMembership: Membership) {
   return actorMembership.isOwner() || actorMembership.isAdmin();
@@ -28,8 +29,8 @@ function buildQuery({
   from,
   to,
   withDeleted,
-}: GetTimeListParams): Partial<GetTimeListParams> {
-  const query: Partial<GetTimeListParams> = {
+}: TimeListQuery): Partial<TimeListQuery> {
+  const query: Partial<TimeListQuery> = {
     teamId,
     withDeleted: withDeleted || false,
   };
@@ -45,21 +46,15 @@ function buildQuery({
 }
 
 export default async function getTimeList(
-  { teamId, projectId, membershipId, from, to, withDeleted }: GetTimeListParams,
-  currentUser: User
+  { projectId, membershipId, from, to, withDeleted }: GetTimeListParams,
+  actorMembership: Membership
 ) {
-  const currentMembership = await memberships.getMembership({
-    userId: currentUser.getId(),
-    teamId: teamId,
-  });
-  if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
-  }
-  const currentMembershipId = currentMembership.getId();
+  const { teamId } = actorMembership;
+  const currentMembershipId = actorMembership.getId();
 
   let timeList = [];
 
-  if (canGetTeamTime(currentMembership)) {
+  if (canGetTeamTime(actorMembership)) {
     timeList = await time.getTime(
       buildQuery({ teamId, projectId, membershipId, from, to, withDeleted })
     );

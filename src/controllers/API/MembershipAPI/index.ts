@@ -9,6 +9,7 @@ import {
 import { memberships } from "../../../services";
 import BussinessError from "../../../utils/Rejection";
 import getProjects from "./getProjects";
+import getTimeList from "./getTimeList";
 
 async function checkToken(token: string) {
   const tokenData = checkAccessToken(token);
@@ -65,6 +66,7 @@ const membershipApiRouter = Router();
 
 membershipApiRouter.use(checkMembershipAuth);
 membershipApiRouter.get("/getProjects", getProjects);
+membershipApiRouter.get("/getTimeList", getTimeList);
 membershipApiRouter.post("/addTime", addTime);
 
 export default membershipApiRouter;
