@@ -1,9 +1,8 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import User from "../../models/User";
-import { memberships, projects, time } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { projects, time } from "../../services";
+import { BusinessError } from "../../utils/Rejection";
 
 async function canArchiveTime(
   currentMembership: Membership,
@@ -20,32 +19,27 @@ async function canArchiveTime(
 
   if (currentMembership.getId() === existingTime.membershipId) return true;
 
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to archive time entry"
   );
 }
 
-export default async function archiveTime(id: string, currentUser: User) {
+export default async function archiveTime(
+  id: string,
+  actorMembership: Membership
+) {
   const existingTime = await time.getTimeById(id);
   if (!existingTime) {
-    throw new BussinessError("NOT_FOUND", `Time entry not found`);
-  }
-
-  const currentMembership = await memberships.getMembership({
-    userId: currentUser.getId(),
-    teamId: existingTime.teamId,
-  });
-  if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
   const project = await projects.getProjectById(existingTime.projectId);
-  if (!project) throw new BussinessError("NOT_FOUND", "Project not found");
+  if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
-  await canArchiveTime(currentMembership, existingTime, project);
+  await canArchiveTime(actorMembership, existingTime, project);
 
-  await existingTime.archive(currentMembership);
+  await existingTime.archive(actorMembership);
 
   return {};
 }
