@@ -11,11 +11,13 @@ import BussinessError from "../../../utils/Rejection";
 
 async function checkToken(token: string) {
   const tokenData = checkAccessToken(token);
+
   if (tokenData?.membershipId) {
     return tokenData?.membershipId;
   }
 
   const apiKey = await checkApiKey(token);
+
   if (apiKey?.membershipId) {
     return apiKey?.membershipId;
   }
@@ -25,16 +27,22 @@ async function checkToken(token: string) {
 
 async function getMembershipByToken(token: string) {
   const bearerlessToken = getBearerToken(token);
+
   if (!bearerlessToken) {
     throw new BussinessError(
       "UNAUTHORIZED",
       "You not provided a valid access token or API key"
     );
   }
-  const membershipId = await checkToken(token);
+
+  const membershipId = await checkToken(bearerlessToken);
   const currentMembership = await memberships.getMembershipById(membershipId);
 
-  if (!currentMembership) return currentMembership;
+  if (!currentMembership) {
+    throw new BussinessError("UNAUTHORIZED", "Membership not found");
+  }
+
+  return currentMembership;
 }
 
 async function checkMembershipAuth(
@@ -44,15 +52,8 @@ async function checkMembershipAuth(
 ) {
   try {
     const { authorization } = req.headers;
-
     const actorMembership = await getMembershipByToken(authorization);
-
-    if (!actorMembership) {
-      throw new BussinessError("UNAUTHORIZED", "Membership not found");
-    }
-
     req.data = { actorMembership };
-
     return next();
   } catch (e) {
     return next(e);

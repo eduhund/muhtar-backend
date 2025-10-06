@@ -18,7 +18,7 @@ function createToken() {
 const tokens = readFile("/temp/", "tokens.json") || {};
 
 export async function checkApiKey(token: string) {
-  const [id, key] = token.split(".");
+  const [id, key] = token.split(":");
   const existingKey = await apiKeys.findApiKey(id);
   if (!existingKey || !existingKey.isActive() || !existingKey.verifyKey(key))
     return null;
