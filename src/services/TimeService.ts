@@ -6,9 +6,10 @@ import { dateOnlyIsoString } from "../utils/date";
 
 type TimeParams = {
   membershipId: string;
-  createdBy?: string;
   projectId: string;
+  teamId: string;
   taskId?: string | null;
+  createdBy?: string;
   date: Date;
   duration?: number;
   comment?: string | null;
@@ -19,6 +20,7 @@ export default class TimeService extends Service {
     {
       membershipId,
       projectId,
+      teamId,
       taskId = null,
       date,
       duration = 0,
@@ -32,6 +34,7 @@ export default class TimeService extends Service {
       isDeleted: false,
       membershipId,
       projectId,
+      teamId,
       taskId,
       date: dateOnlyIsoString(date),
       duration,
