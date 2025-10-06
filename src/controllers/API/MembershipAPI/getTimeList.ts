@@ -1,5 +1,5 @@
 import { getTimeListFlow } from "../../../flows";
-import BusinessError from "../../../utils/Rejection";
+import { BusinessError } from "../../../utils/Rejection";
 
 export default async function getTimeList(req: any, res: any, next: any) {
   try {

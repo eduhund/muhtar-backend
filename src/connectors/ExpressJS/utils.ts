@@ -24,6 +24,13 @@ export function handleResponse(
       res.status(400).send({ OK: false, error });
       return;
 
+    case "VALIDATION":
+      delete error.type;
+      delete error.name;
+      log.warn(error);
+      res.status(400).send({ OK: false, error });
+      return;
+
     default:
       log.error({ type: "SYSTEM", error });
       res

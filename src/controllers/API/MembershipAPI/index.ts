@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import { Router } from "express";
-import addTime from "./addTime";
+import addTime from "./addTime/addTime";
 import {
   checkAccessToken,
   checkApiKey,
   getBearerToken,
 } from "../../../utils/tokens";
 import { memberships } from "../../../services";
-import BussinessError from "../../../utils/Rejection";
+import { BusinessError } from "../../../utils/Rejection";
 import getProjects from "./getProjects";
 import getTimeList from "./getTimeList";
+import validateAddTimeParams from "./addTime/utils";
 
 async function checkToken(token: string) {
   const tokenData = checkAccessToken(token);
@@ -24,14 +25,14 @@ async function checkToken(token: string) {
     return apiKey?.membershipId;
   }
 
-  throw new BussinessError("UNAUTHORIZED", "Invalid or expired token");
+  throw new BusinessError("UNAUTHORIZED", "Invalid or expired token");
 }
 
 async function getMembershipByToken(token: string) {
   const bearerlessToken = getBearerToken(token);
 
   if (!bearerlessToken) {
-    throw new BussinessError(
+    throw new BusinessError(
       "UNAUTHORIZED",
       "You not provided a valid access token or API key"
     );
@@ -41,7 +42,7 @@ async function getMembershipByToken(token: string) {
   const currentMembership = await memberships.getMembershipById(membershipId);
 
   if (!currentMembership) {
-    throw new BussinessError("UNAUTHORIZED", "Membership not found");
+    throw new BusinessError("UNAUTHORIZED", "Membership not found");
   }
 
   return currentMembership;
@@ -67,6 +68,6 @@ const membershipApiRouter = Router();
 membershipApiRouter.use(checkMembershipAuth);
 membershipApiRouter.get("/getProjects", getProjects);
 membershipApiRouter.get("/getTimeList", getTimeList);
-membershipApiRouter.post("/addTime", addTime);
+membershipApiRouter.post("/addTime", validateAddTimeParams, addTime);
 
 export default membershipApiRouter;

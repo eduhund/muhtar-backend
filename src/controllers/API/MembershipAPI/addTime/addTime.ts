@@ -1,4 +1,4 @@
-import { addTimeFlow } from "../../../flows";
+import { addTimeFlow } from "../../../../flows";
 
 export default async function addTime(req: any, res: any, next: any) {
   try {
