@@ -3,13 +3,15 @@ import { Router } from "express";
 import { checkMembershipAuth } from "./utils";
 import { addTime, validateAddTimeParams } from "./addTime";
 import { getProjects, validateGetProjectsParams } from "./getProjects";
-import { getTimeList, validateGetTimeListParams } from "./getTimeList";
+import { getTime, validateGetTimeParams } from "./getTime";
+import { updateTime, validateUpdateTimeParams } from "./updateTime";
 
 const membershipApiRouter = Router();
 
 membershipApiRouter.use(checkMembershipAuth);
 membershipApiRouter.get("/getProjects", validateGetProjectsParams, getProjects);
-membershipApiRouter.get("/getTimeList", validateGetTimeListParams, getTimeList);
+membershipApiRouter.get("/getTime", validateGetTimeParams, getTime);
 membershipApiRouter.post("/addTime", validateAddTimeParams, addTime);
+membershipApiRouter.post("/updateTime", validateUpdateTimeParams, updateTime);
 
 export default membershipApiRouter;

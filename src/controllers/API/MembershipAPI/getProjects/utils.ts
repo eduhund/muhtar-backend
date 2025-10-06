@@ -5,9 +5,15 @@ export default function validateGetProjectsParams(
   res: any,
   next: any
 ) {
-  const { membershipId } = req.query;
-  if (membershipId && typeof membershipId !== "string")
-    throw new InvalidParamsError("membershipId must be a string");
-
-  return next();
+  const { id, membershipId } = req.query;
+  if (id) {
+    if (typeof id !== "string") {
+      throw new InvalidParamsError("id must be a string");
+    }
+    return next();
+  } else {
+    if (membershipId && typeof membershipId !== "string")
+      throw new InvalidParamsError("membershipId must be a string");
+    return next();
+  }
 }

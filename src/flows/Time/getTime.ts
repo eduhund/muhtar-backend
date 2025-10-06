@@ -2,7 +2,7 @@ import Membership from "../../models/Membership";
 import Time from "../../models/Time";
 import User from "../../models/User";
 import { memberships, time } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 function canGetTime(currentMembership: Membership, timeItem: Time) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
@@ -10,7 +10,7 @@ function canGetTime(currentMembership: Membership, timeItem: Time) {
   const currentMembershipId = currentMembership.getId();
 
   if (timeItem.membershipId === currentMembershipId) return true;
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to get the time entry"
   );
@@ -19,7 +19,7 @@ function canGetTime(currentMembership: Membership, timeItem: Time) {
 export default async function getTime(id: string, currentUser: User) {
   const timeItem = await time.getTimeById(id);
   if (!timeItem) {
-    throw new BussinessError("NOT_FOUND", "Time entry not found");
+    throw new BusinessError("NOT_FOUND", "Time entry not found");
   }
 
   const currentMembership = await memberships.getMembership({
@@ -28,7 +28,7 @@ export default async function getTime(id: string, currentUser: User) {
   });
 
   if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
   if (canGetTime(currentMembership, timeItem)) return timeItem;
