@@ -1,9 +1,8 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import User from "../../models/User";
 import { memberships, projects, time } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 type updateTimeParams = {
   membershipId?: string;
@@ -38,7 +37,7 @@ async function canUpdateTime(
 
   if (currentMembershipId === time.membershipId) return true;
 
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to update time entry"
   );
@@ -46,14 +45,13 @@ async function canUpdateTime(
 
 async function getNewMembership(membershipId: string) {
   const membership = await memberships.getMembershipById(membershipId);
-  if (!membership)
-    throw new BussinessError("NOT_FOUND", "Membership not found");
+  if (!membership) throw new BusinessError("NOT_FOUND", "Membership not found");
   return membership;
 }
 
 async function getNewProject(projectId: string) {
   const project = await projects.getProjectById(projectId);
-  if (!project) throw new BussinessError("NOT_FOUND", "Project not found");
+  if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
   return project;
 }
 
@@ -67,19 +65,11 @@ export default async function updateTime(
     duration,
     comment,
   }: updateTimeParams,
-  currentUser: User
+  actorMembership: Membership
 ) {
   const existingTime = await time.getTimeById(id);
   if (!existingTime) {
-    throw new BussinessError("NOT_FOUND", `Time entry not found`);
-  }
-
-  const currentMembership = await memberships.getMembership({
-    userId: currentUser.getId(),
-    teamId: existingTime.teamId,
-  });
-  if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
   const newMembership = await getNewMembership(
@@ -87,12 +77,7 @@ export default async function updateTime(
   );
   const newProject = await getNewProject(projectId || existingTime.projectId);
 
-  await canUpdateTime(
-    currentMembership,
-    existingTime,
-    newMembership,
-    newProject
-  );
+  await canUpdateTime(actorMembership, existingTime, newMembership, newProject);
 
   await existingTime.update(
     {
@@ -103,7 +88,7 @@ export default async function updateTime(
       duration,
       comment,
     },
-    currentMembership
+    actorMembership
   );
 
   return {};
