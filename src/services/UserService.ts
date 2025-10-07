@@ -71,7 +71,6 @@ export default class UserService extends Service {
 
   async getUserCredentials(userId: string) {
     const user = await this.getUserById(userId);
-    console.log("User credentials for userId", userId, user);
     if (!user) throw new Error("User not found");
     return user.getPassword();
   }
