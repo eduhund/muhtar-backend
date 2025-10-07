@@ -45,6 +45,10 @@ async function richProject(project: Project) {
     0
   );
 
+  const projectMembershipIds = new Set(
+    project.memberships.map((m) => m.membershipId)
+  );
+
   const projectMemberships = await Promise.all(
     project.memberships.map(async (m) => {
       const membership = await memberships.getMembershipById(m.membershipId);
@@ -57,9 +61,28 @@ async function richProject(project: Project) {
     })
   );
 
+  const guestMembershipIds = Object.keys(timelistPerMembership).filter(
+    (id) => !projectMembershipIds.has(id)
+  );
+
+  const projectGuests = await Promise.all(
+    guestMembershipIds.map(async (membershipId) => {
+      const membership = await memberships.getMembershipById(membershipId);
+      const membershipTotalSpentTime =
+        timelistPerMembership[membershipId]?.totalValue || 0;
+      return {
+        membershipId,
+        name: membership?.name || "Unknown Membership",
+        membershipTotalSpentTime,
+        timeList: timelistPerMembership[membershipId].list,
+      };
+    })
+  );
+
   return Object.assign(project, {
-    totalSpentTime,
     memberships: projectMemberships,
+    guests: projectGuests,
+    totalSpentTime,
   });
 }
 
