@@ -13,7 +13,7 @@ export default class User extends BaseModel {
     this.firstName = data.firstName ?? "";
     this.lastName = data.lastName ?? "";
     this.email = data.email ?? "";
-    this._password = data.password ?? null;
+    this._password = data._password ?? null;
     this.createdAt = data.createdAt ?? new Date();
     this.isBatch = data.isBatch ?? false;
   }

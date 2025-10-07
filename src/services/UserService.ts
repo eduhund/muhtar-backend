@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import Service from "./Service";
 import User from "../models/User";
+import { createHash } from "../utils/hash";
 
 export default class UserService extends Service {
   constructor(adapter: any, collection: string) {
@@ -12,9 +13,10 @@ export default class UserService extends Service {
     if (existingUser) {
       throw new Error("Email already exists");
     }
+    const hashedPassword = createHash(data.password);
     const user = new User({
       _id: uuidv4(),
-      _password: data.password,
+      _password: hashedPassword,
       email: data.email,
       firstName: data.firstName,
       lastName: data.lastName,
@@ -69,6 +71,7 @@ export default class UserService extends Service {
 
   async getUserCredentials(userId: string) {
     const user = await this.getUserById(userId);
+    console.log("User credentials for userId", userId, user);
     if (!user) throw new Error("User not found");
     return user.getPassword();
   }

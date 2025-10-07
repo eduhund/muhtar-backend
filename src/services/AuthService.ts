@@ -1,4 +1,5 @@
 import { compareHash } from "../utils/hash";
+import { BusinessError } from "../utils/Rejection";
 import { setAccessToken } from "../utils/tokens";
 import MembershipService from "./MembershipService";
 import UserService from "./UserService";
@@ -13,7 +14,8 @@ export default class AuthService {
   async verifyPassword(userId: string, inputPassword: string) {
     const { hash, salt } =
       (await this.userService.getUserCredentials(userId)) || {};
-    if (!hash || !salt) throw new Error("User credentials not found");
+    if (!hash || !salt)
+      throw new BusinessError("NOT_FOUND", "User credentials not found");
     return compareHash(inputPassword, hash, salt);
   }
 
