@@ -12,10 +12,13 @@ export function readFile(filePath: string, name: string) {
     const fullPath = path.join(projectPath, filePath);
     if (!fs.existsSync(fullPath)) {
       createPath(fullPath);
-      fs.writeFileSync(fullPath + name, JSON.stringify({}));
+    }
+    const fileFullPath = fullPath + name;
+    if (!fs.existsSync(fileFullPath)) {
+      fs.writeFileSync(fileFullPath, JSON.stringify({}));
       return {};
     }
-    return JSON.parse(fs.readFileSync(fullPath + name, "utf-8"));
+    return JSON.parse(fs.readFileSync(fileFullPath, "utf-8"));
   } catch {
     throw new Error("Dump file is not readed");
   }
