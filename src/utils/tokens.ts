@@ -1,11 +1,12 @@
 import { apiKeys } from "../services";
 import { readFile, writeFile } from "./fs";
 
-type tokenType = "user" | "membership";
+type tokenType = "user" | "membership" | "team";
 
 export type Token = {
   userId?: string;
   membershipId?: string;
+  teamId?: string;
   ts: number;
 };
 
@@ -19,7 +20,7 @@ function createToken() {
 
 const tokens = new Map<tokenType, Record<string, Token>>();
 
-for (const type of ["user", "membership"] as tokenType[]) {
+for (const type of ["user", "membership", "team"] as tokenType[]) {
   tokens.set(type, readFile("/temp/", `${type}Tokens.json`));
 }
 
@@ -47,7 +48,8 @@ export function setAccessToken(type: tokenType, id: string): string {
     ts: Date.now(),
   };
   tokens.set(type, typeTokens);
-  writeFile("/temp/", `${type}Tokens.json`, tokens);
+
+  writeFile("/temp/", `${type}Tokens.json`, typeTokens);
   return aceessToken;
 }
 

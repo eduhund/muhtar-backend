@@ -7,6 +7,7 @@ export default class User extends BaseModel {
   email: string;
   _password: { hash: string; salt: string } | null;
   createdAt: Date;
+  activeTeam: string;
   isBatch: boolean;
   constructor(data: any) {
     super(data._id, "users");
@@ -15,6 +16,7 @@ export default class User extends BaseModel {
     this.email = data.email ?? "";
     this._password = data._password ?? null;
     this.createdAt = data.createdAt ?? new Date();
+    this.activeTeam = data.activeTeam ?? null;
     this.isBatch = data.isBatch ?? false;
   }
 
@@ -28,6 +30,10 @@ export default class User extends BaseModel {
       fullName += ` ${this.lastName}`;
     }
     return fullName;
+  }
+
+  getActiveTeam() {
+    return this.activeTeam || null;
   }
 
   changeEmail(newEmail: string) {
@@ -46,6 +52,12 @@ export default class User extends BaseModel {
   async changePassword(newPassword: string) {
     this._password = createHash(newPassword);
     this.saveChanges("_password");
+    return this;
+  }
+
+  async setActiveTeam(teamId: string) {
+    this.activeTeam = teamId;
+    this.saveChanges("activeTeam");
     return this;
   }
 }

@@ -1,3 +1,5 @@
+import Membership from "../models/Membership";
+import User from "../models/User";
 import { compareHash } from "../utils/hash";
 import { BusinessError } from "../utils/Rejection";
 import { setAccessToken } from "../utils/tokens";
@@ -38,7 +40,15 @@ export default class AuthService {
     return { message: "Password changed successfully" };
   }
 
-  generateToken(user: any) {
-    return setAccessToken("user", user._id);
+  generateUserToken(user: User) {
+    return setAccessToken("user", user.getId());
+  }
+
+  generateMembershipToken(membership: Membership) {
+    return setAccessToken("membership", membership.getId());
+  }
+
+  generateTeamToken(team: Membership) {
+    return setAccessToken("team", team.getId());
   }
 }
