@@ -49,6 +49,10 @@ export default async function getProject(
 
   const projectTimeList = await time.getTimeByProject(id);
   const timelistPerMembership = groupTimeByMembership(projectTimeList);
+  project.totalSpentTime = Object.values(timelistPerMembership).reduce(
+    (sum: number, { totalValue }) => sum + totalValue,
+    0
+  );
 
   project.memberships = await Promise.all(
     project.memberships.map(async (m) => {
