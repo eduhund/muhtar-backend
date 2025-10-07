@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import { memberships, projectAnalytics, projects, time } from "../../services";
+import { memberships, projects, time } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 function canGetProject(currentMembership: Membership, project: Project) {

@@ -4,6 +4,39 @@ import Service from "./Service";
 import Project from "../models/Project";
 import Membership from "../models/Membership";
 
+type ProjectQueryParams = {
+  id?: string;
+  teamId?: string;
+  membershipId?: string;
+  status?: string;
+};
+
+type ProjectQuery = {
+  id?: string;
+  teamId?: string;
+  memberships?: { membershipId: string };
+  status?: string;
+};
+
+function buildProjectQuery({
+  id,
+  teamId,
+  membershipId,
+  status,
+}: ProjectQueryParams): Partial<ProjectQuery> {
+  if (id) return { id };
+
+  const query: Partial<ProjectQuery> = {
+    teamId,
+  };
+  if (membershipId) {
+    const memberships = { membershipId };
+    query.memberships = memberships;
+  }
+  if (status) query.status = status;
+  return query;
+}
+
 export default class ProjectService extends Service {
   async createProject(data: any, currentMembership: Membership) {
     const currentMembershipId = currentMembership.getId();
@@ -30,9 +63,8 @@ export default class ProjectService extends Service {
     return project;
   }
 
-  async getProjects({ teamId, membershipId }: any) {
-    const query: any = { teamId };
-    if (membershipId) query["memberships.membershipId"] = membershipId;
+  async getProjects(params: ProjectQueryParams) {
+    const query = buildProjectQuery(params);
     const data = await this._findMany(query);
     return data.map((project: any) => new Project(project));
   }
