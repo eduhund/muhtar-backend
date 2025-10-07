@@ -1,4 +1,4 @@
-import { loginFlow } from "../../../flows";
+import { loginFlow } from "../../../../flows";
 
 export default async function login(req: any, res: any, next: any) {
   try {
