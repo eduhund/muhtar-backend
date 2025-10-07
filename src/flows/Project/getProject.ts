@@ -1,8 +1,8 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import User from "../../models/User";
-import { memberships, projectAnalytics, projects } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import Time from "../../models/Time";
+import { memberships, projectAnalytics, projects, time } from "../../services";
+import { BusinessError } from "../../utils/Rejection";
 
 function canGetProject(currentMembership: Membership, project: Project) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
@@ -10,46 +10,55 @@ function canGetProject(currentMembership: Membership, project: Project) {
   const currentMembershipId = currentMembership.getId();
 
   if (project.isProjectMembership(currentMembershipId)) return true;
-  throw new BussinessError(
-    "FORBIDDEN",
-    "You are not allowed to get the project"
-  );
+  return false;
 }
 
-export default async function getProject(id: string, currentUser: User) {
-  const project = await projects.getProjectById(id);
-  if (!project) {
-    throw new BussinessError("NOT_FOUND", "Project not found");
+function groupTimeByMembership(projectTimeList: Time[]) {
+  const timelistPerMembership: Record<
+    string,
+    { list: Time[]; totalValue: number }
+  > = {};
+
+  for (const entry of projectTimeList) {
+    const { membershipId, duration } = entry;
+    if (!timelistPerMembership[membershipId]) {
+      timelistPerMembership[membershipId] = { list: [], totalValue: 0 };
+    }
+    timelistPerMembership[membershipId].list.push(entry);
+    timelistPerMembership[membershipId].totalValue += duration;
   }
 
-  const currentMembership = await memberships.getMembership({
-    userId: currentUser.getId(),
-    teamId: project.teamId,
-  });
-  if (!currentMembership) {
-    throw new BussinessError(
+  return timelistPerMembership;
+}
+
+export default async function getProject(
+  id: string,
+  actorMembership: Membership
+) {
+  const project = await projects.getProjectById(id);
+  if (!project) {
+    throw new BusinessError("NOT_FOUND", "Project not found");
+  }
+
+  if (!canGetProject(actorMembership, project)) {
+    throw new BusinessError(
       "FORBIDDEN",
-      "You are not a member of this project team"
+      "You are not allowed to get the project"
     );
   }
 
-  canGetProject(currentMembership, project);
+  const projectTimeList = await time.getTimeByProject(id);
+  const timelistPerMembership = groupTimeByMembership(projectTimeList);
 
-  project.totalHours = await projectAnalytics.calculateTotalHours(project);
-  project.totalAmount = await projectAnalytics.calculateTotalAmount(project);
   project.memberships = await Promise.all(
     project.memberships.map(async (m) => {
-      const membershipTotalHours =
-        await projectAnalytics.calculateTotalHoursByMembership(
-          project,
-          m.membershipId
-        );
-      const membershipTotalAmount =
-        await projectAnalytics.calculateTotalAmountByMembership(
-          project,
-          m.membershipId
-        );
-      return Object.assign(m, { membershipTotalHours, membershipTotalAmount });
+      const membership = await memberships.getMembershipById(m.membershipId);
+      const membershipTotalSpendedTime =
+        timelistPerMembership[m.membershipId].totalValue || 0;
+      return Object.assign(m, {
+        name: membership?.name || "Unknown Membership",
+        membershipTotalSpendedTime,
+      });
     })
   );
   return project;

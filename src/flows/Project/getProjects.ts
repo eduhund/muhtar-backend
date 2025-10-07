@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import { memberships, projectAnalytics, projects } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { projectAnalytics, projects } from "../../services";
+import { BusinessError } from "../../utils/Rejection";
 
 type GetProjectsFilters = {
   membershipId?: string;
