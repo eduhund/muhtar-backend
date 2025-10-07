@@ -39,6 +39,6 @@ export default class AuthService {
   }
 
   generateToken(user: any) {
-    return setAccessToken(user._id);
+    return setAccessToken("user", user._id);
   }
 }

@@ -1,6 +1,8 @@
 import { apiKeys } from "../services";
 import { readFile, writeFile } from "./fs";
 
+type tokenType = "user" | "membership";
+
 export type Token = {
   userId?: string;
   membershipId?: string;
@@ -15,7 +17,11 @@ function createToken() {
   return rand() + rand();
 }
 
-const tokens = readFile("/temp/", "tokens.json") || {};
+const tokens = new Map<tokenType, Record<string, Token>>();
+
+for (const type of ["user", "membership"] as tokenType[]) {
+  tokens.set(type, readFile("/temp/", `${type}Tokens.json`));
+}
 
 export async function checkApiKey(token: string) {
   const [id, key] = token.split(":");
@@ -25,17 +31,23 @@ export async function checkApiKey(token: string) {
   return existingKey;
 }
 
-export function checkAccessToken(token: string): Token | null {
-  return tokens?.[token] || null;
+export function checkAccessToken(type: tokenType, token: string): Token | null {
+  const typeTokens = tokens.get(type);
+  if (!typeTokens) return null;
+  return typeTokens[token] || null;
 }
 
-export function setAccessToken(userId: string): string {
+export function setAccessToken(type: tokenType, id: string): string {
   const aceessToken = createToken();
-  tokens[aceessToken] = {
-    userId,
+  const typeTokens = tokens.get(type);
+  if (!typeTokens) throw new Error("Token type not found");
+
+  typeTokens[aceessToken] = {
+    [`${type}Id`]: id,
     ts: Date.now(),
   };
-  writeFile("/temp/", "tokens.json", tokens);
+  tokens.set(type, typeTokens);
+  writeFile("/temp/", `${type}Tokens.json`, tokens);
   return aceessToken;
 }
 
