@@ -9,7 +9,7 @@ import { setWorkdays } from "./utils/isDayOff";
   try {
     await expressServer.start();
     await mongo.connect();
-    await setWorkdays();
+    //await setWorkdays();
     log.info("All systems running. Let's rock!");
     //sendDailyTimeTrackReminder();
   } catch (e) {
