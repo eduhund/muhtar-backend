@@ -1,5 +1,4 @@
 import { restoreProjectFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
 
 export default async function restoreProject(req: any, res: any, next: any) {
   try {
@@ -8,6 +7,6 @@ export default async function restoreProject(req: any, res: any, next: any) {
     await restoreProjectFlow(id, currentUser);
     return next({ data: {} });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

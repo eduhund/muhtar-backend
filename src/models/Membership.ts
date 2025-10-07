@@ -1,7 +1,12 @@
 import BaseModel from "./BaseModel";
 
-type MembershipAccessRole = "owner" | "admin" | "manager" | "user" | "guest";
-type MembershipStatus =
+export type MembershipAccessRole =
+  | "owner"
+  | "admin"
+  | "manager"
+  | "user"
+  | "guest";
+export type MembershipStatus =
   | "active"
   | "pending"
   | "declined"

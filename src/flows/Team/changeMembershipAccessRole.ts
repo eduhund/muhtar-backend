@@ -1,11 +1,11 @@
-import Membership from "../../models/Membership";
+import Membership, { MembershipAccessRole } from "../../models/Membership";
 import User from "../../models/User";
 import { memberships } from "../../services";
-import BusinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 type changeTeamMembershipParams = {
   membershipId: string;
-  accessRole: string;
+  accessRole: MembershipAccessRole;
 };
 
 const membershipAccessRoles = ["guest", "user", "manager", "admin", "owner"];
@@ -55,6 +55,6 @@ export default async function changeMembershipAccessRole(
 
   await canUpdateTeamMembership(currentMembership, accessRole);
 
-  await membership.changeAccessRole(accessRole, currentMembership);
+  membership.changeAccessRole(accessRole, currentMembership);
   return {};
 }

@@ -1,11 +1,12 @@
-import { memberships } from "../../services";
+import { memberships, teams } from "../../services";
 import Membership from "../../models/Membership";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
+import { WorkRole } from "../../models/Team";
 
 function canRemoveWorkRole(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to remove work roles from the team"
   );
@@ -13,7 +14,7 @@ function canRemoveWorkRole(currentMembership: Membership) {
 
 export default async function removeWorkRole(
   teamId: string,
-  workRoleName: string,
+  workRole: WorkRole,
   currentUser: User
 ) {
   const currentMembership = await memberships.getMembership({
@@ -21,23 +22,23 @@ export default async function removeWorkRole(
     teamId: teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
   canRemoveWorkRole(currentMembership);
 
-  const team = await memberships.getTeamById(teamId);
+  const team = await teams.getTeamById(teamId);
   if (!team) {
-    throw new BussinessError("NOT_FOUND", `Team not found`);
+    throw new BusinessError("NOT_FOUND", `Team not found`);
   }
-  if (!team.hasWorkRole(workRoleName)) {
-    throw new BussinessError(
+  if (!team.hasWorkRole(workRole)) {
+    throw new BusinessError(
       "CONFLICT",
-      `Work role with name ${workRoleName} is not found`
+      `Work role with name ${workRole} is not found`
     );
   }
 
-  await team.removeWorkRole(workRoleName, currentMembership);
+  await team.removeWorkRole(workRole.name, currentMembership);
 
   return {};
 }

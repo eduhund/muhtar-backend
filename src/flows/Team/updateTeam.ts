@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import User from "../../models/User";
 import { memberships, teams } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 type updateTeamParams = {
   name?: string;
@@ -10,7 +10,7 @@ type updateTeamParams = {
 async function canUpdateTeam(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
 
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to update the team"
   );
@@ -26,14 +26,14 @@ export default async function updateTeam(
     teamId: teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
   await canUpdateTeam(currentMembership);
 
   const team = await teams.getTeamById(teamId);
   if (!team) {
-    throw new BussinessError("NOT_FOUND", `Team not found`);
+    throw new BusinessError("NOT_FOUND", `Team not found`);
   }
 
   await team.update({ name }, currentMembership);

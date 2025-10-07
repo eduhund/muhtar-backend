@@ -1,5 +1,4 @@
 import { removeMembershipFromProjectFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
 
 export default async function changeAccessRole(req: any, res: any, next: any) {
   try {
@@ -9,6 +8,6 @@ export default async function changeAccessRole(req: any, res: any, next: any) {
     await removeMembershipFromProjectFlow(id, membershipId, currentUser);
     return next({ data: {} });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

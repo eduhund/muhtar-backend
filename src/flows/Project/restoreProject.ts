@@ -2,7 +2,7 @@ import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import User from "../../models/User";
 import { memberships, projects } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 async function canRestoreProject(
   currentMembership: Membership,
@@ -16,7 +16,7 @@ async function canRestoreProject(
     project.getProjectMembershipRole(currentMembershipId);
 
   if (projectActorMembershipRole === "manager") return true;
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to restore project"
   );
@@ -25,7 +25,7 @@ async function canRestoreProject(
 export default async function restoreProject(id: string, currentUser: User) {
   const project = await projects.getProjectById(id);
   if (!project) {
-    throw new BussinessError("NOT_FOUND", `Project not found`);
+    throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
   const currentMembership = await memberships.getMembership({
@@ -33,7 +33,7 @@ export default async function restoreProject(id: string, currentUser: User) {
     teamId: project.teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError(
+    throw new BusinessError(
       "FORBIDDEN",
       "You are not a member of this project team"
     );

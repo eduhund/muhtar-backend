@@ -1,5 +1,5 @@
 import { memberships, projects } from "../../services";
-import BusinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
 import Membership from "../../models/Membership";
 

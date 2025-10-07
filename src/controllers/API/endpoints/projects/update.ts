@@ -1,5 +1,4 @@
 import { updateProjectFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
 
 export default async function update(req: any, res: any, next: any) {
   try {
@@ -17,6 +16,6 @@ export default async function update(req: any, res: any, next: any) {
     );
     return next({ data: {} });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

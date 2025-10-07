@@ -1,5 +1,4 @@
 import { Router } from "express";
-import getProject from "./getProject";
 import create from "./create";
 import update from "./update";
 import archive from "./archive";
@@ -9,7 +8,6 @@ import removeMembership from "./removeMembership";
 
 const router = Router();
 
-router.get("/:id", getProject);
 router.post("/create", create);
 router.post("/:id/update", update);
 router.post("/:id/archive", archive);

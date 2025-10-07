@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { checkAuth } from "../../security";
 import getTeams from "./getTeams";
 import getTeam from "./getTeam";
 import archive from "./archive";
@@ -13,8 +12,6 @@ import updateWorkRole from "./updateWorkRole";
 import removeWorkRole from "./removeWorkRole";
 
 const router = Router();
-
-router.use(checkAuth);
 
 router.get("/", getTeams);
 router.get("/:id", getTeam);

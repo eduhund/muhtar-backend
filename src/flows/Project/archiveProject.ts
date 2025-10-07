@@ -2,7 +2,7 @@ import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import User from "../../models/User";
 import { memberships, projects } from "../../services";
-import BusinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 async function canArchiveProject(
   currentMembership: Membership,

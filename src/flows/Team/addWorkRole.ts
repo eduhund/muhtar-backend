@@ -1,6 +1,6 @@
-import { memberships } from "../../services";
+import { memberships, teams } from "../../services";
 import Membership from "../../models/Membership";
-import BusinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 import { WorkRole } from "../../models/Team";
 import User from "../../models/User";
 
@@ -28,11 +28,11 @@ export default async function addWorkRole(
 
   canAddWorkRole(currentMembership);
 
-  const team = await memberships.getTeamById(teamId);
+  const team = await teams.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("NOT_FOUND", `Team not found`);
   }
-  if (team.hasWorkRole(workRole.name)) {
+  if (team.hasWorkRole(workRole)) {
     throw new BusinessError(
       "CONFLICT",
       `Work role with name ${workRole.name} already exists`

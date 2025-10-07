@@ -1,5 +1,4 @@
 import { getTeamFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
 
 export default async function getTeam(req: any, res: any, next: any) {
   try {
@@ -8,6 +7,6 @@ export default async function getTeam(req: any, res: any, next: any) {
     const data = await getTeamFlow(id, currentUser);
     return next({ data });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

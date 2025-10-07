@@ -31,7 +31,7 @@ export default async function sendDailyTimeTrackReminder() {
     for (const membership of memberships) {
       if (!membership.connections?.slack?.userId) continue;
       if (membership.contract?.status === "bench") continue;
-      const timeList = await time.getTime({
+      const timeList = await time.getTimeList({
         teamId,
         membershipId: membership.getId(),
         from: previusWorkday,

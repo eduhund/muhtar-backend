@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import User from "../../models/User";
 import { memberships } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 const membershipAccessRoles = ["guest", "user", "manager", "admin", "owner"];
 
@@ -17,7 +17,7 @@ async function canRemoveMembershipFromTeam(
   );
   if (currentMembershipAccessRoleIndex > newAccessRoleIndex) return true;
 
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to remove team membership"
   );
@@ -33,16 +33,16 @@ export default async function removeMembershipFromTeam(
     teamId: teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
   const membership = await memberships.getMembershipById(membershipId);
   if (!membership) {
-    throw new BussinessError("NOT_FOUND", `Membership not found`);
+    throw new BusinessError("NOT_FOUND", `Membership not found`);
   }
 
   if (membership.teamId !== teamId) {
-    throw new BussinessError(
+    throw new BusinessError(
       "FORBIDDEN",
       "Membership does not belong to this team"
     );

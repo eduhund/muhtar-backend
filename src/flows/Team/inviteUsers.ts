@@ -1,6 +1,6 @@
 import { memberships, users } from "../../services";
 import Membership from "../../models/Membership";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
 
 type InviteeType = { email: string; accessRole?: string };
@@ -15,7 +15,7 @@ async function canInvite(teamId: string, currentMembership: Membership) {
   )
     return true;
 
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to invite users to the team"
   );
@@ -31,7 +31,7 @@ export default async function inviteUsers(
     teamId: teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError("FORBIDDEN", "You are not a member of this team");
+    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
   await canInvite(teamId, currentMembership);

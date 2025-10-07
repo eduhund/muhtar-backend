@@ -16,7 +16,7 @@ export default async function getTeams(currentUser: User) {
 
   for (const membership of membershipsList) {
     const team = await teams.getTeamById(membership.teamId);
-    if (isValidTeam(team, membership)) {
+    if (team && isValidTeam(team, membership)) {
       teamsList.push(team);
     }
   }

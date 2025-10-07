@@ -1,5 +1,4 @@
 import { archiveProjectFlow } from "../../../../flows";
-import { errorHandler } from "../../responses";
 
 export default async function archiveProject(req: any, res: any, next: any) {
   try {
@@ -8,6 +7,6 @@ export default async function archiveProject(req: any, res: any, next: any) {
     await archiveProjectFlow(id, currentUser);
     return next({ data: {} });
   } catch (e) {
-    return next(errorHandler(e));
+    return next(e);
   }
 }

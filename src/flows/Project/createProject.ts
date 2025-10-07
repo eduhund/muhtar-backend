@@ -1,6 +1,6 @@
 import User from "../../models/User";
 import { memberships, projects } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 type AddProjectParams = {
   name: string;
@@ -17,14 +17,14 @@ export default async function createProject(
     teamId: teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError(
+    throw new BusinessError(
       "FORBIDDEN",
       "You are not a member of this project team"
     );
   }
 
   if (!currentMembership.isOwner() && !currentMembership.isAdmin()) {
-    throw new BussinessError(
+    throw new BusinessError(
       "FORBIDDEN",
       "You are not allowed to create a project in this team"
     );

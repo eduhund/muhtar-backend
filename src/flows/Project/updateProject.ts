@@ -2,7 +2,7 @@ import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import User from "../../models/User";
 import { memberships, projects } from "../../services";
-import BussinessError from "../../utils/Rejection";
+import { BusinessError } from "../../utils/Rejection";
 
 type RecourceParams = {
   workRole: string;
@@ -36,7 +36,7 @@ async function canUpdateProject(
     project.getProjectMembershipRole(currentMembershipId);
 
   if (projectActorMembershipRole === "manager") return true;
-  throw new BussinessError(
+  throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to update the project"
   );
@@ -49,7 +49,7 @@ export default async function updateProject(
 ) {
   const project = await projects.getProjectById(id);
   if (!project) {
-    throw new BussinessError("NOT_FOUND", `Project not found`);
+    throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
   const currentMembership = await memberships.getMembership({
@@ -57,7 +57,7 @@ export default async function updateProject(
     teamId: project.teamId,
   });
   if (!currentMembership) {
-    throw new BussinessError(
+    throw new BusinessError(
       "FORBIDDEN",
       "You are not a member of this project team"
     );
@@ -73,7 +73,7 @@ export default async function updateProject(
     const totalLimit = resources.reduce(
       (acc: number, resource: RecourceParams) => {
         if (resource.limit < 0) {
-          throw new BussinessError(
+          throw new BusinessError(
             "INVALID_ARGUMENT",
             "Resource hours limit cannot be negative"
           );
@@ -86,7 +86,7 @@ export default async function updateProject(
     const totalBudget = resources.reduce(
       (acc: number, resource: RecourceParams) => {
         if (resource.price < 0) {
-          throw new BussinessError(
+          throw new BusinessError(
             "INVALID_ARGUMENT",
             "Resource price cannot be negative"
           );
