@@ -53,11 +53,11 @@ export default async function getProject(
   project.memberships = await Promise.all(
     project.memberships.map(async (m) => {
       const membership = await memberships.getMembershipById(m.membershipId);
-      const membershipTotalSpendedTime =
+      const membershipTotalSpentTime =
         timelistPerMembership[m.membershipId].totalValue || 0;
       return Object.assign(m, {
         name: membership?.name || "Unknown Membership",
-        membershipTotalSpendedTime,
+        membershipTotalSpentTime,
       });
     })
   );
