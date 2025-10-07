@@ -1,11 +1,11 @@
 import BaseModel from "./BaseModel";
-import { hash } from "../utils/hash";
+import { createHash } from "../utils/hash";
 
 export default class User extends BaseModel {
   firstName: string;
   lastName: string;
   email: string;
-  _password: string | null;
+  _password: { hash: string; salt: string } | null;
   createdAt: Date;
   isBatch: boolean;
   constructor(data: any) {
@@ -44,7 +44,7 @@ export default class User extends BaseModel {
   }
 
   async changePassword(newPassword: string) {
-    this._password = await hash(newPassword);
+    this._password = createHash(newPassword);
     this.saveChanges("_password");
     return this;
   }

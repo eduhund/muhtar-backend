@@ -1,5 +1,5 @@
-import { compare } from "../utils/hash";
-import { setToken } from "../utils/tokens";
+import { compareHash } from "../utils/hash";
+import { setAccessToken } from "../utils/tokens";
 import MembershipService from "./MembershipService";
 import UserService from "./UserService";
 
@@ -11,8 +11,10 @@ export default class AuthService {
     this.membershipService = services.memberships;
   }
   async verifyPassword(userId: string, inputPassword: string) {
-    const { password } = await this.userService.getUserCredentials(userId);
-    return compare(inputPassword, password);
+    const { hash, salt } =
+      (await this.userService.getUserCredentials(userId)) || {};
+    if (!hash || !salt) throw new Error("User credentials not found");
+    return compareHash(inputPassword, hash, salt);
   }
 
   async changePassword(
@@ -23,7 +25,10 @@ export default class AuthService {
     const user = await this.userService.getUserById(userId);
     if (!user) throw new Error("User not found");
 
-    const isMatch = await compare(oldPassword, user.getPassword());
+    const { hash, salt } = user.getPassword() || {};
+    if (!hash || !salt) throw new Error("User credentials not found");
+
+    const isMatch = await compareHash(oldPassword, hash, salt);
     if (!isMatch) throw new Error("Incorrect old password");
 
     await user.changePassword(newPassword);
@@ -32,6 +37,6 @@ export default class AuthService {
   }
 
   generateToken(user: any) {
-    return setToken(user._id);
+    return setAccessToken(user._id);
   }
 }
