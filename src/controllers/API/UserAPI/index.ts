@@ -7,6 +7,6 @@ const userApiRouter = Router();
 
 userApiRouter.use(checkUserAuth);
 
-userApiRouter.get("/changeTeam", validateChangeTeamParams, changeTeam);
+userApiRouter.post("/changeTeam", validateChangeTeamParams, changeTeam);
 
 export default userApiRouter;

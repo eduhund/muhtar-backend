@@ -6,7 +6,7 @@ export default function validateChangeTeamParams(
   res: any,
   next: any
 ) {
-  const { teamId } = req.query;
+  const { teamId } = req.body;
   if (!teamId) {
     throw new InvalidParamsError("teamId is required");
   }
