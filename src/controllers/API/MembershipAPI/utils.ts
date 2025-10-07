@@ -8,7 +8,7 @@ import { memberships } from "../../../services";
 import { BusinessError } from "../../../utils/Rejection";
 
 async function checkToken(token: string) {
-  const tokenData = checkAccessToken("user", token);
+  const tokenData = checkAccessToken("membership", token);
 
   if (tokenData?.membershipId) {
     return tokenData?.membershipId;
