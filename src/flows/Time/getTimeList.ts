@@ -5,6 +5,7 @@ import { projects, time, teams, memberships } from "../../services";
 import { getRichTime } from "../../utils/getRichObject";
 
 type GetTimeListParams = {
+  id?: string;
   projectId?: string;
   membershipId?: string;
   date?: string;
@@ -14,7 +15,15 @@ type GetTimeListParams = {
 };
 
 export default async function getTimeList(
-  { projectId, membershipId, date, from, to, withDeleted }: GetTimeListParams,
+  {
+    id,
+    projectId,
+    membershipId,
+    date,
+    from,
+    to,
+    withDeleted,
+  }: GetTimeListParams,
   actorMembership: Membership
 ) {
   const { teamId } = actorMembership;
@@ -24,6 +33,7 @@ export default async function getTimeList(
 
   if (actorMembership.isOwner() || actorMembership.isAdmin()) {
     timeList = await time.getTimeList({
+      id,
       teamId,
       projectId,
       membershipId,
