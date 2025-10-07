@@ -1,7 +1,7 @@
 import { InvalidParamsError } from "../../../../utils/Rejection";
 
 export default function validateloginParams(req: any, res: any, next: any) {
-  const { email, password } = req.query;
+  const { email, password } = req.body;
   if (!email || !password) {
     throw new InvalidParamsError(
       "Both 'email' and 'password' parameters must be provided"

@@ -4,6 +4,6 @@ import { login, validateloginParams } from "./login";
 
 const authApiRouter = Router();
 
-authApiRouter.get("/login", validateloginParams, login);
+authApiRouter.post("/login", validateloginParams, login);
 
 export default authApiRouter;
