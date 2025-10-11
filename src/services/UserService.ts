@@ -8,7 +8,7 @@ export default class UserService extends Service {
   constructor(adapter: any, collection: string) {
     super(adapter, collection);
   }
-  async createUser(data: any) {
+  async create(data: any) {
     const existingUser = await this.getUserByEmail(data.email);
     if (existingUser) {
       throw new Error("Email already exists");
@@ -23,10 +23,11 @@ export default class UserService extends Service {
       createdAt: new Date(),
       isBatch: false,
     });
+    await this._create(user);
     return user;
   }
 
-  async createBatchUser(data: any) {
+  async createBatch(data: any) {
     const existingUser = await this.getUserByEmail(data.email);
     if (existingUser) {
       throw new Error("Email already exists");
@@ -40,6 +41,12 @@ export default class UserService extends Service {
       createdAt: null,
       isBatch: true,
     });
+    await this._create(user);
+    return user;
+  }
+
+  async save(user: User) {
+    await this._update(user.getId(), user);
     return user;
   }
 

@@ -4,12 +4,18 @@ import Service from "./Service";
 import Team from "../models/Team";
 
 export default class TeamService extends Service {
-  async createTeam(data: any) {
+  async create(data: any) {
     const team = new Team({
       _id: uuidv4(),
       ...data,
       createdAt: new Date(),
     });
+    await this._create(team);
+    return team;
+  }
+
+  async save(team: Team) {
+    await this._update(team.getId(), team);
     return team;
   }
 

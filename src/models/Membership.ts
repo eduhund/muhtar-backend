@@ -8,7 +8,12 @@ export type MembershipStatus =
   | "invited"
   | "archived";
 
-const ACCESS_ROLES = ["guest", "user", "manager", "admin", "owner"];
+const ACCESS_ROLES: MembershipAccessRole[] = [
+  "guest",
+  "user",
+  "admin",
+  "owner",
+];
 
 export default class Membership extends BaseModel<Membership, Membership> {
   userId: string;
@@ -113,6 +118,10 @@ export default class Membership extends BaseModel<Membership, Membership> {
 
   getAccessRoleIndex() {
     const index = ACCESS_ROLES.indexOf(this.accessRole);
+    if (index === -1) {
+      this._systemUpdate({ accessRole: ACCESS_ROLES[0] });
+      return 0;
+    }
     return index;
   }
 }

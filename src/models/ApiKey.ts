@@ -1,7 +1,9 @@
 import BaseModel from "./BaseModel";
 import { compareHash } from "../utils/hash";
+import Membership from "./Membership";
 
 export type ApiKeyParams = {
+  _id: string;
   hash: string;
   salt: string;
   userId?: string | null;
@@ -15,7 +17,7 @@ export type ApiKeyParams = {
   revokedAt?: Date | null;
 };
 
-export default class ApiKey extends BaseModel {
+export default class ApiKey extends BaseModel<ApiKey, Membership> {
   hash: string;
   salt: string;
   userId: string | null;
@@ -27,8 +29,8 @@ export default class ApiKey extends BaseModel {
   creationType: string;
   expiresAt: Date | null;
   revokedAt: Date | null;
-  constructor(data: ApiKeyParams & { _id: string }) {
-    super(data._id, "apiKeys");
+  constructor(data: ApiKeyParams) {
+    super(data._id);
     this.hash = data.hash;
     this.salt = data.salt;
     this.userId = data.userId ?? null;

@@ -66,7 +66,7 @@ function buildQuery({
 }
 
 export default class TimeService extends Service {
-  async addTime(
+  async create(
     {
       membershipId,
       projectId,
@@ -97,6 +97,12 @@ export default class TimeService extends Service {
         },
       ],
     });
+    await this._create(time);
+    return time;
+  }
+
+  async save(time: Time) {
+    await this._update(time.getId(), time);
     return time;
   }
 

@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
-export default class Project extends BaseModel {
+export default class Project extends BaseModel<Project, Membership> {
   name: string;
   description: string;
   teamId: string;
@@ -9,8 +9,9 @@ export default class Project extends BaseModel {
   connections: Record<string, any>;
   memberships: any[];
   history: any[];
+  totalHours: number;
   constructor(data: any = {}) {
-    super(data._id, "projects");
+    super(data._id);
     this.name = data.name ?? "";
     this.description = data.description ?? "";
     this.teamId = data.teamId;
@@ -18,92 +19,43 @@ export default class Project extends BaseModel {
     this.connections = data.connections ?? {};
     this.memberships = data.memberships ?? [];
     this.history = data.history ?? [];
+    this.totalHours = data.totalHours ?? 0;
   }
 
-  update(newData: any, currentMembership: Membership) {
-    const cleanData = Object.fromEntries(
-      Object.entries(newData).filter(([_, value]) => value !== undefined)
-    );
-    const changes: { [key: string]: any } = {};
-
-    Object.keys(cleanData).forEach((key) => {
-      const oldVal = this[key];
-      const newVal = cleanData[key];
-
-      if (oldVal === newVal) return;
-
-      changes[key] = {
-        from: oldVal ?? null,
-        to: newVal ?? null,
-      };
-    });
-
-    Object.assign(this, cleanData);
-    this.history.push({
-      ts: Date.now(),
-      action: "update",
-      membershipId: currentMembership.getId(),
-      changes: changes,
-    });
-    this._save(this.toJSON());
-  }
-
-  rename(newName: string) {
-    this.name = newName;
-    this.saveChanges("name");
+  rename(name: string, membership: Membership) {
+    this._update({ name }, membership);
     return this;
   }
 
-  changeDescription(newDescription: string) {
-    this.description = newDescription;
-    this.saveChanges("description");
+  changeDescription(description: string, membership: Membership) {
+    this._update({ description }, membership);
     return this;
   }
 
-  archive(currentMembership: Membership) {
-    Object.assign(this, { isDeleted: true });
-    this.history.push({
-      ts: Date.now(),
-      action: "archive",
-      membershipId: currentMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
+  archive(membership: Membership) {
+    this._archive(membership);
+    return this;
   }
 
-  restore(currentMembership: Membership) {
-    Object.assign(this, { isDeleted: false });
-    this.history.push({
-      ts: Date.now(),
-      action: "restore",
-      membershipId: currentMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
+  restore(membership: Membership) {
+    this._restore(membership);
+    return this;
   }
 
   connectTo(
     service: any,
-    { channelId, teamId }: { channelId: string; teamId: string }
+    { channelId, teamId }: { channelId: string; teamId: string },
+    membership: Membership
   ) {
-    switch (service) {
-      case "slack":
-        this.connections.slack = {
-          channelId,
-          teamId,
-        };
-        this.saveChanges("connections");
-        return this;
-      default:
-        return this;
-    }
+    this._update(
+      { connections: { [service]: { channelId, teamId } } },
+      membership
+    );
+    return this;
   }
 
-  disconnectFrom(service: string) {
-    if (this.isConnectedTo(service)) {
-      delete this.connections[service];
-      this.saveChanges("connections");
-    }
+  disconnectFrom(service: string, membership: Membership) {
+    this._update({ connections: { [service]: undefined } }, membership);
     return this;
   }
 
@@ -132,7 +84,6 @@ export default class Project extends BaseModel {
       };
       this.memberships.push(membershipData);
     }
-    this.saveChanges("memberships");
     return this;
   }
 
@@ -158,7 +109,6 @@ export default class Project extends BaseModel {
         membershipId: currentMembership.getId(),
         changes: { ...update },
       });
-      this.saveChanges("memberships");
     }
     return this;
   }
@@ -169,7 +119,6 @@ export default class Project extends BaseModel {
     );
     if (index !== -1) {
       this.memberships[index].isDeleted = true;
-      this.saveChanges("memberships");
     }
     return this;
   }
@@ -193,8 +142,8 @@ export default class Project extends BaseModel {
   }
 
   setTotalHours(totalHours: number) {
-    this.totalHours = totalHours;
-    this.saveChanges("totalHours");
+    this._systemUpdate({ totalHours });
+    return this;
   }
 
   toString() {

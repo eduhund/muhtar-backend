@@ -1,10 +1,11 @@
+import ApiKey from "./ApiKey";
 import Membership from "./Membership";
 import Project from "./Project";
 import Team from "./Team";
 import Time from "./Time";
 import User from "./User";
 
-type ModelType = User | Membership | Time | Team | Project;
+type ModelType = User | Membership | Time | Team | Project | ApiKey;
 type ActorType = User | Membership;
 
 type ChangesObject<T> = {
@@ -12,6 +13,25 @@ type ChangesObject<T> = {
 };
 
 type ModelJSON<T> = { id: string } & Partial<T>;
+
+function cleanData<T>(data: Partial<T>): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(data).filter(([_, value]) => value !== undefined)
+  ) as Partial<T>;
+}
+
+function createChanges<T extends ModelType>(
+  oldData: T,
+  newData: Partial<T>
+): ChangesObject<T> {
+  const changes: ChangesObject<T> = {};
+  for (const key of Object.keys(newData) as (keyof T)[]) {
+    if (oldData[key] !== newData[key]) {
+      changes[key] = { from: oldData[key] ?? null, to: newData[key] ?? null };
+    }
+  }
+  return changes;
+}
 
 export default class BaseModel<T extends ModelType, H extends ActorType> {
   private _id: string;
@@ -27,26 +47,10 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
   }
 
   _update(newData: Partial<T>, actor: H) {
-    const cleanData = Object.fromEntries(
-      Object.entries(newData).filter(([_, value]) => value !== undefined)
-    ) as Partial<T>;
-    const changes: ChangesObject<T> = {};
+    const cleanedData = cleanData(newData);
+    Object.assign(this, cleanedData);
 
-    for (const key in cleanData) {
-      const oldData = this as unknown as T;
-      const typedKey = key as keyof T;
-      const oldVal = oldData[typedKey];
-      const newVal = cleanData[typedKey];
-
-      if (oldVal === newVal) continue;
-
-      changes[typedKey] = {
-        from: oldVal ?? null,
-        to: newVal ?? null,
-      };
-    }
-
-    Object.assign(this, cleanData);
+    const changes = createChanges(this as unknown as T, cleanedData);
 
     this.history.push({
       ts: Date.now(),
@@ -54,6 +58,13 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
       actorId: actor.getId(),
       changes: changes,
     });
+    return this;
+  }
+
+  _systemUpdate(newData: Partial<T>) {
+    const cleanedData = cleanData(newData);
+    Object.assign(this, cleanedData);
+    return this;
   }
 
   _archive(actor: User | Membership) {

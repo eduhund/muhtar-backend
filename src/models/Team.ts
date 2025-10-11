@@ -7,14 +7,14 @@ export type WorkRole = {
   rate: number;
 };
 
-export default class Team extends BaseModel {
+export default class Team extends BaseModel<Team, Membership> {
   name: string;
   isDeleted: boolean;
   workRoles: WorkRole[];
   connections: Record<string, any>;
   history: any[];
   constructor(data: any = {}) {
-    super(data._id, "teams");
+    super(data._id);
     this.name = data.name ?? "";
     this.isDeleted = data.isDeleted ?? false;
     this.workRoles = data.workRoles ?? [];
@@ -22,70 +22,29 @@ export default class Team extends BaseModel {
     this.history = data.history ?? [];
   }
 
-  rename(newName: string) {
-    this.name = newName;
-    this.saveChanges("name");
+  rename(name: string, membership: Membership) {
+    this._update({ name }, membership);
     return this;
   }
 
-  update(newData: any, currentMembership: Membership) {
-    const cleanData = Object.fromEntries(
-      Object.entries(newData).filter(([_, value]) => value !== undefined)
-    );
-    const changes: { [key: string]: any } = {};
-
-    Object.keys(cleanData).forEach((key) => {
-      const oldVal = this[key];
-      const newVal = cleanData[key];
-
-      if (oldVal === newVal) return;
-
-      changes[key] = {
-        from: oldVal ?? null,
-        to: newVal ?? null,
-      };
-    });
-
-    Object.assign(this, cleanData);
-    this.history.push({
-      ts: Date.now(),
-      action: "update",
-      membershipId: currentMembership.getId(),
-      changes: changes,
-    });
-    this._save(this.toJSON());
+  archive(membership: Membership) {
+    this._archive(membership);
+    return this;
   }
 
-  archive(currentMembership: Membership) {
-    Object.assign(this, { isDeleted: true });
-    this.history.push({
-      ts: Date.now(),
-      action: "archive",
-      membershipId: currentMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
+  restore(membership: Membership) {
+    this._restore(membership);
+    return this;
   }
 
-  restore(currentMembership: Membership) {
-    Object.assign(this, { isDeleted: false });
-    this.history.push({
-      ts: Date.now(),
-      action: "restore",
-      membershipId: currentMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
-  }
-
-  addWorkRole(workRole: WorkRole, currentMembership: Membership) {
+  addWorkRole(workRole: WorkRole, membership: Membership) {
     this.workRoles.push(workRole);
     this.history.push({
       ts: Date.now(),
       action: "addWorkRole",
-      membershipId: currentMembership.getId(),
+      membershipId: membership.getId(),
     });
-    return this._save(this.toJSON());
+    return this;
   }
 
   removeWorkRole(workRoleName: string, currentMembership: Membership) {
@@ -97,7 +56,7 @@ export default class Team extends BaseModel {
       action: "removeWorkRole",
       membershipId: currentMembership.getId(),
     });
-    return this._save(this.toJSON());
+    return this;
   }
 
   updateWorkRole(
@@ -117,7 +76,7 @@ export default class Team extends BaseModel {
       membershipId: currentMembership.getId(),
       changes: { workRoleName, newData },
     });
-    return this._save(this.toJSON());
+    return this;
   }
 
   hasWorkRole(workRole: WorkRole): boolean {
