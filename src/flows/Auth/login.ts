@@ -1,4 +1,9 @@
-import { authService, memberships, teams, users } from "../../services";
+import {
+  authService,
+  membershipService,
+  teamService,
+  userService,
+} from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type LoginFlowParams = {
@@ -12,7 +17,7 @@ export default async function login({
   password,
   activeTeamId,
 }: LoginFlowParams) {
-  const user = await users.getUserByEmail(email);
+  const user = await userService.getUserByEmail(email);
   if (!user) throw new BusinessError("INVALID_CREDENTIALS", "User not found");
 
   const userId = user.getId();
@@ -25,14 +30,14 @@ export default async function login({
 
   const teamId =
     activeTeamId ||
-    user.getActiveTeam() ||
-    (await memberships.getMembershipsByUser(userId))[0]?.teamId ||
+    user.activeTeamId ||
+    (await membershipService.getMembershipsByUser(userId))[0]?.teamId ||
     null;
   const membership = teamId
-    ? await memberships.getMembership({ userId, teamId })
+    ? await membershipService.getMembership({ userId, teamId })
     : null;
 
-  const team = teamId ? await teams.getTeamById(teamId) : null;
+  const team = teamId ? await teamService.getTeamById(teamId) : null;
 
   const membershipAccessToken = membership
     ? authService.generateMembershipToken(membership)
