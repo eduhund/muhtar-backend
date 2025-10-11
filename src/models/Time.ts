@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
-export default class Time extends BaseModel {
+export default class Time extends BaseModel<Time, Membership> {
   membershipId: string;
   teamId: string;
   projectId: string;
@@ -25,7 +25,7 @@ export default class Time extends BaseModel {
     isDeleted = false,
     history = [],
   }: any = {}) {
-    super(_id, "time");
+    super(_id);
     this.membershipId = membershipId;
     this.teamId = teamId;
     this.projectId = projectId;
@@ -38,83 +38,38 @@ export default class Time extends BaseModel {
     this.history = history;
   }
 
-  update(newData: any, actorMembership: Membership) {
-    const cleanData = Object.fromEntries(
-      Object.entries(newData).filter(([_, value]) => value !== undefined)
-    );
-    const changes: { [key: string]: any } = {};
-
-    Object.keys(cleanData).forEach((key) => {
-      const oldVal = this[key];
-      const newVal = cleanData[key];
-
-      if (oldVal === newVal) return;
-
-      changes[key] = {
-        from: oldVal ?? null,
-        to: newVal ?? null,
-      };
-    });
-
-    Object.assign(this, cleanData);
-    this.history.push({
-      ts: Date.now(),
-      action: "update",
-      membershipId: actorMembership.getId(),
-      changes: changes,
-    });
-    this._save(this.toJSON());
-  }
-
-  changeProject(newProjectId: string) {
-    this.projectId = newProjectId;
-    this.saveChanges("projectId");
+  changeProject(projectId: string, membership: Membership) {
+    this._update({ projectId }, membership);
     return this;
   }
 
-  changeTaskId(newTaskId: string | null) {
-    this.taskId = newTaskId;
-    this.saveChanges("taskId");
+  changeTaskId(taskId: string | null, membership: Membership) {
+    this._update({ taskId }, membership);
     return this;
   }
 
-  changeDate(newDate: string) {
-    this.date = newDate;
-    this.saveChanges("date");
+  changeDate(date: string, membership: Membership) {
+    this._update({ date }, membership);
     return this;
   }
 
-  changeDuration(newDuration: number) {
-    this.duration = newDuration;
-    this.saveChanges("duration");
+  changeDuration(duration: number, membership: Membership) {
+    this._update({ duration }, membership);
     return this;
   }
 
-  changeComment(newComment: string) {
-    this.comment = newComment;
-    this.saveChanges("comment");
+  changeComment(comment: string, membership: Membership) {
+    this._update({ comment }, membership);
     return this;
   }
 
-  archive(actorMembership: Membership) {
-    Object.assign(this, { isDeleted: true });
-    this.history.push({
-      ts: Date.now(),
-      action: "archive",
-      membershipId: actorMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
+  archive(membership: Membership) {
+    this._archive(membership);
+    return this;
   }
 
-  restore(actorMembership: Membership) {
-    Object.assign(this, { isDeleted: false });
-    this.history.push({
-      ts: Date.now(),
-      action: "restore",
-      membershipId: actorMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
+  restore(membership: Membership) {
+    this._restore(membership);
+    return this;
   }
 }

@@ -1,11 +1,6 @@
 import BaseModel from "./BaseModel";
 
-export type MembershipAccessRole =
-  | "owner"
-  | "admin"
-  | "manager"
-  | "user"
-  | "guest";
+export type MembershipAccessRole = "owner" | "admin" | "user" | "guest";
 export type MembershipStatus =
   | "active"
   | "pending"
@@ -15,7 +10,7 @@ export type MembershipStatus =
 
 const ACCESS_ROLES = ["guest", "user", "manager", "admin", "owner"];
 
-export default class Membership extends BaseModel {
+export default class Membership extends BaseModel<Membership, Membership> {
   userId: string;
   teamId: string;
   name: string;
@@ -23,15 +18,9 @@ export default class Membership extends BaseModel {
   workRole: string;
   status: MembershipStatus;
   connections: Record<string, any>;
-  history: Array<{
-    ts: number;
-    action: string;
-    membershipId?: string;
-    changes?: Record<string, any>;
-  }>;
   contract: Record<string, any>;
   constructor(data: any = {}) {
-    super(data._id, "memberships");
+    super(data._id);
     this.userId = data.userId;
     this.teamId = data.teamId;
     this.name = data.name;
@@ -43,72 +32,42 @@ export default class Membership extends BaseModel {
     this.contract = data.contract ?? {};
   }
 
-  changeStatus(status: MembershipStatus) {
-    this.status = status;
-    this.saveChanges("status");
+  changeStatus(status: MembershipStatus, membership: Membership) {
+    this._update({ status }, membership);
     return this;
   }
 
-  changeAccessRole(
-    accessRole: MembershipAccessRole,
-    actorMembership: Membership
-  ) {
-    this.history.push({
-      ts: Date.now(),
-      action: "update",
-      membershipId: actorMembership.getId(),
-      changes: { from: this.accessRole, to: accessRole },
-    });
-    this.accessRole = accessRole;
-    this._save(this.toJSON());
+  changeAccessRole(accessRole: MembershipAccessRole, membership: Membership) {
+    this._update({ accessRole }, membership);
     return this;
   }
 
-  invite() {
-    return this.changeStatus("pending");
+  invite(membership: Membership) {
+    return this.changeStatus("pending", membership);
   }
 
-  accept() {
-    return this.changeStatus("active");
+  accept(membership: Membership) {
+    return this.changeStatus("active", membership);
   }
 
-  decline() {
-    return this.changeStatus("declined");
-  }
-
-  archive(currentMembership: Membership) {
-    Object.assign(this, { status: "archived" });
-    this.history.push({
-      ts: Date.now(),
-      action: "archive",
-      membershipId: currentMembership.getId(),
-    });
-
-    return this._save(this.toJSON());
+  decline(membership: Membership) {
+    return this.changeStatus("declined", membership);
   }
 
   connectTo(
-    service: any,
-    { userId, teamId }: { userId: string; teamId: string }
+    service: string,
+    { userId, teamId }: { userId: string; teamId: string },
+    membership: Membership
   ) {
-    switch (service) {
-      case "slack":
-        this.connections.slack = {
-          userId,
-          teamId,
-        };
-        this.saveChanges("connections");
-        return this;
-      default:
-        return this;
-    }
+    this._update(
+      { connections: { [service]: { userId, teamId } } },
+      membership
+    );
+    return this;
   }
 
-  disconnectFrom(service: string) {
-    if (this.isConnectedTo(service)) {
-      delete this.connections[service];
-      this.saveChanges("connections");
-    }
+  disconnectFrom(service: string, membership: Membership) {
+    this._update({ connections: { [service]: undefined } }, membership);
     return this;
   }
 
@@ -148,21 +107,12 @@ export default class Membership extends BaseModel {
     return this.accessRole === "admin" && this.status !== "declined";
   }
 
-  isManager() {
-    return this.accessRole === "manager" && this.status !== "declined";
-  }
-
   isMember() {
     return this.accessRole === "user" && this.status !== "declined";
   }
 
   getAccessRoleIndex() {
     const index = ACCESS_ROLES.indexOf(this.accessRole);
-    if (index === -1) {
-      this.accessRole = ACCESS_ROLES[0] as MembershipAccessRole;
-      this.saveChanges("accessRole");
-      return 0;
-    }
     return index;
   }
 }

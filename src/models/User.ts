@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel";
 import { createHash } from "../utils/hash";
 
-export default class User extends BaseModel {
+export default class User extends BaseModel<User, User> {
   firstName: string;
   lastName: string;
   email: string;
@@ -10,7 +10,7 @@ export default class User extends BaseModel {
   activeTeam: string;
   isBatch: boolean;
   constructor(data: any) {
-    super(data._id, "users");
+    super(data._id);
     this.firstName = data.firstName ?? "";
     this.lastName = data.lastName ?? "";
     this.email = data.email ?? "";
@@ -36,28 +36,30 @@ export default class User extends BaseModel {
     return this.activeTeam || null;
   }
 
-  changeEmail(newEmail: string) {
-    this.email = newEmail ? newEmail : this.email;
-    this.saveChanges("email");
+  changeEmail(email: string) {
+    this._update({ email }, this);
     return this;
   }
 
-  changeName(firstName: string, lastName: string) {
-    this.firstName = firstName ? firstName : this.firstName;
-    this.lastName = lastName ? lastName : this.lastName;
-    this.saveChanges(["firstName", "lastName"]);
+  changeName({
+    firstName,
+    lastName,
+  }: {
+    firstName?: string;
+    lastName?: string;
+  }) {
+    this._update({ firstName, lastName }, this);
     return this;
   }
 
-  async changePassword(newPassword: string) {
-    this._password = createHash(newPassword);
-    this.saveChanges("_password");
+  async changePassword(password: string) {
+    const hashedPassword = createHash(password);
+    this._update({ _password: hashedPassword }, this);
     return this;
   }
 
   async setActiveTeam(teamId: string) {
-    this.activeTeam = teamId;
-    this.saveChanges("activeTeam");
+    this._update({ activeTeam: teamId }, this);
     return this;
   }
 }
