@@ -1,4 +1,4 @@
-import { memberships, teams } from "../../services";
+import { membershipService, teamService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
 import { WorkRole } from "../../models/Team";
@@ -18,7 +18,7 @@ export default async function addWorkRole(
   workRole: WorkRole,
   currentUser: User
 ) {
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -28,7 +28,7 @@ export default async function addWorkRole(
 
   canAddWorkRole(currentMembership);
 
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("NOT_FOUND", `Team not found`);
   }

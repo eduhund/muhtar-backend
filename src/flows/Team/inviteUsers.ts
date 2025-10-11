@@ -1,4 +1,4 @@
-import { memberships, users } from "../../services";
+import { membershipService, userService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
@@ -26,7 +26,7 @@ export default async function inviteUsers(
   { invitees }: InviteUsersParams,
   currentUser: User
 ) {
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -39,20 +39,20 @@ export default async function inviteUsers(
   for (const invitee of invitees) {
     const { email, accessRole = "user" } = invitee;
     const user =
-      (await users.getUserByEmail(email)) ||
-      (await users.createBatchUser({ email }));
+      (await userService.getUserByEmail(email)) ||
+      (await userService.createBatch({ email }));
     const userId = user.getId();
     const membership =
-      (await memberships.getMembership({
+      (await membershipService.getMembership({
         userId,
         teamId,
       })) ||
-      (await memberships.createMembership({
+      (await membershipService.createMembership({
         userId,
         teamId,
         accessRole,
       }));
-    membership.invite();
+    membership.invite(currentMembership);
   }
 
   return {};

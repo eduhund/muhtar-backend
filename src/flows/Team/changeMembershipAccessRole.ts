@@ -1,6 +1,6 @@
 import Membership, { MembershipAccessRole } from "../../models/Membership";
 import User from "../../models/User";
-import { memberships } from "../../services";
+import { membershipService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type changeTeamMembershipParams = {
@@ -33,7 +33,7 @@ export default async function changeMembershipAccessRole(
   { membershipId, accessRole }: changeTeamMembershipParams,
   currentUser: User
 ) {
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -41,7 +41,7 @@ export default async function changeMembershipAccessRole(
     throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
-  const membership = await memberships.getMembershipById(membershipId);
+  const membership = await membershipService.getMembershipById(membershipId);
   if (!membership) {
     throw new BusinessError("NOT_FOUND", `Membership not found`);
   }

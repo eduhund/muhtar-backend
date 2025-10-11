@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import Team from "../../models/Team";
 import User from "../../models/User";
-import { memberships, teams } from "../../services";
+import { membershipService, teamService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 function isValidTeam(team: Team, membership: Membership): boolean {
@@ -13,7 +13,7 @@ function isValidTeam(team: Team, membership: Membership): boolean {
 }
 
 export default async function getTeam(teamId: string, currentUser: User) {
-  const membership = await memberships.getMembership({
+  const membership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -21,7 +21,7 @@ export default async function getTeam(teamId: string, currentUser: User) {
     throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
   if (!team || !isValidTeam(team, membership)) {
     throw new BusinessError("NOT_FOUND", "Team not found");
   }

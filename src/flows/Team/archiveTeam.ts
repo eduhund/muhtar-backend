@@ -1,6 +1,6 @@
 import Membership from "../../models/Membership";
 import User from "../../models/User";
-import { memberships, teams } from "../../services";
+import { membershipService, teamService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 async function canArchiveTeam(currentMembership: Membership) {
@@ -13,7 +13,7 @@ async function canArchiveTeam(currentMembership: Membership) {
 }
 
 export default async function archiveTeam(teamId: string, currentUser: User) {
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -23,7 +23,7 @@ export default async function archiveTeam(teamId: string, currentUser: User) {
 
   await canArchiveTeam(currentMembership);
 
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("NOT_FOUND", `Team not found`);
   }

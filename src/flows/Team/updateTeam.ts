@@ -1,6 +1,6 @@
 import Membership from "../../models/Membership";
 import User from "../../models/User";
-import { memberships, teams } from "../../services";
+import { membershipService, teamService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type updateTeamParams = {
@@ -21,7 +21,7 @@ export default async function updateTeam(
   { name }: updateTeamParams,
   currentUser: User
 ) {
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -31,12 +31,12 @@ export default async function updateTeam(
 
   await canUpdateTeam(currentMembership);
 
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("NOT_FOUND", `Team not found`);
   }
 
-  await team.update({ name }, currentMembership);
+  //await team.update({ name }, currentMembership);
 
   return {};
 }
