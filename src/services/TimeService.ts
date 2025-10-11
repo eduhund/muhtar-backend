@@ -97,7 +97,6 @@ export default class TimeService extends Service {
         },
       ],
     });
-    time.saveChanges();
     return time;
   }
 

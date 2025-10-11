@@ -10,7 +10,6 @@ export default class TeamService extends Service {
       ...data,
       createdAt: new Date(),
     });
-    team.saveChanges();
     return team;
   }
 

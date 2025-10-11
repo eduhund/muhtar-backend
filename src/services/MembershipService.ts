@@ -19,7 +19,6 @@ export default class MembershipService extends Service {
       ...data,
       createdAt: new Date(),
     });
-    membership.saveChanges();
     return membership;
   }
 

@@ -12,9 +12,6 @@ export default class ApiKeyService extends Service {
       _id: uuidv4(),
       ...data,
     });
-
-    apiKey.saveChanges();
-
     return apiKey;
   }
 

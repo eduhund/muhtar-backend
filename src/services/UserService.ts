@@ -23,9 +23,6 @@ export default class UserService extends Service {
       createdAt: new Date(),
       isBatch: false,
     });
-
-    user.saveChanges();
-
     return user;
   }
 
@@ -43,9 +40,6 @@ export default class UserService extends Service {
       createdAt: null,
       isBatch: true,
     });
-
-    user.saveChanges();
-
     return user;
   }
 

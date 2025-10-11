@@ -11,6 +11,8 @@ type ChangesObject<T> = {
   [K in keyof T]?: { from: T[K] | null; to: T[K] | null };
 };
 
+type ModelJSON<T> = { id: string } & Partial<T>;
+
 export default class BaseModel<T extends ModelType, H extends ActorType> {
   private _id: string;
   isDeleted: boolean = false;
@@ -31,8 +33,9 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
     const changes: ChangesObject<T> = {};
 
     for (const key in cleanData) {
+      const oldData = this as unknown as T;
       const typedKey = key as keyof T;
-      const oldVal = this[typedKey];
+      const oldVal = oldData[typedKey];
       const newVal = cleanData[typedKey];
 
       if (oldVal === newVal) continue;
@@ -78,13 +81,14 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
   }
 
   toJSON() {
-    const result: Record<string, any> = {};
-    for (const key of Object.keys(this)) {
-      if (!key.startsWith("_") && typeof this[key] !== "function") {
-        result[key] = this[key];
+    const result: any = { id: this._id };
+    const data = this as unknown as T;
+    for (const key of Object.keys(data)) {
+      const typedKey = key as keyof T;
+      if (!key.startsWith("_") && typeof data[typedKey] !== "function") {
+        result[key] = data[typedKey];
       }
     }
-    result.id = this._id;
-    return result;
+    return result as ModelJSON<T>;
   }
 }
