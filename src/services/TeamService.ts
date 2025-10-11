@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Team from "../models/Team";
@@ -6,8 +6,8 @@ import Team from "../models/Team";
 export default class TeamService extends Service {
   async create(data: any) {
     const team = new Team({
-      _id: uuidv4(),
       ...data,
+      _id: uuidv7(),
       createdAt: new Date(),
     });
     await this._create(team);

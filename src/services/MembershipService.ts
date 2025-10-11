@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Membership from "../models/Membership";
@@ -15,7 +15,7 @@ export default class MembershipService extends Service {
   }
   async createMembership(data: any) {
     const membership = new Membership({
-      _id: uuidv4(),
+      _id: uuidv7(),
       ...data,
       createdAt: new Date(),
     });

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Project from "../models/Project";
@@ -42,8 +42,8 @@ export default class ProjectService extends Service {
     const currentMembershipId = currentMembership.getId();
 
     const project = new Project({
-      _id: uuidv4(),
       ...data,
+      _id: uuidv7(),
       teamId: currentMembership.teamId,
       memberships: [
         {

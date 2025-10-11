@@ -1,21 +1,32 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import User from "../models/User";
 import { createHash } from "../utils/hash";
 
+type NewUserParams = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+};
+
+type NewBatchUserParams = {
+  email: string;
+};
+
 export default class UserService extends Service {
   constructor(adapter: any, collection: string) {
     super(adapter, collection);
   }
-  async create(data: any) {
+  async create(data: NewUserParams) {
     const existingUser = await this.getUserByEmail(data.email);
     if (existingUser) {
       throw new Error("Email already exists");
     }
     const hashedPassword = createHash(data.password);
     const user = new User({
-      _id: uuidv4(),
+      _id: uuidv7(),
       _password: hashedPassword,
       email: data.email,
       firstName: data.firstName,
@@ -27,13 +38,13 @@ export default class UserService extends Service {
     return user;
   }
 
-  async createBatch(data: any) {
+  async createBatch(data: NewBatchUserParams) {
     const existingUser = await this.getUserByEmail(data.email);
     if (existingUser) {
       throw new Error("Email already exists");
     }
     const user = new User({
-      _id: uuidv4(),
+      _id: uuidv7(),
       _password: null,
       email: data.email,
       firstName: null,
