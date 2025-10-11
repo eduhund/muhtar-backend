@@ -1,4 +1,12 @@
 import { adapter } from "../connectors/MongoDB";
+import { v7 as uuidv7, parse as uuidParse } from "uuid";
+import { Binary } from "mongodb";
+
+function binaryUUID(uuid: string | null = null) {
+  const uuidStr = uuid || uuidv7();
+  const uuidBuffer = Buffer.from(uuidParse(uuidStr));
+  return new Binary(uuidBuffer, Binary.SUBTYPE_UUID);
+}
 
 export default class BaseModel {
   [key: string]: any;
@@ -16,7 +24,11 @@ export default class BaseModel {
   }
 
   async _save(update: any) {
-    return this._dbAdapter.update(this._collection, this._id, update);
+    return this._dbAdapter.update(
+      this._collection,
+      binaryUUID(this._id),
+      update
+    );
   }
 
   async saveChanges(params?: any) {

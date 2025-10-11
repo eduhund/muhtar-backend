@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Time from "../models/Time";
@@ -79,7 +79,7 @@ export default class TimeService extends Service {
     currentMembership: any
   ) {
     const time = new Time({
-      _id: uuidv4(),
+      _id: uuidv7(),
       ts: Date.now(),
       isDeleted: false,
       membershipId,
