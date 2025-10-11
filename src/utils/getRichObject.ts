@@ -41,7 +41,7 @@ async function richHistory(history: any[]) {
 }
 
 export async function getRichTime({ time, membership, project, team }: any) {
-  const richTime = { ...time.toPublicJSON() };
+  const richTime = { ...time.toJSON() };
   if (membership) {
     richTime.membership = {
       id: membership.getId(),
@@ -82,7 +82,7 @@ export async function getRichTime({ time, membership, project, team }: any) {
   delete richTime.projectId;
   delete richTime.teamId;
 
-  richTime.history = await richHistory(time.history);
+  //richTime.history = await richHistory(time.history);
 
   return richTime;
 }
