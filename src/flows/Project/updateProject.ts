@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import User from "../../models/User";
-import { memberships, projects } from "../../services";
+import { membershipService, projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type RecourceParams = {
@@ -47,12 +47,12 @@ export default async function updateProject(
   { name, description, plan }: updateTimeParams,
   currentUser: User
 ) {
-  const project = await projects.getProjectById(id);
+  const project = await projectService.getProjectById(id);
   if (!project) {
     throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: project.teamId,
   });
@@ -96,6 +96,7 @@ export default async function updateProject(
       0
     );
 
+    /*
     await project.updatePlan(
       {
         startDate,
@@ -107,7 +108,9 @@ export default async function updateProject(
       },
       currentMembership
     );
+    */
   }
+
   await project.update(
     {
       name,

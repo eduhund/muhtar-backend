@@ -1,6 +1,6 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import { projects } from "../../services";
+import { projectService } from "../../services";
 import getProject from "./getProject";
 
 type GetProjectsFilters = {
@@ -14,7 +14,7 @@ export default async function getProjects(
 ) {
   const { teamId } = actorMembership;
 
-  const projectList = await projects.getProjects({
+  const projectList = await projectService.getProjects({
     teamId,
     membershipId,
     status,

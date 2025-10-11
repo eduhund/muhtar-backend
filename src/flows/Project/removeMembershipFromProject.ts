@@ -1,4 +1,4 @@
-import { memberships, projects } from "../../services";
+import { membershipService, projectService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
@@ -17,12 +17,12 @@ export default async function removeMembershipFromProject(
   membershipId: string,
   currentUser: User
 ) {
-  const project = await projects.getProjectById(id);
+  const project = await projectService.getProjectById(id);
   if (!project) {
     throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: project.teamId,
   });
@@ -35,7 +35,7 @@ export default async function removeMembershipFromProject(
 
   await canRemoveMembershipsFromProject(currentMembership);
 
-  const membership = await memberships.getMembershipById(membershipId);
+  const membership = await membershipService.getMembershipById(membershipId);
 
   if (!membership) {
     throw new BusinessError("NOT_FOUND", `Membership not found`);

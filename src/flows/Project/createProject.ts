@@ -1,5 +1,5 @@
 import User from "../../models/User";
-import { memberships, projects } from "../../services";
+import { membershipService, projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type AddProjectParams = {
@@ -12,7 +12,7 @@ export default async function createProject(
   { name, description = "", teamId }: AddProjectParams,
   currentUser: User
 ) {
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: teamId,
   });
@@ -30,7 +30,7 @@ export default async function createProject(
     );
   }
 
-  const newProject = await projects.createProject(
+  const newProject = await projectService.createProject(
     {
       name,
       description,

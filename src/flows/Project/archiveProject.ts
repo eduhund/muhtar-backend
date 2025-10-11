@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import User from "../../models/User";
-import { memberships, projects } from "../../services";
+import { membershipService, projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 async function canArchiveProject(
@@ -23,12 +23,12 @@ async function canArchiveProject(
 }
 
 export default async function archiveProject(id: string, currentUser: User) {
-  const existingProject = await projects.getProjectById(id);
+  const existingProject = await projectService.getProjectById(id);
   if (!existingProject) {
     throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
-  const currentMembership = await memberships.getMembership({
+  const currentMembership = await membershipService.getMembership({
     userId: currentUser.getId(),
     teamId: existingProject.teamId,
   });

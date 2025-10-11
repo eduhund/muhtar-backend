@@ -22,6 +22,11 @@ export default class Project extends BaseModel<Project, Membership> {
     this.totalHours = data.totalHours ?? 0;
   }
 
+  update(data: Partial<Project>, membership: Membership) {
+    this._update(data, membership);
+    return this;
+  }
+
   rename(name: string, membership: Membership) {
     this._update({ name }, membership);
     return this;
