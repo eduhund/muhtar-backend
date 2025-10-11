@@ -3,6 +3,7 @@ import { Router } from "express";
 import { checkMembershipAuth } from "./utils";
 import { addTime, validateAddTimeParams } from "./addTime";
 import { archiveTime, validateArchiveTimeParams } from "./archiveTime";
+import { getProject, validateGetProjectParams } from "./getProject";
 import { getProjects, validateGetProjectsParams } from "./getProjects";
 import { getTime, validateGetTimeParams } from "./getTime";
 import { updateTime, validateUpdateTimeParams } from "./updateTime";
@@ -12,6 +13,7 @@ const membershipApiRouter = Router();
 
 membershipApiRouter.use(checkMembershipAuth);
 
+membershipApiRouter.get("/getProject", validateGetProjectParams, getProject);
 membershipApiRouter.get("/getProjects", validateGetProjectsParams, getProjects);
 membershipApiRouter.get("/getTime", validateGetTimeParams, getTime);
 

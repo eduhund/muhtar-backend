@@ -1,3 +1,4 @@
+import getProjectFlow from "./getProject";
 import getProjectsFlow from "./getProjects";
 import createProjectFlow from "./createProject";
 import updateProjectFlow from "./updateProject";
@@ -8,6 +9,7 @@ import updateProjectMembershipFlow from "./updateMembership";
 import removeMembershipFromProjectFlow from "./removeMembershipFromProject";
 
 export {
+  getProjectFlow,
   getProjectsFlow,
   createProjectFlow,
   updateProjectFlow,
