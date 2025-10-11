@@ -1,5 +1,5 @@
 import User from "../../models/User";
-import { authService, memberships, teams } from "../../services";
+import { authService, membershipService, teamService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 export default async function changeTeam(
@@ -7,13 +7,13 @@ export default async function changeTeam(
   actorUser: User
 ) {
   const userId = actorUser.getId();
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
 
   if (!team) {
     throw new BusinessError("NOT_FOUND", "Team not found");
   }
 
-  const membership = await memberships.getMembership({
+  const membership = await membershipService.getMembership({
     teamId,
     userId,
   });
