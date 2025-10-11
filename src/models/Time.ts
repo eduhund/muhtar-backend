@@ -38,6 +38,16 @@ export default class Time extends BaseModel<Time, Membership> {
     this.history = history;
   }
 
+  update(data: Partial<Time>, membership: Membership) {
+    this._update(data, membership);
+    return this;
+  }
+
+  changeMembership(membershipId: string, membership: Membership) {
+    this._update({ membershipId }, membership);
+    return this;
+  }
+
   changeProject(projectId: string, membership: Membership) {
     this._update({ projectId }, membership);
     return this;

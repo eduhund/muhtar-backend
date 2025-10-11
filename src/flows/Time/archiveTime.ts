@@ -1,7 +1,7 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import { projects, time } from "../../services";
+import { projectService, timeService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 async function canArchiveTime(
@@ -29,12 +29,12 @@ export default async function archiveTime(
   id: string,
   actorMembership: Membership
 ) {
-  const existingTime = await time.getTimeById(id);
+  const existingTime = await timeService.getTimeById(id);
   if (!existingTime) {
     throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
-  const project = await projects.getProjectById(existingTime.projectId);
+  const project = await projectService.getProjectById(existingTime.projectId);
   if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
   await canArchiveTime(actorMembership, existingTime, project);

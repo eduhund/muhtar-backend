@@ -134,7 +134,15 @@ export default class Project extends BaseModel<Project, Membership> {
   }
 
   isProjectMembership(membershipId: string) {
-    return this.getProjectMembership(membershipId) !== undefined;
+    const membership = this.getProjectMembership(membershipId);
+    if (!membership || membership.isDeleted) return false;
+    return membership.accessRole !== undefined;
+  }
+
+  isProjectAdmin(membershipId: string) {
+    const membership = this.getProjectMembership(membershipId);
+    if (!membership || membership.isDeleted) return false;
+    return membership.accessRole === "admin";
   }
 
   getProjectMembershipRole(membershipId: string) {

@@ -1,6 +1,11 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import { projects, teams, time, memberships } from "../../services";
+import {
+  projectService,
+  teamService,
+  timeService,
+  membershipService,
+} from "../../services";
 import { getRichTime } from "../../utils/getRichObject";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -20,7 +25,7 @@ async function canAddTime(
 ) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
 
-  const projectActorMembershipRole = project.getProjectMembershipAccessRole(
+  const projectActorMembershipRole = await project.getProjectMembershipRole(
     currentMembership.getId()
   );
 
@@ -44,17 +49,17 @@ export default async function addTime(
   { membershipId, projectId, taskId, date, duration, comment }: AddTimeParams,
   actorMembership: Membership
 ) {
-  const membership = await memberships.getMembershipById(membershipId);
+  const membership = await membershipService.getMembershipById(membershipId);
 
   if (!membership) {
     throw new BusinessError("NOT_FOUND", "Membership not found");
   }
   const { teamId } = membership;
 
-  const project = await projects.getProjectById(projectId);
+  const project = await projectService.getProjectById(projectId);
   if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
   if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
 
   await canAddTime(actorMembership, membership, project);
@@ -69,7 +74,7 @@ export default async function addTime(
     comment,
   };
 
-  const newTime = await time.addTime(timeData, actorMembership);
+  const newTime = await timeService.create(timeData, actorMembership);
 
   const richTime = await getRichTime({
     time: newTime,

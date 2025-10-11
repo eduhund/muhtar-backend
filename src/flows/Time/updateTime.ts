@@ -1,7 +1,8 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import { memberships, projects, time } from "../../services";
+import { membershipService, projectService, timeService } from "../../services";
+import { dateOnlyIsoString } from "../../utils/date";
 import { BusinessError } from "../../utils/Rejection";
 
 type updateTimeParams = {
@@ -44,13 +45,13 @@ async function canUpdateTime(
 }
 
 async function getNewMembership(membershipId: string) {
-  const membership = await memberships.getMembershipById(membershipId);
+  const membership = await membershipService.getMembershipById(membershipId);
   if (!membership) throw new BusinessError("NOT_FOUND", "Membership not found");
   return membership;
 }
 
 async function getNewProject(projectId: string) {
-  const project = await projects.getProjectById(projectId);
+  const project = await projectService.getProjectById(projectId);
   if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
   return project;
 }
@@ -67,24 +68,24 @@ export default async function updateTime(
   }: updateTimeParams,
   actorMembership: Membership
 ) {
-  const existingTime = await time.getTimeById(id);
-  if (!existingTime) {
+  const time = await timeService.getTimeById(id);
+  if (!time) {
     throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
   const newMembership = await getNewMembership(
-    membershipId || existingTime.membershipId
+    membershipId || time.membershipId
   );
-  const newProject = await getNewProject(projectId || existingTime.projectId);
+  const newProject = await getNewProject(projectId || time.projectId);
 
-  await canUpdateTime(actorMembership, existingTime, newMembership, newProject);
+  await canUpdateTime(actorMembership, time, newMembership, newProject);
 
-  await existingTime.update(
+  time.update(
     {
       membershipId,
       projectId,
       taskId,
-      date,
+      date: date ? dateOnlyIsoString(date) : undefined,
       duration,
       comment,
     },

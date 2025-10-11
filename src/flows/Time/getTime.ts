@@ -1,7 +1,12 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import { projects, time, teams, memberships } from "../../services";
+import {
+  projectService,
+  timeService,
+  teamService,
+  membershipService,
+} from "../../services";
 import { getRichTime } from "../../utils/getRichObject";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -18,11 +23,7 @@ function canGetTime(
 
   const currentMembershipId = currentMembership.getId();
 
-  if (
-    currentMembership.isManager() &&
-    project.isProjectMembership(currentMembershipId)
-  )
-    return true;
+  if (project.isProjectAdmin(currentMembershipId)) return true;
 
   if (timeEntry.membershipId === currentMembershipId) return true;
   return false;
@@ -32,7 +33,7 @@ export default async function getTime(
   { id }: GetTimeParams,
   actorMembership: Membership
 ) {
-  const timeData = await time.getTimeById(id);
+  const timeData = await timeService.getTimeById(id);
 
   if (!timeData) {
     throw new BusinessError("NOT_FOUND", "Time entry not found");
@@ -40,11 +41,17 @@ export default async function getTime(
 
   const { teamId, projectId, membershipId } = timeData;
 
-  const project = await projects.getProjectById(projectId);
+  const membership = await membershipService.getMembershipById(membershipId);
+
+  if (!membership) {
+    throw new BusinessError("INTERNAL_ERROR", "Membership not found");
+  }
+
+  const project = await projectService.getProjectById(projectId);
   if (!project) {
     throw new BusinessError("INTERNAL_ERROR", "Project not found");
   }
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("INTERNAL_ERROR", "Team not found");
   }
@@ -58,7 +65,7 @@ export default async function getTime(
 
   return getRichTime({
     time: timeData,
-    membership: actorMembership,
+    membership,
     project,
     team,
   });
