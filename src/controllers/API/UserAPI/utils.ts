@@ -4,7 +4,7 @@ import {
   checkApiKey,
   getBearerToken,
 } from "../../../utils/tokens";
-import { memberships, users } from "../../../services";
+import { users } from "../../../services";
 import { BusinessError } from "../../../utils/Rejection";
 
 async function checkToken(token: string) {
