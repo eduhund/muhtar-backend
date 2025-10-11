@@ -3,6 +3,7 @@ import { v7 as uuidv7 } from "uuid";
 import Service from "./Service";
 import Time from "../models/Time";
 import { dateOnlyIsoString } from "../utils/date";
+import { richHistory } from "../utils/getRichObject";
 
 type TimeParams = {
   membershipId: string;
@@ -143,5 +144,52 @@ export default class TimeService extends Service {
       date: { $gte: from, $lt: to },
     });
     return data.map((time: any) => new Time(time));
+  }
+
+  async getRichTime({ time, membership, project, team, teamMemberships }: any) {
+    const richTime = { ...time.toJSON() };
+    if (membership) {
+      richTime.membership = {
+        id: membership.getId(),
+        name: membership.name,
+      };
+    } else {
+      richTime.membership = {
+        id: richTime.membershipId || null,
+        name: "Unknown Membership",
+      };
+    }
+
+    if (project) {
+      richTime.project = {
+        id: project.getId(),
+        name: project.name,
+      };
+    } else {
+      richTime.project = {
+        id: richTime.projectId || null,
+        name: "Unknown Project",
+      };
+    }
+
+    if (team) {
+      richTime.team = {
+        id: team.getId(),
+        name: team.name,
+      };
+    } else {
+      richTime.team = {
+        id: richTime.teamId || null,
+        name: "Unknown Team",
+      };
+    }
+
+    delete richTime.membershipId;
+    delete richTime.projectId;
+    delete richTime.teamId;
+
+    richTime.history = await richHistory(time.history, teamMemberships);
+
+    return richTime;
   }
 }

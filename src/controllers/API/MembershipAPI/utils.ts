@@ -4,7 +4,7 @@ import {
   checkApiKey,
   getBearerToken,
 } from "../../../utils/tokens";
-import { memberships } from "../../../services";
+import { membershipService } from "../../../services";
 import { BusinessError } from "../../../utils/Rejection";
 
 async function checkToken(token: string) {
@@ -34,7 +34,9 @@ async function getMembershipByToken(token: string) {
   }
 
   const membershipId = await checkToken(bearerlessToken);
-  const currentMembership = await memberships.getMembershipById(membershipId);
+  const currentMembership = await membershipService.getMembershipById(
+    membershipId
+  );
 
   if (!currentMembership) {
     throw new BusinessError("UNAUTHORIZED", "Membership not found");

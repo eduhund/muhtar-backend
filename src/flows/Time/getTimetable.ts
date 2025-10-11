@@ -1,8 +1,12 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import { projects, time, teams, memberships } from "../../services";
-import { getRichTime } from "../../utils/getRichObject";
+import {
+  projectService,
+  timeService,
+  teamService,
+  membershipService,
+} from "../../services";
 
 type GetTimeListParams = {
   projectId?: string;
@@ -20,10 +24,10 @@ export default async function getTimetable(
   const { teamId } = actorMembership;
   const actorMembershipId = actorMembership.getId();
 
-  let timeList = [];
+  let timetable = [];
 
   if (actorMembership.isOwner() || actorMembership.isAdmin()) {
-    timeList = await time.getTimeList({
+    timetable = await timeService.getTimeList({
       teamId,
       projectId,
       membershipId,
@@ -34,7 +38,7 @@ export default async function getTimetable(
     });
   } else {
     const currentMembershipProjectList =
-      await projects.getProjectsByMembershipId(actorMembershipId);
+      await projectService.getProjectsByMembershipId(actorMembershipId);
     const timePerProject = await Promise.all(
       currentMembershipProjectList.map(async (project: Project) => {
         const thisProjectId = project.getId();
@@ -43,7 +47,7 @@ export default async function getTimetable(
         const projectRole = project.getProjectMembershipRole(actorMembershipId);
 
         if (projectRole === "manager") {
-          return await time.getTimeList({
+          return await timeService.getTimeList({
             teamId,
             projectId: thisProjectId,
             membershipId,
@@ -53,7 +57,7 @@ export default async function getTimetable(
             withDeleted,
           });
         } else if (projectRole === "user") {
-          return await time.getTimeList({
+          return await timeService.getTimeList({
             teamId,
             projectId: thisProjectId,
             membershipId: actorMembershipId,
@@ -64,26 +68,27 @@ export default async function getTimetable(
       })
     );
 
-    timeList = timePerProject.flat().sort((a, b) => a.ts - b.ts);
+    timetable = timePerProject.flat().sort((a, b) => a.ts - b.ts);
   }
 
-  const membershipList = await memberships.getMembershipsByTeam(teamId);
-  const projectList = await projects.getProjectsByTeam(teamId);
-  const team = await teams.getTeamById(teamId);
+  const team = await teamService.getTeamById(teamId);
+  const teamProjects = await projectService.getProjectsByTeam(teamId);
+  const teamMemberships = await membershipService.getMembershipsByTeam(teamId);
 
   const richTimeList = await Promise.all(
-    timeList.map(async (time: Time) => {
-      const membership = membershipList.find(
+    timetable.map(async (time: Time) => {
+      const membership = teamMemberships.find(
         (m: Membership) => m.getId() === time.membershipId
       );
-      const project = projectList.find(
+      const project = teamProjects.find(
         (p: Project) => p.getId() === time.projectId
       );
-      const richTime = await getRichTime({
+      const richTime = await timeService.getRichTime({
         time,
         membership,
         project,
         team,
+        teamMemberships,
       });
       return richTime;
     })

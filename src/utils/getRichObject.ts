@@ -1,26 +1,17 @@
-import { memberships } from "../services";
+import Membership from "../models/Membership";
 
-async function richHistory(history: any[]) {
-  const actorMembershipIds = [
-    ...new Set(
-      history
-        .map((h) => h.membershipId)
-        .filter((id: string) => id !== undefined)
-    ),
-  ];
-  const actorMemberships = await Promise.all(
-    actorMembershipIds.map((membershipId: string) =>
-      memberships.getMembershipById(membershipId)
-    )
-  );
+export async function richHistory(
+  history: any[],
+  teamMemberships: Membership[]
+) {
   const actorMembershipsMap = Object.fromEntries(
-    actorMemberships.map((m: any) => [m.getId(), m])
+    teamMemberships.map((m: any) => [m.getId(), m])
   );
 
-  return history.map((entry) => {
-    const actorMembership = actorMembershipsMap[entry.membershipId];
+  return history.map((historyItem) => {
+    const actorMembership = actorMembershipsMap[historyItem.membershipId];
     const richHistoryItem = {
-      ...entry,
+      ...historyItem,
     };
 
     if (actorMembership) {
@@ -30,7 +21,7 @@ async function richHistory(history: any[]) {
       };
     } else {
       richHistoryItem.membership = {
-        id: entry.membershipId || null,
+        id: historyItem.membershipId || null,
         name: "Unknown Membership",
       };
     }

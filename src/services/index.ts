@@ -8,21 +8,30 @@ import TeamService from "./TeamService";
 import TimeService from "./TimeService";
 import UserService from "./UserService";
 
-export const apiKeys: ApiKeyService = new ApiKeyService(adapter, "apiKeys");
-export const projects: ProjectService = new ProjectService(adapter, "projects");
-export const teams: TeamService = new TeamService(adapter, "teams");
-export const time: TimeService = new TimeService(adapter, "time");
-export const users: UserService = new UserService(adapter, "users");
+export const apiKeysService: ApiKeyService = new ApiKeyService(
+  adapter,
+  "apiKeys"
+);
+export const projectService: ProjectService = new ProjectService(
+  adapter,
+  "projects"
+);
+export const teamService: TeamService = new TeamService(adapter, "teams");
+export const timeService: TimeService = new TimeService(adapter, "time");
+export const userService: UserService = new UserService(adapter, "users");
 
-export const memberships: MembershipService = new MembershipService(
+export const membershipService: MembershipService = new MembershipService(
   adapter,
   "memberships",
   {
-    teams,
-    users,
+    teamService,
+    userService,
   }
 );
 
-export const authService: AuthService = new AuthService({ users, memberships });
+export const authService: AuthService = new AuthService({
+  userService,
+  membershipService,
+});
 export const projectAnalytics: ProjectAnalyticsService =
-  new ProjectAnalyticsService(projects, time);
+  new ProjectAnalyticsService(projectService, timeService);
