@@ -18,16 +18,19 @@ export async function richHistory(
       richHistoryItem.actor = {
         id: actorMembership.getId(),
         name: actorMembership.name,
+        type: historyItem.actorType,
       };
     } else {
       richHistoryItem.actor = {
         id: historyItem.membershipId || null,
         name:
           historyItem.actorType === "AUTO" ? "System event" : "Unknown actor",
+        type: historyItem.actorType,
       };
     }
 
     delete richHistoryItem.actorId;
+    delete richHistoryItem.actorType;
     return richHistoryItem;
   });
 }
