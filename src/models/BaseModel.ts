@@ -12,7 +12,9 @@ type ChangesObject<T> = {
   [K in keyof T]?: { from: T[K] | null; to: T[K] | null };
 };
 
-type ModelJSON<T> = { id: string } & Partial<T>;
+type BinaryID = { _bsontype: string; sub_type: number; buffer: any };
+
+type ModelJSON<T> = { id: BinaryID } & Partial<T>;
 
 function cleanData<T>(data: Partial<T>): Partial<T> {
   return Object.fromEntries(
@@ -33,8 +35,21 @@ function createChanges<T extends ModelType>(
   return changes;
 }
 
+function binaryUuidToString(binaryUuid: BinaryID): string {
+  if (
+    !binaryUuid ||
+    binaryUuid._bsontype !== "Binary" ||
+    binaryUuid.sub_type !== 4
+  ) {
+    throw new Error("Input is not a Binary UUID");
+  }
+  const buf = binaryUuid.buffer;
+  const hex = [...buf].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return hex.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+}
+
 export default class BaseModel<T extends ModelType, H extends ActorType> {
-  private _id: string;
+  private _id: BinaryID;
   isDeleted: boolean = false;
   history: Array<{
     ts: number;
@@ -42,7 +57,7 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
     actorId: string;
     changes?: ChangesObject<T>;
   }> = [];
-  constructor(_id: string) {
+  constructor(_id: BinaryID) {
     this._id = _id;
   }
 
@@ -88,7 +103,7 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
   }
 
   getId() {
-    return this._id;
+    return binaryUuidToString(this._id);
   }
 
   toJSON() {
