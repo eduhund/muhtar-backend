@@ -162,7 +162,9 @@ export default class TimeService extends Service {
     if (project) {
       richTime.project = {
         id: project.getId(),
-        name: project.name,
+        name: project.customer
+          ? `${project.customer} / ${project.name}`
+          : project.name,
       };
     } else {
       richTime.project = {

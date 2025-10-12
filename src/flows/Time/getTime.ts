@@ -7,7 +7,6 @@ import {
   teamService,
   membershipService,
 } from "../../services";
-import { getRichTime } from "../../utils/getRichObject";
 import { BusinessError } from "../../utils/Rejection";
 
 type GetTimeParams = {
@@ -56,6 +55,8 @@ export default async function getTime(
     throw new BusinessError("INTERNAL_ERROR", "Team not found");
   }
 
+  const teamMemberships = await membershipService.getMembershipsByTeam(teamId);
+
   if (!canGetTime(actorMembership, project, timeData)) {
     throw new BusinessError(
       "FORBIDDEN",
@@ -63,10 +64,11 @@ export default async function getTime(
     );
   }
 
-  return getRichTime({
+  return await timeService.getRichTime({
     time: timeData,
     membership,
     project,
     team,
+    teamMemberships,
   });
 }
