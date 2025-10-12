@@ -9,24 +9,25 @@ export async function richHistory(
   );
 
   return history.map((historyItem) => {
-    const actorMembership = actorMembershipsMap[historyItem.membershipId];
+    const actorMembership = actorMembershipsMap[historyItem.actorId];
     const richHistoryItem = {
       ...historyItem,
     };
 
     if (actorMembership) {
-      richHistoryItem.membership = {
+      richHistoryItem.actor = {
         id: actorMembership.getId(),
         name: actorMembership.name,
       };
     } else {
-      richHistoryItem.membership = {
+      richHistoryItem.actor = {
         id: historyItem.membershipId || null,
-        name: "Unknown Membership",
+        name:
+          historyItem.actorType === "AUTO" ? "System event" : "Unknown actor",
       };
     }
 
-    delete richHistoryItem.membershipId;
+    delete richHistoryItem.actorId;
     return richHistoryItem;
   });
 }
