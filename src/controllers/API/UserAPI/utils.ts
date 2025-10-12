@@ -4,7 +4,7 @@ import {
   checkApiKey,
   getBearerToken,
 } from "../../../utils/tokens";
-import { users } from "../../../services";
+import { userService } from "../../../services";
 import { BusinessError } from "../../../utils/Rejection";
 
 async function checkToken(token: string) {
@@ -34,10 +34,10 @@ async function getUserByToken(token: string) {
   }
 
   const userId = await checkToken(bearerlessToken);
-  const currentUser = await users.getUserById(userId);
+  const currentUser = await userService.getUserById(userId);
 
   if (!currentUser) {
-    throw new BusinessError("UNAUTHORIZED", "Membership not found");
+    throw new BusinessError("NOT_FOUND", "User not found");
   }
 
   return currentUser;

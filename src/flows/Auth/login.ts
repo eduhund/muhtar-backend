@@ -1,9 +1,4 @@
-import {
-  authService,
-  membershipService,
-  teamService,
-  userService,
-} from "../../services";
+import { authService, membershipService, userService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type LoginFlowParams = {
@@ -37,24 +32,14 @@ export default async function login({
     ? await membershipService.getMembership({ userId, teamId })
     : null;
 
-  const team = teamId ? await teamService.getTeamById(teamId) : null;
-
   const membershipAccessToken = membership
     ? authService.generateMembershipToken(membership)
     : undefined;
-  const teamAccessToken =
-    membership && (membership.isOwner() || membership.isAdmin())
-      ? authService.generateTeamToken(membership)
-      : undefined;
 
   return {
-    user,
-    membership,
-    team,
     tokens: {
-      user: userAccessToken,
-      membership: membershipAccessToken,
-      team: teamAccessToken,
+      user: { accessToken: userAccessToken },
+      membership: { accessToken: membershipAccessToken },
     },
   };
 }
