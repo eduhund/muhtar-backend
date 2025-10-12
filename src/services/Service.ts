@@ -1,5 +1,3 @@
-import { getBinaryUUID } from "../utils/id";
-
 export default class Service {
   _dbAdapter: any;
   _collection: string | undefined;
@@ -10,7 +8,6 @@ export default class Service {
 
   async _create(data: any) {
     if (!this._collection) throw new Error("Collection not defined");
-    if (!data._id) data._id = getBinaryUUID();
     await this._dbAdapter.insert(this._collection, data);
     return data;
   }
@@ -24,6 +21,6 @@ export default class Service {
   }
 
   async _update(id: string, update: any) {
-    return this._dbAdapter.update(this._collection, getBinaryUUID(id), update);
+    return this._dbAdapter.update(this._collection, id, update);
   }
 }
