@@ -55,6 +55,7 @@ export default class BaseModel<T extends ModelType, H extends ActorType> {
     ts: number;
     action: "create" | "update" | "archive" | "restore";
     actorId: string;
+    actorType?: "user" | "membership" | "AUTO";
     changes?: ChangesObject<T>;
   }> = [];
   constructor(_id: BinaryID) {

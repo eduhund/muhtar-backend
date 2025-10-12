@@ -1,6 +1,6 @@
+import { ACCESS_ROLES, AccessRole } from "../utils/accessRoles";
 import BaseModel from "./BaseModel";
 
-export type MembershipAccessRole = "owner" | "admin" | "user" | "guest";
 export type MembershipStatus =
   | "active"
   | "pending"
@@ -8,19 +8,11 @@ export type MembershipStatus =
   | "invited"
   | "archived";
 
-const ACCESS_ROLES: MembershipAccessRole[] = [
-  "guest",
-  "user",
-  "admin",
-  "owner",
-];
-
 export default class Membership extends BaseModel<Membership, Membership> {
   userId: string;
   teamId: string;
   name: string;
-  accessRole: MembershipAccessRole;
-  workRole: string;
+  accessRole: AccessRole;
   status: MembershipStatus;
   connections: Record<string, any>;
   contract: Record<string, any>;
@@ -29,8 +21,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
     this.userId = data.userId;
     this.teamId = data.teamId;
     this.name = data.name;
-    this.accessRole = data.accessRole ?? "member";
-    this.workRole = data.workRole ?? "staff";
+    this.accessRole = data.accessRole ?? "user";
     this.status = data.status ?? data.userId ? "active" : "pending";
     this.connections = data.connections ?? {};
     this.history = data.history ?? [];
@@ -42,7 +33,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
     return this;
   }
 
-  changeAccessRole(accessRole: MembershipAccessRole, membership: Membership) {
+  changeAccessRole(accessRole: AccessRole, membership: Membership) {
     this._update({ accessRole }, membership);
     return this;
   }
@@ -105,7 +96,9 @@ export default class Membership extends BaseModel<Membership, Membership> {
   }
 
   isOwner() {
-    return this.accessRole === "owner" && this.status !== "declined";
+    return (
+      this.getId() === this.history[0]?.actorId && this.status !== "declined"
+    );
   }
 
   isAdmin() {

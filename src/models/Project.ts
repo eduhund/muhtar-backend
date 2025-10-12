@@ -1,5 +1,14 @@
+import { AccessRole } from "../utils/accessRoles";
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
+
+type ProjectMembership = {
+  membershipId: string;
+  accessRole: AccessRole;
+  workRole: string;
+  multiplier: number;
+  isDeleted: boolean;
+};
 
 export default class Project extends BaseModel<Project, Membership> {
   name: string;
@@ -8,7 +17,7 @@ export default class Project extends BaseModel<Project, Membership> {
   teamId: string;
   isDeleted: boolean;
   connections: Record<string, any>;
-  memberships: any[];
+  memberships: ProjectMembership[];
   history: any[];
   totalHours: number;
   constructor(data: any = {}) {
@@ -71,21 +80,17 @@ export default class Project extends BaseModel<Project, Membership> {
     isDeleted = false,
     workRole = "staff",
     multiplier = 1,
-  }: {
-    membershipId: string;
-    isDeleted?: boolean;
-    workRole?: string;
-    multiplier?: number;
-  }) {
+  }: ProjectMembership) {
     const index = this.memberships.findIndex(
       (membership) => membership.membershipId === membershipId
     );
     if (index !== -1) {
       this.memberships[index].isDeleted = isDeleted;
     } else {
-      const membershipData = {
+      const membershipData: ProjectMembership = {
         membershipId,
         isDeleted,
+        accessRole: "guest",
         workRole,
         multiplier,
       };

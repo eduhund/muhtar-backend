@@ -46,7 +46,7 @@ export default async function getTimetable(
 
         const projectRole = project.getProjectMembershipRole(actorMembershipId);
 
-        if (projectRole === "manager") {
+        if (projectRole === "admin") {
           return await timeService.getTimeList({
             teamId,
             projectId: thisProjectId,
