@@ -1,4 +1,4 @@
-import { v4 as uuidv7 } from "uuid";
+import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Team from "../models/Team";
