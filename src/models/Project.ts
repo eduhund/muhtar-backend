@@ -4,6 +4,7 @@ import Membership from "./Membership";
 export default class Project extends BaseModel<Project, Membership> {
   name: string;
   description: string;
+  customer: string | null;
   teamId: string;
   isDeleted: boolean;
   connections: Record<string, any>;
@@ -14,6 +15,7 @@ export default class Project extends BaseModel<Project, Membership> {
     super(data._id);
     this.name = data.name ?? "";
     this.description = data.description ?? "";
+    this.customer = data.customer ?? null;
     this.teamId = data.teamId;
     this.isDeleted = data.isDeleted ?? false;
     this.connections = data.connections ?? {};
