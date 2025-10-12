@@ -58,8 +58,10 @@ export default async function addMemberships(
 
     project.addMembership({
       membershipId: membership.getId(),
-      workRole: membershipData.workRole || membership.workRole,
+      accessRole: "guest",
+      workRole: membershipData.workRole || "staff",
       multiplier: membershipData.multiplier || 1,
+      isDeleted: false,
     });
   }
 

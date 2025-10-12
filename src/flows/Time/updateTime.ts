@@ -30,7 +30,7 @@ async function canUpdateTime(
 
   const isMembershipInProject = project.isProjectMembership(userMembershipId);
 
-  if (projectActorMembershipRole === "manager" && isMembershipInProject)
+  if (projectActorMembershipRole === "admin" && isMembershipInProject)
     return true;
 
   if (currentMembershipId === userMembershipId && isMembershipInProject)

@@ -29,7 +29,7 @@ export default class ApiKey extends BaseModel<ApiKey, Membership> {
   creationType: string;
   expiresAt: Date | null;
   revokedAt: Date | null;
-  constructor(data: ApiKeyParams) {
+  constructor(data: any = {}) {
     super(data._id);
     this.hash = data.hash;
     this.salt = data.salt;

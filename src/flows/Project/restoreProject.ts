@@ -15,7 +15,7 @@ async function canRestoreProject(
   const projectActorMembershipRole =
     project.getProjectMembershipRole(currentMembershipId);
 
-  if (projectActorMembershipRole === "manager") return true;
+  if (projectActorMembershipRole === "admin") return true;
   throw new BusinessError(
     "FORBIDDEN",
     "You are not allowed to restore project"

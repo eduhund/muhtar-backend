@@ -1,11 +1,12 @@
-import Membership, { MembershipAccessRole } from "../../models/Membership";
+import Membership from "../../models/Membership";
 import User from "../../models/User";
 import { membershipService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
+import { AccessRole } from "../../utils/accessRoles";
 
 type changeTeamMembershipParams = {
   membershipId: string;
-  accessRole: MembershipAccessRole;
+  accessRole: AccessRole;
 };
 
 const membershipAccessRoles = ["guest", "user", "manager", "admin", "owner"];

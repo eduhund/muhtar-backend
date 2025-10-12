@@ -56,7 +56,7 @@ export default class ProjectAnalyticsService {
       throw new Error("Membership not found");
     }
 
-    return totalHours * projectMembership.rate;
+    return totalHours * 1; //projectMembership.rate;
   }
 
   async calculateTotalAmount(project: Project) {

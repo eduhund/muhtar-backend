@@ -15,7 +15,7 @@ async function canArchiveTime(
     currentMembership.getId()
   );
 
-  if (projectActorMembershipRole === "manager") return true;
+  if (projectActorMembershipRole === "admin") return true;
 
   if (currentMembership.getId() === existingTime.membershipId) return true;
 

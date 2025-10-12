@@ -33,7 +33,7 @@ async function canAddTime(
     userMembership.getId()
   );
 
-  if (projectActorMembershipRole === "manager" && isMembershipInProject)
+  if (projectActorMembershipRole === "admin" && isMembershipInProject)
     return true;
 
   if (

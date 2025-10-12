@@ -4,7 +4,7 @@ import User from "../../models/User";
 import { membershipService, teamService } from "../../services";
 
 function isValidTeam(team: Team, membership: Membership): boolean {
-  return team && (membership.accessRole === "owner" || !team.isDeleted);
+  return team && (membership.accessRole === "admin" || !team.isDeleted);
 }
 
 export default async function getTeams(currentUser: User) {

@@ -8,7 +8,7 @@ function isValidTeam(team: Team, membership: Membership): boolean {
   return (
     team &&
     team.getId() === membership.teamId &&
-    (membership.accessRole === "owner" || !team.isDeleted)
+    (membership.accessRole === "admin" || !team.isDeleted)
   );
 }
 

@@ -1,4 +1,4 @@
-import { apiKeys } from "../services";
+import { apiKeysService } from "../services";
 import { readFile, writeFile } from "./fs";
 
 type tokenType = "user" | "membership" | "team";
@@ -26,7 +26,7 @@ for (const type of ["user", "membership", "team"] as tokenType[]) {
 
 export async function checkApiKey(token: string) {
   const [id, key] = token.split(":");
-  const existingKey = await apiKeys.findApiKey(id);
+  const existingKey = await apiKeysService.findApiKey(id);
   if (!existingKey || !existingKey.isActive() || !existingKey.verifyKey(key))
     return null;
   return existingKey;

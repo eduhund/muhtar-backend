@@ -1,5 +1,5 @@
 import Team from "../models/Team";
-import { memberships, teams, time } from "../services";
+import { membershipService, teamService, timeService } from "../services";
 import { getPreviousWorkday, isDayWorkday } from "../utils/isDayOff";
 
 function groupMembershipsByTeamId(membershipsList: any[]) {
@@ -19,8 +19,8 @@ function groupMembershipsByTeamId(membershipsList: any[]) {
 export default async function sendDailyTimeTrackReminder() {
   if (!(await isDayWorkday())) return;
   const previusWorkday = getPreviousWorkday();
-  const teamsList = await teams.getAllActiveTeams();
-  const membershipsList = await memberships.getAllActiveMemberships();
+  const teamsList = await teamService.getAllActiveTeams();
+  const membershipsList = await membershipService.getAllActiveMemberships();
 
   const membershipsByTeam = groupMembershipsByTeamId(membershipsList);
   for (const [teamId, memberships] of Object.entries(membershipsByTeam)) {
@@ -31,7 +31,7 @@ export default async function sendDailyTimeTrackReminder() {
     for (const membership of memberships) {
       if (!membership.connections?.slack?.userId) continue;
       if (membership.contract?.status === "bench") continue;
-      const timeList = await time.getTimeList({
+      const timeList = await timeService.getTimeList({
         teamId,
         membershipId: membership.getId(),
         from: previusWorkday,
