@@ -2,7 +2,6 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Time from "../models/Time";
-import { dateOnlyIsoString } from "../utils/date";
 import { richHistory } from "../utils/getRichObject";
 
 type TimeParams = {
@@ -87,7 +86,7 @@ export default class TimeService extends Service {
       projectId,
       teamId,
       taskId,
-      date: dateOnlyIsoString(date),
+      date,
       duration,
       comment,
       history: [
