@@ -33,5 +33,6 @@ export const authService: AuthService = new AuthService({
   userService,
   membershipService,
 });
+
 export const projectAnalytics: ProjectAnalyticsService =
   new ProjectAnalyticsService(projectService, timeService);

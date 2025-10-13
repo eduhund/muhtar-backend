@@ -9,9 +9,15 @@ import UserService from "./UserService";
 export default class AuthService {
   userService: UserService;
   membershipService: MembershipService;
-  constructor(services: any) {
-    this.userService = services.users;
-    this.membershipService = services.memberships;
+  constructor({
+    userService,
+    membershipService,
+  }: {
+    userService: UserService;
+    membershipService: MembershipService;
+  }) {
+    this.userService = userService;
+    this.membershipService = membershipService;
   }
   async verifyPassword(userId: string, inputPassword: string) {
     const { hash, salt } =
