@@ -94,5 +94,11 @@ export default async function getTimetable(
     })
   );
 
+  // Sort descending by date and timestamp
+  richTimeList.sort((a, b) => {
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
+    return b.ts - a.ts;
+  });
   return richTimeList;
 }
