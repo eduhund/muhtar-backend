@@ -7,7 +7,7 @@ export default class User extends BaseModel<User, User> {
   email: string;
   _password: { hash: string; salt: string } | null;
   createdAt: Date;
-  activeTeamId: string;
+  activeMembershipId: string;
   isBatch: boolean;
   constructor(data: any) {
     super(data._id);
@@ -16,7 +16,7 @@ export default class User extends BaseModel<User, User> {
     this.email = data.email ?? "";
     this._password = data._password ?? null;
     this.createdAt = data.createdAt ?? new Date();
-    this.activeTeamId = data.activeTeam ?? null;
+    this.activeMembershipId = data.activeMembershipId ?? null;
     this.isBatch = data.isBatch ?? false;
   }
 
@@ -54,8 +54,8 @@ export default class User extends BaseModel<User, User> {
     return this;
   }
 
-  async setActiveTeam(teamId: string) {
-    this._update({ activeTeamId: teamId }, this);
+  async setActiveMembershipId(membershipId: string) {
+    this._update({ activeMembershipId: membershipId }, this);
     return this;
   }
 }
