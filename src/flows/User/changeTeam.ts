@@ -22,7 +22,7 @@ export default async function changeTeam(
     throw new BusinessError("NOT_FOUND", "You are not a member of this team");
   }
 
-  await actorUser.setActiveTeam(teamId);
+  await actorUser.setActiveMembershipId(membership.getId());
 
   const membershipAccessToken = membership
     ? authService.generateMembershipToken(membership)

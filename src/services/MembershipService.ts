@@ -35,11 +35,17 @@ export default class MembershipService extends Service {
   async getActiveUserMembership(userId: string) {
     const user = await this.userService.getUserById(userId);
     if (!user) throw new Error("User not found");
-    if (user.activeTeamId) {
-      return this.getMembership({ userId, teamId: user.activeTeamId });
+    if (user.activeMembershipId) {
+      return this.getMembershipById(user.activeMembershipId);
     } else {
-      const memberships = await this.getMembershipsByUser(userId);
-      return memberships[0] || null;
+      const membership = await this.getMembershipsByUser(userId).then(
+        (m) => m[0] || null
+      );
+      if (membership) {
+        user.setActiveMembershipId(membership.getId());
+        await this.userService.save(user);
+      }
+      return membership;
     }
   }
 

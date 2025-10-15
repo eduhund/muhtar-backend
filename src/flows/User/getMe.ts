@@ -4,22 +4,9 @@ import { membershipService, teamService, userService } from "../../services";
 
 export default async function getMe(actorUser: User) {
   const userId = actorUser.getId();
-  const activeMembershipId = actorUser.activeMembershipId;
-  let activeMembership = null;
-
-  if (activeMembershipId) {
-    activeMembership = await membershipService.getMembershipById(
-      activeMembershipId
-    );
-  } else {
-    activeMembership = await membershipService
-      .getMembershipsByUser(userId)
-      .then((memberships) => memberships[0] || null);
-    if (activeMembership) {
-      actorUser.setActiveMembershipId(activeMembership.getId());
-      await userService.save(actorUser);
-    }
-  }
+  const activeMembership = await membershipService.getActiveUserMembership(
+    userId
+  );
   const team = activeMembership
     ? await teamService.getTeamById(activeMembership.teamId)
     : null;

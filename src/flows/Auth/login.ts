@@ -23,14 +23,7 @@ export default async function login({
 
   const userAccessToken = authService.generateUserToken(user);
 
-  const teamId =
-    activeTeamId ||
-    user.activeTeamId ||
-    (await membershipService.getMembershipsByUser(userId))[0]?.teamId ||
-    null;
-  const membership = teamId
-    ? await membershipService.getMembership({ userId, teamId })
-    : null;
+  const membership = await membershipService.getActiveUserMembership(userId);
 
   const membershipAccessToken = membership
     ? authService.generateMembershipToken(membership)
