@@ -10,8 +10,8 @@ export default class MembershipService extends Service {
   teamService: TeamService;
   constructor(adapter: any, collection: string, services: any) {
     super(adapter, collection);
-    this.userService = services.users;
-    this.teamService = services.teams;
+    this.userService = services.userService;
+    this.teamService = services.teamService;
   }
   async createMembership(data: any) {
     const membership = new Membership({
