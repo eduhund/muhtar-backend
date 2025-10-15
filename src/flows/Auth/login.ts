@@ -4,13 +4,13 @@ import { BusinessError } from "../../utils/Rejection";
 type LoginFlowParams = {
   email: string;
   password: string;
-  activeTeamId?: string;
+  activeMembershipId?: string;
 };
 
 export default async function login({
   email,
   password,
-  activeTeamId,
+  activeMembershipId,
 }: LoginFlowParams) {
   const user = await userService.getUserByEmail(email);
   if (!user) throw new BusinessError("INVALID_CREDENTIALS", "User not found");
