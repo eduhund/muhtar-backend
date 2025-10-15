@@ -14,11 +14,19 @@ type GetTimeListParams = {
   date?: string;
   from?: string;
   to?: string;
-  withDeleted?: boolean;
+  withArchived?: boolean;
 };
 
+function sortTimetable(timetable: Time[]) {
+  return timetable.sort((a, b) => {
+    if (a.date < b.date) return 1;
+    if (a.date > b.date) return -1;
+    return b.ts - a.ts;
+  });
+}
+
 export default async function getTimetable(
-  { projectId, membershipId, date, from, to, withDeleted }: GetTimeListParams,
+  { projectId, membershipId, date, from, to, withArchived }: GetTimeListParams,
   actorMembership: Membership
 ) {
   const { teamId } = actorMembership;
@@ -26,7 +34,43 @@ export default async function getTimetable(
 
   let timetable = [];
 
-  if (actorMembership.isOwner() || actorMembership.isAdmin()) {
+  if (actorMembership.isGuest()) {
+    let resultMembershipId = actorMembershipId;
+    if (membershipId && membershipId !== actorMembershipId) {
+      throw new Error("Guests can only access their own timetable");
+    }
+
+    if (projectId) {
+      const project = await projectService.getProjectById(projectId);
+      if (!project) throw new Error("Project not found");
+
+      if (!project.isProjectMembership(actorMembershipId))
+        throw new Error("Access denied to this project");
+
+      const projectRole = project.getProjectMembershipRole(actorMembershipId);
+      if (projectRole === "admin" || projectRole === "user") {
+        timeService.getTimeList({
+          teamId,
+          projectId,
+          membershipId,
+          date,
+          from,
+          to,
+        });
+      } else {
+        timeService.getTimeList({
+          teamId,
+          projectId,
+          membershipId: actorMembershipId,
+          date,
+          from,
+          to,
+        });
+      }
+    }
+  }
+
+  if (actorMembership.isAdmin()) {
     timetable = await timeService.getTimeList({
       teamId,
       projectId,
@@ -34,15 +78,16 @@ export default async function getTimetable(
       date,
       from,
       to,
-      withDeleted,
+      withArchived,
     });
   } else {
     const currentMembershipProjectList =
       await projectService.getProjectsByMembershipId(actorMembershipId);
+
     const timePerProject = await Promise.all(
       currentMembershipProjectList.map(async (project: Project) => {
         const thisProjectId = project.getId();
-        if (thisProjectId !== projectId) return [];
+        if (projectId && projectId !== thisProjectId) return [];
 
         const projectRole = project.getProjectMembershipRole(actorMembershipId);
 
@@ -54,21 +99,19 @@ export default async function getTimetable(
             date,
             from,
             to,
-            withDeleted,
+            withArchived,
           });
-        } else if (projectRole === "user") {
+        } else {
           return await timeService.getTimeList({
             teamId,
             projectId: thisProjectId,
             membershipId: actorMembershipId,
           });
-        } else {
-          return [];
         }
       })
     );
 
-    timetable = timePerProject.flat().sort((a, b) => a.ts - b.ts);
+    timetable = timePerProject.flat();
   }
 
   const team = await teamService.getTeamById(teamId);
@@ -94,11 +137,7 @@ export default async function getTimetable(
     })
   );
 
-  // Sort descending by date and timestamp
-  richTimeList.sort((a, b) => {
-    if (a.date < b.date) return 1;
-    if (a.date > b.date) return -1;
-    return b.ts - a.ts;
-  });
+  sortTimetable(richTimeList);
+
   return richTimeList;
 }

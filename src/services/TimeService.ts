@@ -23,7 +23,7 @@ type TimeQueryParams = {
   date?: string;
   from?: string;
   to?: string;
-  withDeleted?: boolean;
+  withArchived?: boolean;
 };
 
 type TimeQuery = {
@@ -45,7 +45,7 @@ function buildQuery({
   date,
   from,
   to,
-  withDeleted,
+  withArchived,
 }: TimeQueryParams): Partial<TimeQuery> {
   if (id) return { id };
   const query: Partial<TimeQuery> = {
@@ -61,7 +61,7 @@ function buildQuery({
     if (to) dateQuery.$lt = to;
     if (Object.keys(dateQuery).length > 0) query.date = dateQuery;
   }
-  if (withDeleted !== undefined) query.isDeleted = false;
+  if (withArchived !== undefined) query.isDeleted = false;
   return query;
 }
 

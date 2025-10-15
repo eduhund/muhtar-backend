@@ -109,6 +109,10 @@ export default class Membership extends BaseModel<Membership, Membership> {
     return this.accessRole === "user" && this.status !== "declined";
   }
 
+  isGuest() {
+    return this.accessRole === "guest" && this.status !== "declined";
+  }
+
   getAccessRoleIndex() {
     const index = ACCESS_ROLES.indexOf(this.accessRole);
     if (index === -1) {
