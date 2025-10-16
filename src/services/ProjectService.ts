@@ -133,9 +133,9 @@ export default class ProjectService extends Service {
     );
   }
 
-  async getRichProject({ project, team, memberships }: any) {
+  async getRichProject({ project, memberships }: any) {
     const richProject = { ...project.toJSON() };
-    //await getRichTeam(richProject, team);
+    delete richProject.teamId;
 
     //richProject.history = await getRichHistory(project.history, memberships);
 
