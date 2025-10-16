@@ -175,7 +175,5 @@ export async function getRichObject({
   richObject.projectId && (await getRichProject(richObject, project));
   richObject.teamId && (await getRichTeam(richObject, team));
 
-  //richTime.history = await richHistory(time.history);
-
   return richObject;
 }

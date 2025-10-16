@@ -2,7 +2,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Time from "../models/Time";
-import { richHistory } from "../utils/getRichObject";
+import { getRichObject, richHistory } from "../utils/getRichObject";
 
 type TimeParams = {
   membershipId: string;
@@ -146,48 +146,12 @@ export default class TimeService extends Service {
   }
 
   async getRichTime({ time, membership, project, team, teamMemberships }: any) {
-    const richTime = { ...time.toJSON() };
-    if (membership) {
-      richTime.membership = {
-        id: membership.getId(),
-        name: membership.name,
-      };
-    } else {
-      richTime.membership = {
-        id: richTime.membershipId || null,
-        name: "Unknown Membership",
-      };
-    }
-
-    if (project) {
-      richTime.project = {
-        id: project.getId(),
-        name: project.customer
-          ? `${project.customer} / ${project.name}`
-          : project.name,
-      };
-    } else {
-      richTime.project = {
-        id: richTime.projectId || null,
-        name: "Unknown Project",
-      };
-    }
-
-    if (team) {
-      richTime.team = {
-        id: team.getId(),
-        name: team.name,
-      };
-    } else {
-      richTime.team = {
-        id: richTime.teamId || null,
-        name: "Unknown Team",
-      };
-    }
-
-    delete richTime.membershipId;
-    delete richTime.projectId;
-    delete richTime.teamId;
+    const richTime = await getRichObject({
+      baseObject: { ...time.toJSON() },
+      membership,
+      project,
+      team,
+    });
 
     richTime.history = await richHistory(time.history, teamMemberships);
 
