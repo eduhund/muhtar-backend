@@ -53,8 +53,7 @@ export async function getRichUser(object: any, user?: User | null) {
         name: user.getFullName(),
       };
       delete object.userId;
-    }
-    throw new Error("User ID does not match the object's userId");
+    } else throw new Error("User ID does not match the object's userId");
   } else {
     const findedUser = await userService.getUserById(object.userId);
     if (findedUser) {
@@ -83,8 +82,8 @@ export async function getRichMembership(
         name: membership.name,
       };
       delete object.membershipId;
-    }
-    throw new Error("Membership ID does not match the object's membershipId");
+    } else
+      throw new Error("Membership ID does not match the object's membershipId");
   } else {
     const findedMembership = await membershipService.getMembershipById(
       object.membershipId
@@ -112,9 +111,8 @@ export async function getRichProject(object: any, project?: Project | null) {
         name: project.name,
         customer: project.customer,
       };
-      delete object.project;
-    }
-    throw new Error("Project ID does not match the object's projectId");
+      delete object.projectId;
+    } else throw new Error("Project ID does not match the object's projectId");
   } else {
     const findedProject = await projectService.getProjectById(object.projectId);
     if (findedProject) {
@@ -141,8 +139,7 @@ export async function getRichTeam(object: any, team?: Team | null) {
         name: team.name,
       };
       delete object.teamId;
-    }
-    throw new Error("Team ID does not match the object's teamId");
+    } else throw new Error("Team ID does not match the object's teamId");
   } else {
     const findedTeam = await teamService.getTeamById(object.teamId);
     if (findedTeam) {
