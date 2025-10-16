@@ -1,9 +1,6 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import Time from "../../models/Time";
-import { membershipService, projectService, timeService } from "../../services";
-import { getRichProject } from "../../utils/getRichObject";
-import { BusinessError } from "../../utils/Rejection";
+import { projectService } from "../../services";
 
 function canGetProject(currentMembership: Membership, project: Project) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
@@ -23,6 +20,6 @@ export default async function getProject(
   if (!project) return;
 
   return canGetProject(actorMembership, project)
-    ? getRichProject(project)
+    ? projectService.getRichProject({ project })
     : undefined;
 }
