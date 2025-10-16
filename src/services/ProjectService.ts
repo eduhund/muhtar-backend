@@ -8,6 +8,7 @@ import {
   getRichObject,
   getRichProject,
   getRichTeam,
+  richHistory,
 } from "../utils/getRichObject";
 
 type ProjectQueryParams = {
@@ -133,11 +134,13 @@ export default class ProjectService extends Service {
     );
   }
 
-  async getRichTime({ time, membership, project, team }: any) {
+  async getRichTime({ time, membership, project, team, memberships }: any) {
     const richProject = { ...time.toJSON() };
     await getRichMembership(richProject, membership);
     await getRichProject(richProject, project);
     await getRichTeam(richProject, team);
+
+    richProject.history = await richHistory(time.history, memberships);
 
     return richProject;
   }

@@ -35,7 +35,6 @@ export default async function getTimetable(
   let timetable = [];
 
   if (actorMembership.isGuest()) {
-    let resultMembershipId = actorMembershipId;
     if (membershipId && membershipId !== actorMembershipId) {
       throw new Error("Guests can only access their own timetable");
     }
@@ -115,15 +114,15 @@ export default async function getTimetable(
   }
 
   const team = await teamService.getTeamById(teamId);
-  const teamProjects = await projectService.getProjectsByTeam(teamId);
-  const teamMemberships = await membershipService.getMembershipsByTeam(teamId);
+  const projects = await projectService.getProjectsByTeam(teamId);
+  const memberships = await membershipService.getMembershipsByTeam(teamId);
 
   const richTimeList = await Promise.all(
     timetable.map(async (time: Time) => {
-      const membership = teamMemberships.find(
+      const membership = memberships.find(
         (m: Membership) => m.getId() === time.membershipId
       );
-      const project = teamProjects.find(
+      const project = projects.find(
         (p: Project) => p.getId() === time.projectId
       );
       const richTime = await timeService.getRichTime({
@@ -131,7 +130,7 @@ export default async function getTimetable(
         membership,
         project,
         team,
-        teamMemberships,
+        memberships,
       });
       return richTime;
     })

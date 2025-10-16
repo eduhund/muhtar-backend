@@ -150,13 +150,13 @@ export default class TimeService extends Service {
     return data.map((time: any) => new Time(time));
   }
 
-  async getRichTime({ time, membership, project, team, teamMemberships }: any) {
+  async getRichTime({ time, membership, project, team, memberships }: any) {
     const richTime = { ...time.toJSON() };
     await getRichMembership(richTime, membership);
     await getRichProject(richTime, project);
     await getRichTeam(richTime, team);
 
-    richTime.history = await richHistory(time.history, teamMemberships);
+    richTime.history = await richHistory(time.history, memberships);
 
     return richTime;
   }

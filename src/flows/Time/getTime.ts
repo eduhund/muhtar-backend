@@ -55,7 +55,7 @@ export default async function getTime(
     throw new BusinessError("INTERNAL_ERROR", "Team not found");
   }
 
-  const teamMemberships = await membershipService.getMembershipsByTeam(teamId);
+  const memberships = await membershipService.getMembershipsByTeam(teamId);
 
   if (!canGetTime(actorMembership, project, timeData)) {
     throw new BusinessError(
@@ -69,6 +69,6 @@ export default async function getTime(
     membership,
     project,
     team,
-    teamMemberships,
+    memberships,
   });
 }

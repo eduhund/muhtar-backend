@@ -80,6 +80,7 @@ export default async function addTime(
     membership,
     project,
     team,
+    memberships: [membership],
   });
 
   return richTime;
