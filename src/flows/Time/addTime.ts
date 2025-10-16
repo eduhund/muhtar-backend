@@ -6,7 +6,6 @@ import {
   timeService,
   membershipService,
 } from "../../services";
-import { getRichTime } from "../../utils/getRichObject";
 import { BusinessError } from "../../utils/Rejection";
 
 type AddTimeParams = {
@@ -76,7 +75,7 @@ export default async function addTime(
 
   const newTime = await timeService.create(timeData, actorMembership);
 
-  const richTime = await getRichTime({
+  const richTime = await timeService.getRichTime({
     time: newTime,
     membership,
     project,

@@ -92,5 +92,5 @@ export default async function updateTime(
     actorMembership
   );
 
-  return {};
+  return time;
 }

@@ -29,17 +29,18 @@ export default async function archiveTime(
   id: string,
   actorMembership: Membership
 ) {
-  const existingTime = await timeService.getTimeById(id);
-  if (!existingTime) {
+  const time = await timeService.getTimeById(id);
+  if (!time) {
     throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
-  const project = await projectService.getProjectById(existingTime.projectId);
+  const project = await projectService.getProjectById(time.projectId);
   if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
-  await canArchiveTime(actorMembership, existingTime, project);
+  await canArchiveTime(actorMembership, time, project);
 
-  await existingTime.archive(actorMembership);
+  time.archive(actorMembership);
+  await timeService.save(time);
 
-  return {};
+  return time;
 }

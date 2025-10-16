@@ -29,17 +29,18 @@ export default async function restoreTime(
   id: string,
   actorMembership: Membership
 ) {
-  const existingTime = await timeService.getTimeById(id);
-  if (!existingTime) {
+  const time = await timeService.getTimeById(id);
+  if (!time) {
     throw new BusinessError("NOT_FOUND", `Time entry not found`);
   }
 
-  const project = await projectService.getProjectById(existingTime.projectId);
+  const project = await projectService.getProjectById(time.projectId);
   if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
-  await canRestoreTime(actorMembership, existingTime, project);
+  await canRestoreTime(actorMembership, time, project);
 
-  await existingTime.restore(actorMembership);
+  time.restore(actorMembership);
+  await timeService.save(time);
 
-  return {};
+  return time;
 }
