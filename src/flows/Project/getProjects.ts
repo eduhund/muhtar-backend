@@ -21,9 +21,11 @@ export default async function getProjects(
   });
 
   const extentedProjectList = await Promise.all(
-    projectList.map((project: Project) =>
-      getProject({ id: project.getId() }, actorMembership)
-    )
+    projectList
+      .map((project: Project) =>
+        getProject({ id: project.getId() }, actorMembership)
+      )
+      .filter((p: Project) => p !== undefined || p !== null)
   );
 
   return extentedProjectList;

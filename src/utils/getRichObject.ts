@@ -1,15 +1,35 @@
 import Membership from "../models/Membership";
 import Project from "../models/Project";
 import Team from "../models/Team";
+import Time from "../models/Time";
 import User from "../models/User";
 import {
   membershipService,
   projectService,
   teamService,
+  timeService,
   userService,
 } from "../services";
 
-export async function richHistory(
+function groupTimeByMembership(projectTimeList: Time[]) {
+  const timelistPerMembership: Record<
+    string,
+    { list: Time[]; totalValue: number }
+  > = {};
+
+  for (const entry of projectTimeList) {
+    const { membershipId, duration } = entry;
+    if (!timelistPerMembership[membershipId]) {
+      timelistPerMembership[membershipId] = { list: [], totalValue: 0 };
+    }
+    timelistPerMembership[membershipId].list.push(entry);
+    timelistPerMembership[membershipId].totalValue += duration;
+  }
+
+  return timelistPerMembership;
+}
+
+export async function getRichHistory(
   history: any[],
   teamMemberships: Membership[]
 ) {
@@ -41,6 +61,59 @@ export async function richHistory(
     delete richHistoryItem.actorId;
     delete richHistoryItem.actorType;
     return richHistoryItem;
+  });
+}
+
+export async function getRichMembershipList(project: Project) {
+  const projectTimeList = await timeService.getTimeByProject(project.getId());
+  const timelistPerMembership = groupTimeByMembership(projectTimeList);
+  const totalSpentTime = Object.values(timelistPerMembership).reduce(
+    (sum: number, { totalValue }) => sum + totalValue,
+    0
+  );
+
+  const projectMembershipIds = new Set(
+    project.memberships.map((m) => m.membershipId)
+  );
+
+  const projectMemberships = await Promise.all(
+    project.memberships.map(async (m) => {
+      const membership = await membershipService.getMembershipById(
+        m.membershipId
+      );
+      const membershipTotalSpentTime =
+        timelistPerMembership[m.membershipId]?.totalValue || 0;
+      return Object.assign(m, {
+        name: membership?.name || "Unknown Membership",
+        membershipTotalSpentTime,
+      });
+    })
+  );
+
+  const guestMembershipIds = Object.keys(timelistPerMembership).filter(
+    (id) => !projectMembershipIds.has(id)
+  );
+
+  const projectGuests = await Promise.all(
+    guestMembershipIds.map(async (membershipId) => {
+      const membership = await membershipService.getMembershipById(
+        membershipId
+      );
+      const membershipTotalSpentTime =
+        timelistPerMembership[membershipId]?.totalValue || 0;
+      return {
+        membershipId,
+        name: membership?.name || "Unknown Membership",
+        membershipTotalSpentTime,
+        timeList: timelistPerMembership[membershipId].list,
+      };
+    })
+  );
+
+  return Object.assign(project, {
+    memberships: projectMemberships,
+    guests: projectGuests,
+    totalSpentTime,
   });
 }
 

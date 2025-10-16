@@ -1,7 +1,12 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Time from "../../models/Time";
-import { membershipService, projectService, timeService } from "../../services";
+import {
+  membershipService,
+  projectService,
+  teamService,
+  timeService,
+} from "../../services";
 import { dateOnlyIsoString } from "../../utils/date";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -92,5 +97,17 @@ export default async function updateTime(
     actorMembership
   );
 
-  return time;
+  await timeService.save(time);
+
+  const richTime = await timeService.getRichTime({
+    time,
+    membership: newMembership,
+    project: newProject,
+    team: await teamService.getTeamById(newMembership.teamId),
+    memberships: await membershipService.getMembershipsByTeam(
+      newMembership.teamId
+    ),
+  });
+
+  return richTime;
 }
