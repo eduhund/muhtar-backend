@@ -41,7 +41,7 @@ export default class MongoAdapter {
   }
 
   async insert(collection: string, doc: any) {
-    const convertedDoc = convertIdToBinary(doc);
+    const convertedDoc = convertIdToBinary({ ...doc });
     await this.db.collection(collection).insertOne(convertedDoc);
   }
 

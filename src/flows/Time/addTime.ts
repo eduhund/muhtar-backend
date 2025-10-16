@@ -48,7 +48,9 @@ export default async function addTime(
   { membershipId, projectId, taskId, date, duration, comment }: AddTimeParams,
   actorMembership: Membership
 ) {
-  const membership = await membershipService.getMembershipById(membershipId);
+  const membership = membershipId
+    ? await membershipService.getMembershipById(membershipId)
+    : actorMembership;
 
   if (!membership) {
     throw new BusinessError("NOT_FOUND", "Membership not found");

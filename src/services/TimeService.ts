@@ -3,10 +3,10 @@ import { v7 as uuidv7 } from "uuid";
 import Service from "./Service";
 import Time from "../models/Time";
 import {
+  getRichHistory,
   getRichMembership,
   getRichProject,
   getRichTeam,
-  richHistory,
 } from "../utils/getRichObject";
 
 type TimeParams = {
@@ -98,7 +98,8 @@ export default class TimeService extends Service {
         {
           ts: Date.now(),
           action: "create",
-          membershipId: currentMembership.getId(),
+          actorType: "membership",
+          actorId: currentMembership.getId(),
         },
       ],
     });
@@ -156,7 +157,7 @@ export default class TimeService extends Service {
     await getRichProject(richTime, project);
     await getRichTeam(richTime, team);
 
-    richTime.history = await richHistory(time.history, memberships);
+    richTime.history = await getRichHistory(time.history, memberships);
 
     return richTime;
   }

@@ -4,11 +4,10 @@ import Service from "./Service";
 import Project from "../models/Project";
 import Membership from "../models/Membership";
 import {
+  getRichHistory,
   getRichMembership,
-  getRichObject,
   getRichProject,
   getRichTeam,
-  richHistory,
 } from "../utils/getRichObject";
 
 type ProjectQueryParams = {
@@ -140,7 +139,7 @@ export default class ProjectService extends Service {
     await getRichProject(richProject, project);
     await getRichTeam(richProject, team);
 
-    richProject.history = await richHistory(time.history, memberships);
+    richProject.history = await getRichHistory(time.history, memberships);
 
     return richProject;
   }
