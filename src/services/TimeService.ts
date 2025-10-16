@@ -2,7 +2,12 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Time from "../models/Time";
-import { getRichObject, richHistory } from "../utils/getRichObject";
+import {
+  getRichMembership,
+  getRichProject,
+  getRichTeam,
+  richHistory,
+} from "../utils/getRichObject";
 
 type TimeParams = {
   membershipId: string;
@@ -146,12 +151,10 @@ export default class TimeService extends Service {
   }
 
   async getRichTime({ time, membership, project, team, teamMemberships }: any) {
-    const richTime = await getRichObject({
-      baseObject: { ...time.toJSON() },
-      membership,
-      project,
-      team,
-    });
+    const richTime = { ...time.toJSON() };
+    await getRichMembership(richTime, membership);
+    await getRichProject(richTime, project);
+    await getRichTeam(richTime, team);
 
     richTime.history = await richHistory(time.history, teamMemberships);
 

@@ -44,7 +44,7 @@ export async function richHistory(
   });
 }
 
-async function getRichUser(object: any, user?: User | null) {
+export async function getRichUser(object: any, user?: User | null) {
   if (user) {
     const userId = user.getId();
     if (object.membershipId === userId) {
@@ -71,7 +71,10 @@ async function getRichUser(object: any, user?: User | null) {
   return object;
 }
 
-async function getRichMembership(object: any, membership?: Membership | null) {
+export async function getRichMembership(
+  object: any,
+  membership?: Membership | null
+) {
   if (membership) {
     const membershipId = membership.getId();
     if (object.membershipId === membershipId) {
@@ -100,7 +103,7 @@ async function getRichMembership(object: any, membership?: Membership | null) {
   return object;
 }
 
-async function getRichProject(object: any, project?: Project | null) {
+export async function getRichProject(object: any, project?: Project | null) {
   if (project) {
     const projectId = project.getId();
     if (object.projectId === projectId) {
@@ -129,7 +132,7 @@ async function getRichProject(object: any, project?: Project | null) {
   return object;
 }
 
-async function getRichTeam(object: any, team?: Team | null) {
+export async function getRichTeam(object: any, team?: Team | null) {
   if (team) {
     const teamId = team.getId();
     if (object.teamId === teamId) {
