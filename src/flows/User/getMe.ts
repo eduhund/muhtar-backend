@@ -4,19 +4,17 @@ import { membershipService, teamService, userService } from "../../services";
 
 export default async function getMe(actorUser: User) {
   const userId = actorUser.getId();
+  const memberships = await membershipService.getMembershipsByUser(userId);
   const activeMembership = await membershipService.getActiveUserMembership(
     userId
   );
-  const team = activeMembership
+  const activeTeam = activeMembership
     ? await teamService.getTeamById(activeMembership.teamId)
     : null;
   return {
     ...actorUser.toJSON(),
-    activeMembership: activeMembership
-      ? {
-          ...activeMembership.toJSON(),
-          team: team ? team.toJSON() : null,
-        }
-      : null,
+    memberships: memberships.map((m: Membership) => m.toJSON()),
+    activeMembership: activeMembership ? activeMembership.toJSON() : null,
+    activeTeam: activeTeam ? activeTeam.toJSON() : null,
   };
 }
