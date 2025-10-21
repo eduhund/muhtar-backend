@@ -5,6 +5,25 @@ import Membership from "../models/Membership";
 import UserService from "./UserService";
 import TeamService from "./TeamService";
 
+type MembershipQueryParams = {
+  teamId: string;
+  accessRole?: string;
+  status?: string;
+};
+
+function buildQuery({
+  teamId,
+  accessRole,
+  status,
+}: MembershipQueryParams): Partial<MembershipQueryParams> {
+  const query: Partial<MembershipQueryParams> = {
+    teamId,
+  };
+  if (accessRole) query.accessRole = accessRole;
+  if (status) query.status = status;
+  return query;
+}
+
 export default class MembershipService extends Service {
   userService: UserService;
   teamService: TeamService;
@@ -25,6 +44,12 @@ export default class MembershipService extends Service {
   async getMembership({ userId, teamId }: { userId: string; teamId: string }) {
     const data = await this._findOne({ userId, teamId });
     return data ? new Membership(data) : null;
+  }
+
+  async getMemberships(params: MembershipQueryParams) {
+    const query = buildQuery(params);
+    const data = await this._findMany(query);
+    return data.map((membership: any) => new Membership(membership));
   }
 
   async getAllActiveMemberships() {

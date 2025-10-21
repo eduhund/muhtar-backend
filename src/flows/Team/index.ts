@@ -9,6 +9,7 @@ import removeMembershipFromTeamFlow from "./removeMembershipFromTeam";
 import addWorkRoleFlow from "./addWorkRole";
 import updateWorkRoleFlow from "./updateWorkRole";
 import removeWorkRoleFlow from "./removeWorkRole";
+import getTeamMembershipsFlow from "./getTeamMemberships";
 
 export {
   getTeamsFlow,
@@ -22,4 +23,5 @@ export {
   addWorkRoleFlow,
   updateWorkRoleFlow,
   removeWorkRoleFlow,
+  getTeamMembershipsFlow,
 };
