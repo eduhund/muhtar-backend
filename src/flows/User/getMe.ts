@@ -11,10 +11,15 @@ export default async function getMe(actorUser: User) {
   const activeTeam = activeMembership
     ? await teamService.getTeamById(activeMembership.teamId)
     : null;
-  return {
+
+  const data = {
     ...actorUser.toJSON(),
     memberships: memberships.map((m: Membership) => m.toJSON()),
     activeMembership: activeMembership ? activeMembership.toJSON() : null,
     activeTeam: activeTeam ? activeTeam.toJSON() : null,
   };
+
+  delete data.activeMembershipId;
+
+  return data;
 }
