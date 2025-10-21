@@ -1,6 +1,6 @@
 import Membership from "../../models/Membership";
 import User from "../../models/User";
-import { membershipService, teamService, userService } from "../../services";
+import { membershipService, teamService } from "../../services";
 
 export default async function getMe(actorUser: User) {
   const userId = actorUser.getId();
