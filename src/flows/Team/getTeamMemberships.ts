@@ -1,8 +1,9 @@
 import Membership from "../../models/Membership";
 import { membershipService } from "../../services";
+import { AccessRole } from "../../utils/accessRoles";
 
 type GetMembershipFilters = {
-  accessRole?: string;
+  accessRole?: AccessRole;
   status?: string;
 };
 

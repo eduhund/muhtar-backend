@@ -4,10 +4,11 @@ import Service from "./Service";
 import Membership from "../models/Membership";
 import UserService from "./UserService";
 import TeamService from "./TeamService";
+import { AccessRole } from "../utils/accessRoles";
 
 type MembershipQueryParams = {
   teamId: string;
-  accessRole?: string;
+  accessRole?: AccessRole;
   status?: string;
 };
 
