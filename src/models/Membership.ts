@@ -110,7 +110,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
   }
 
   isMember() {
-    return this.accessRole === "user" && this.status !== "declined";
+    return this.accessRole === "member" && this.status !== "declined";
   }
 
   isGuest() {

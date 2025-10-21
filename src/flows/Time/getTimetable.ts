@@ -47,7 +47,7 @@ export default async function getTimetable(
         throw new Error("Access denied to this project");
 
       const projectRole = project.getProjectMembershipRole(actorMembershipId);
-      if (projectRole === "admin" || projectRole === "user") {
+      if (projectRole === "admin" || projectRole === "manager") {
         timeService.getTimeList({
           teamId,
           projectId,

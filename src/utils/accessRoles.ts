@@ -1,2 +1,7 @@
-export type AccessRole = "admin" | "manager" | "user" | "guest";
-export const ACCESS_ROLES: AccessRole[] = ["guest", "user", "manager", "admin"];
+export type AccessRole = "admin" | "manager" | "member" | "guest";
+export const ACCESS_ROLES: AccessRole[] = [
+  "guest",
+  "member",
+  "manager",
+  "admin",
+];

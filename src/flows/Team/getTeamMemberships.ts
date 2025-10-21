@@ -13,11 +13,27 @@ export default async function getMemberships(
 ) {
   const { teamId } = actorMembership;
 
+  if (actorMembership.isMember() || actorMembership.isGuest()) {
+    return [actorMembership];
+  }
+
   const membershipList = await membershipService.getMemberships({
     teamId,
     accessRole,
     status,
   });
 
-  return membershipList;
+  if (actorMembership.isManager()) {
+    return membershipList.map((membership: Membership) => {
+      const maskedMembership = membership.toJSON();
+      delete maskedMembership.contract;
+      return maskedMembership;
+    });
+  }
+
+  if (actorMembership.isAdmin()) {
+    return membershipList;
+  }
+
+  return [];
 }
