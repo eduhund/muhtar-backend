@@ -22,7 +22,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
     this.teamId = data.teamId;
     this.name = data.name;
     this.accessRole = data.accessRole ?? "user";
-    this.status = data.status ?? data.userId ? "active" : "pending";
+    this.status = data.status;
     this.connections = data.connections ?? {};
     this.history = data.history ?? [];
     this.contract = data.contract ?? {};
