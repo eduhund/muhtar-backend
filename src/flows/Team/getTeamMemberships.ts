@@ -26,7 +26,7 @@ export default async function getMemberships(
   if (actorMembership.isManager()) {
     return membershipList.map((membership: Membership) => {
       const maskedMembership = membership.toJSON();
-      delete maskedMembership.contract;
+      delete maskedMembership.contract?.rate;
       return maskedMembership;
     });
   }
