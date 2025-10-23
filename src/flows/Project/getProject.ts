@@ -3,7 +3,12 @@ import Project from "../../models/Project";
 import { projectService } from "../../services";
 
 function canGetProject(currentMembership: Membership, project: Project) {
-  if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
+  if (
+    currentMembership.isOwner() ||
+    currentMembership.isAdmin() ||
+    project.visibility === "team"
+  )
+    return true;
 
   const currentMembershipId = currentMembership.getId();
 

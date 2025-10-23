@@ -15,9 +15,11 @@ export default class Project extends BaseModel<Project, Membership> {
   description: string;
   customer: string | null;
   teamId: string;
+  status?: "active" | "archived";
   isDeleted: boolean;
   connections: Record<string, any>;
   memberships: ProjectMembership[];
+  visibility?: "private" | "team";
   history: any[];
   totalHours: number;
   constructor(data: any = {}) {
@@ -26,9 +28,11 @@ export default class Project extends BaseModel<Project, Membership> {
     this.description = data.description ?? "";
     this.customer = data.customer ?? null;
     this.teamId = data.teamId;
+    this.status = data.status ?? "active";
     this.isDeleted = data.isDeleted ?? false;
     this.connections = data.connections ?? {};
     this.memberships = data.memberships ?? [];
+    this.visibility = data.visibility ?? "private";
     this.history = data.history ?? [];
     this.totalHours = data.totalHours ?? 0;
   }
