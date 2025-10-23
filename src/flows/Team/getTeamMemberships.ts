@@ -13,7 +13,7 @@ export default async function getMemberships(
 ) {
   const { teamId } = actorMembership;
 
-  if (actorMembership.isMember() || actorMembership.isGuest()) {
+  if (actorMembership.isGuest()) {
     return [actorMembership];
   }
 
@@ -23,9 +23,5 @@ export default async function getMemberships(
     status,
   });
 
-  if (actorMembership.isAdmin()) {
-    return membershipList;
-  }
-
-  return [];
+  return membershipList;
 }
