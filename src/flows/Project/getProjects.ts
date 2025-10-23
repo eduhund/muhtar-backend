@@ -20,12 +20,30 @@ export default async function getProjects(
     status,
   });
 
+  let filteredProjectList: Project[] = [];
+
+  if (actorMembership.isAdmin() || actorMembership.isManager()) {
+    filteredProjectList = projectList;
+  } else {
+    console.log("Filtering projects for membership:", actorMembership.getId());
+    const actorMembershipId = actorMembership.getId();
+
+    filteredProjectList = projectList.filter(
+      (project: Project) =>
+        project.visibility === "team" ||
+        (Array.isArray(project.memberships) &&
+          project.memberships.some(
+            (m: any) => m.membershipId === actorMembershipId
+          ))
+    );
+  }
+
+  filteredProjectList.forEach((project) => console.log(project.name));
+
   const extentedProjectList = await Promise.all(
-    projectList
-      .map((project: Project) =>
-        getProject({ id: project.getId() }, actorMembership)
-      )
-      .filter((p: Project) => p !== undefined || p !== null)
+    filteredProjectList.map((project: Project) =>
+      projectService.getRichProject({ project })
+    )
   );
 
   return extentedProjectList;
