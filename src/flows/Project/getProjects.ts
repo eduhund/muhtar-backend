@@ -1,7 +1,6 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import { projectService } from "../../services";
-import getProject from "./getProject";
 
 type GetProjectsFilters = {
   membershipId?: string;
@@ -20,25 +19,8 @@ export default async function getProjects(
     status,
   });
 
-  let filteredProjectList: Project[] = [];
-
-  if (actorMembership.isAdmin()) {
-    filteredProjectList = projectList;
-  } else {
-    const actorMembershipId = actorMembership.getId();
-
-    filteredProjectList = projectList.filter(
-      (project: Project) =>
-        project.visibility === "team" ||
-        (Array.isArray(project.memberships) &&
-          project.memberships.some(
-            (m: any) => m.membershipId === actorMembershipId
-          ))
-    );
-  }
-
   const extentedProjectList = await Promise.all(
-    filteredProjectList.map((project: Project) =>
+    projectList.map((project: Project) =>
       projectService.getRichProject({ project })
     )
   );
