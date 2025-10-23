@@ -22,9 +22,10 @@ async function canAddTime(
   userMembership: Membership,
   project: Project
 ) {
-  if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
+  if (currentMembership.isAdmin()) return true;
+  if (project.visibility === "team") return true;
 
-  const projectActorMembershipRole = await project.getProjectMembershipRole(
+  const projectActorMembershipRole = project.getProjectMembershipRole(
     currentMembership.getId()
   );
 
