@@ -22,7 +22,7 @@ export default async function getProjects(
 
   let filteredProjectList: Project[] = [];
 
-  if (actorMembership.isAdmin() || actorMembership.isManager()) {
+  if (actorMembership.isAdmin()) {
     filteredProjectList = projectList;
   } else {
     const actorMembershipId = actorMembership.getId();

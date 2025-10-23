@@ -105,10 +105,6 @@ export default class Membership extends BaseModel<Membership, Membership> {
     return this.accessRole === "admin" && this.status !== "declined";
   }
 
-  isManager() {
-    return this.accessRole === "manager" && this.status !== "declined";
-  }
-
   isMember() {
     return this.accessRole === "member" && this.status !== "declined";
   }
