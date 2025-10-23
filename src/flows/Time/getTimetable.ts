@@ -66,7 +66,8 @@ export default async function getTimetable(
     const membershipProjectList = projects.filter(
       (project: Project) =>
         (projectId ? projectId === project.getId() : true) &&
-        project.isProjectMembership(actorMembershipId)
+        (project.isProjectMembership(actorMembershipId) ||
+          project.visibility === "team")
     );
 
     const timePerProject = await Promise.all(
