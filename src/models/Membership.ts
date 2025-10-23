@@ -15,7 +15,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
   accessRole: AccessRole;
   status: MembershipStatus;
   connections: Record<string, any>;
-  contract: Record<string, any>;
+  contract: Record<string, any>[];
   constructor(data: any = {}) {
     super(data._id);
     this.userId = data.userId;
@@ -25,7 +25,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
     this.status = data.status;
     this.connections = data.connections ?? {};
     this.history = data.history ?? [];
-    this.contract = data.contract ?? {};
+    this.contract = data.contract ?? [];
   }
 
   changeStatus(status: MembershipStatus, membership: Membership) {
