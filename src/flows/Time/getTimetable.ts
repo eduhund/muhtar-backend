@@ -34,40 +34,7 @@ export default async function getTimetable(
 
   let timetable = [];
 
-  if (actorMembership.isGuest()) {
-    if (membershipId && membershipId !== actorMembershipId) {
-      throw new Error("Guests can only access their own timetable");
-    }
-
-    if (projectId) {
-      const project = await projectService.getProjectById(projectId);
-      if (!project) throw new Error("Project not found");
-
-      if (!project.isProjectMembership(actorMembershipId))
-        throw new Error("Access denied to this project");
-
-      const projectRole = project.getProjectMembershipRole(actorMembershipId);
-      if (projectRole === "admin" || projectRole === "manager") {
-        timeService.getTimeList({
-          teamId,
-          projectId,
-          membershipId,
-          date,
-          from,
-          to,
-        });
-      } else {
-        timeService.getTimeList({
-          teamId,
-          projectId,
-          membershipId: actorMembershipId,
-          date,
-          from,
-          to,
-        });
-      }
-    }
-  }
+  // Add Guest access to their own time entries
 
   const projects = await projectService.getProjectsByTeam(teamId);
 
