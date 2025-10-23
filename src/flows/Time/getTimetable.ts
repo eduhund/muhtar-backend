@@ -69,6 +69,8 @@ export default async function getTimetable(
     }
   }
 
+  const projects = await projectService.getProjectsByTeam(teamId);
+
   if (actorMembership.isAdmin()) {
     timetable = await timeService.getTimeList({
       teamId,
@@ -80,8 +82,14 @@ export default async function getTimetable(
       withArchived,
     });
   } else {
-    const currentMembershipProjectList =
-      await projectService.getProjectsByMembershipId(actorMembershipId);
+    const currentMembershipProjectList = projects.filter(
+      (project: Project) =>
+        project.visibility === "team" ||
+        (Array.isArray(project.memberships) &&
+          project.memberships.some(
+            (m: any) => m.membershipId === actorMembershipId
+          ))
+    );
 
     const timePerProject = await Promise.all(
       currentMembershipProjectList.map(async (project: Project) => {
@@ -90,7 +98,7 @@ export default async function getTimetable(
 
         const projectRole = project.getProjectMembershipRole(actorMembershipId);
 
-        if (projectRole === "admin") {
+        if (projectRole === "admin" || projectRole === "manager") {
           return await timeService.getTimeList({
             teamId,
             projectId: thisProjectId,
@@ -114,7 +122,7 @@ export default async function getTimetable(
   }
 
   const team = await teamService.getTeamById(teamId);
-  const projects = await projectService.getProjectsByTeam(teamId);
+
   const memberships = await membershipService.getMembershipsByTeam(teamId);
 
   const richTimeList = await Promise.all(
