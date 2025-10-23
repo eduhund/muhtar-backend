@@ -25,7 +25,6 @@ export default async function getProjects(
   if (actorMembership.isAdmin() || actorMembership.isManager()) {
     filteredProjectList = projectList;
   } else {
-    console.log("Filtering projects for membership:", actorMembership.getId());
     const actorMembershipId = actorMembership.getId();
 
     filteredProjectList = projectList.filter(
@@ -37,8 +36,6 @@ export default async function getProjects(
           ))
     );
   }
-
-  filteredProjectList.forEach((project) => console.log(project.name));
 
   const extentedProjectList = await Promise.all(
     filteredProjectList.map((project: Project) =>
