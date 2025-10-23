@@ -48,40 +48,39 @@ export default async function getTimetable(
       to,
       withArchived,
     });
-  } else {
-    const currentMembershipProjectList = projects.filter(
+  }
+
+  if (actorMembership.isMember()) {
+    if (!membershipId || membershipId === actorMembershipId) {
+      timetable = await timeService.getTimeList({
+        teamId,
+        projectId,
+        membershipId: actorMembershipId,
+        date,
+        from,
+        to,
+        withArchived,
+      });
+    }
+
+    const membershipProjectList = projects.filter(
       (project: Project) =>
-        project.visibility === "team" ||
-        (Array.isArray(project.memberships) &&
-          project.memberships.some(
-            (m: any) => m.membershipId === actorMembershipId
-          ))
+        (projectId ? projectId === project.getId() : true) &&
+        project.isProjectMembership(actorMembershipId)
     );
 
     const timePerProject = await Promise.all(
-      currentMembershipProjectList.map(async (project: Project) => {
+      membershipProjectList.map(async (project: Project) => {
         const thisProjectId = project.getId();
-        if (projectId && projectId !== thisProjectId) return [];
-
-        const projectRole = project.getProjectMembershipRole(actorMembershipId);
-
-        if (projectRole === "admin" || projectRole === "manager") {
-          return await timeService.getTimeList({
-            teamId,
-            projectId: thisProjectId,
-            membershipId,
-            date,
-            from,
-            to,
-            withArchived,
-          });
-        } else {
-          return await timeService.getTimeList({
-            teamId,
-            projectId: thisProjectId,
-            membershipId: actorMembershipId,
-          });
-        }
+        return await timeService.getTimeList({
+          teamId,
+          projectId: thisProjectId,
+          membershipId,
+          date,
+          from,
+          to,
+          withArchived,
+        });
       })
     );
 
@@ -89,7 +88,6 @@ export default async function getTimetable(
   }
 
   const team = await teamService.getTeamById(teamId);
-
   const memberships = await membershipService.getMembershipsByTeam(teamId);
 
   const richTimeList = await Promise.all(

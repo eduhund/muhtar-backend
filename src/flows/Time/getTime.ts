@@ -18,7 +18,7 @@ function canGetTime(
   project: Project,
   timeEntry: Time
 ) {
-  if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
+  if (currentMembership.isAdmin()) return true;
 
   const currentMembershipId = currentMembership.getId();
 
