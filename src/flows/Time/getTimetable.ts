@@ -32,11 +32,13 @@ export default async function getTimetable(
   const { teamId } = actorMembership;
   const actorMembershipId = actorMembership.getId();
 
-  let timetable = [];
+  let timetable: Time[] = [];
 
   // Add Guest access to their own time entries
 
-  const projects = await projectService.getProjectsByTeam(teamId);
+  const projects = (await projectService.getProjectsByTeam(
+    teamId
+  )) as Project[];
 
   if (actorMembership.isAdmin()) {
     timetable = await timeService.getTimeList({
@@ -51,41 +53,33 @@ export default async function getTimetable(
   }
 
   if (actorMembership.isMember()) {
-    if (!membershipId || membershipId === actorMembershipId) {
-      timetable = await timeService.getTimeList({
-        teamId,
-        projectId,
-        membershipId: actorMembershipId,
-        date,
-        from,
-        to,
-        withArchived,
-      });
-    }
+    timetable = await timeService.getTimeList({
+      teamId,
+      projectId,
+      membershipId: actorMembershipId,
+      date,
+      from,
+      to,
+      withArchived,
+    });
 
-    const membershipProjectList = projects.filter(
-      (project: Project) =>
-        (projectId ? projectId === project.getId() : true) &&
-        (project.isProjectMembership(actorMembershipId) ||
-          project.visibility === "team")
-    );
-
-    const timePerProject = await Promise.all(
-      membershipProjectList.map(async (project: Project) => {
-        const thisProjectId = project.getId();
-        return await timeService.getTimeList({
+    for (const project of projects) {
+      if (project.isProjectAdmin(actorMembershipId)) {
+        const projectTime = await timeService.getTimeList({
           teamId,
-          projectId: thisProjectId,
+          projectId: project.getId(),
           membershipId,
           date,
           from,
           to,
           withArchived,
         });
-      })
-    );
-
-    timetable = timePerProject.flat();
+        const projectTimeExceptActorTime = projectTime.filter((time: Time) => {
+          return time.membershipId !== actorMembershipId;
+        });
+        timetable = timetable.concat(projectTimeExceptActorTime);
+      }
+    }
   }
 
   const team = await teamService.getTeamById(teamId);
