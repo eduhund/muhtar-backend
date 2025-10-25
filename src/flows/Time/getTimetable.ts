@@ -53,17 +53,15 @@ export default async function getTimetable(
   }
 
   if (actorMembership.isMember()) {
-    if (membershipId || membershipId === actorMembershipId) {
-      timetable = await timeService.getTimeList({
-        teamId,
-        projectId,
-        membershipId,
-        date,
-        from,
-        to,
-        withArchived,
-      });
-    }
+    timetable = await timeService.getTimeList({
+      teamId,
+      projectId,
+      membershipId: actorMembershipId,
+      date,
+      from,
+      to,
+      withArchived,
+    });
 
     for (const project of projects) {
       if (project.isProjectAdmin(actorMembershipId)) {
