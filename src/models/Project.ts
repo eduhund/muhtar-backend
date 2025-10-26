@@ -15,7 +15,7 @@ export default class Project extends BaseModel<Project, Membership> {
   description: string;
   customer: string | null;
   teamId: string;
-  status?: "active" | "archived";
+  status?: "draft" | "active" | "completed" | "terminated";
   isDeleted: boolean;
   connections: Record<string, any>;
   memberships: ProjectMembership[];
@@ -28,7 +28,7 @@ export default class Project extends BaseModel<Project, Membership> {
     this.description = data.description ?? "";
     this.customer = data.customer ?? null;
     this.teamId = data.teamId;
-    this.status = data.status ?? "active";
+    this.status = data.status ?? "draft";
     this.isDeleted = data.isDeleted ?? false;
     this.connections = data.connections ?? {};
     this.memberships = data.memberships ?? [];
