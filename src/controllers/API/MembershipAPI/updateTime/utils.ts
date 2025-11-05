@@ -22,7 +22,7 @@ export default function validateUpdateTimeParams(
     throw new InvalidParamsError("date must be a valid date string");
   if (duration && isNaN(duration))
     throw new InvalidParamsError("duration must be a valid number");
-  if (comment && comment !== "string")
+  if (comment && typeof comment !== "string")
     throw new InvalidParamsError("comment must be a string");
 
   return next();
