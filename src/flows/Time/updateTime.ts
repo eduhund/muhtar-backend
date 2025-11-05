@@ -90,7 +90,7 @@ export default async function updateTime(
       membershipId,
       projectId,
       taskId,
-      date: date ? dateOnlyIsoString(date) : undefined,
+      date: date ? dateOnlyIsoString(new Date(date)) : undefined,
       duration,
       comment,
     },
