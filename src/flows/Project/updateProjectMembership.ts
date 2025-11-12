@@ -2,8 +2,13 @@ import { membershipService, projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
 import Membership from "../../models/Membership";
+import { AccessRole } from "../../utils/accessRoles";
 
-type MembershipParams = { workRole?: string; multiplier?: number };
+type MembershipParams = {
+  accessRole?: AccessRole;
+  workRole?: string;
+  multiplier?: number;
+};
 
 async function canUpdateMemberships(currentMembership: Membership) {
   if (currentMembership.getAccessRoleIndex() >= 2) return true;
@@ -14,7 +19,7 @@ async function canUpdateMemberships(currentMembership: Membership) {
   );
 }
 
-export default async function updateMembership(
+export default async function updateProjectMembership(
   projectId: string,
   membershipId: string,
   update: MembershipParams,
@@ -52,6 +57,7 @@ export default async function updateMembership(
   }
 
   project.updateMembership(membership.getId(), update, currentMembership);
+  await projectService.save(project);
 
   return {};
 }

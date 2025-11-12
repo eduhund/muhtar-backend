@@ -49,6 +49,7 @@ export default async function removeMembershipFromProject(
   }
 
   project.removeMembership(membership.getId());
+  await projectService.save(project);
 
   return {};
 }

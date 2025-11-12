@@ -14,6 +14,10 @@ import {
   addMembershipToProject,
   validateAddMembershipToProjectParams,
 } from "./addMembershipToProject";
+import {
+  updateProjectMembership,
+  validateUpdateProjectMembershipParams,
+} from "./updateProjectMembership";
 
 const membershipApiRouter = Router();
 
@@ -51,6 +55,12 @@ membershipApiRouter.post(
   "/addMembershipToProject",
   validateAddMembershipToProjectParams,
   addMembershipToProject
+);
+
+membershipApiRouter.post(
+  "/updateProjectMembership",
+  validateUpdateProjectMembershipParams,
+  updateProjectMembership
 );
 
 export default membershipApiRouter;

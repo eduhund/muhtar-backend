@@ -5,7 +5,7 @@ import updateProjectFlow from "./updateProject";
 import archiveProjectFlow from "./archiveProject";
 import restoreProjectFlow from "./restoreProject";
 import addMembershipToProjectFlow from "./addMembershipToProject";
-import updateProjectMembershipFlow from "./updateMembership";
+import updateProjectMembershipFlow from "./updateProjectMembership";
 import removeMembershipFromProjectFlow from "./removeMembershipFromProject";
 
 export {
