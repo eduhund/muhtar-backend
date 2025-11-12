@@ -10,6 +10,10 @@ import { getTimetable, validateGetTimetableParams } from "./getTimetable";
 import { updateTime, validateUpdateTimeParams } from "./updateTime";
 import { restoreTime, validateRestoreTimeParams } from "./restoreTime";
 import { getMemberships, validategetMembershipsParams } from "./getMemberships";
+import {
+  addMembershipToProject,
+  validateAddMembershipToProjectParams,
+} from "./addMembershipToProject";
 
 const membershipApiRouter = Router();
 
@@ -41,6 +45,12 @@ membershipApiRouter.get(
   "/getMemberships",
   validategetMembershipsParams,
   getMemberships
+);
+
+membershipApiRouter.post(
+  "/addMembershipToProject",
+  validateAddMembershipToProjectParams,
+  addMembershipToProject
 );
 
 export default membershipApiRouter;

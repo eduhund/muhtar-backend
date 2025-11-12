@@ -2,10 +2,13 @@ import { membershipService, projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
 import Membership from "../../models/Membership";
+import { AccessRole } from "../../utils/accessRoles";
 
-type MembershipParams = { id: string; workRole?: string; multiplier?: number };
-type AddMembershipsParams = {
-  memberships: MembershipParams[];
+type MembershipParams = {
+  membershipId: string;
+  accessRole?: AccessRole;
+  workRole?: string;
+  multiplier?: number;
 };
 
 async function canAddMemberships(currentMembership: Membership) {
@@ -17,9 +20,14 @@ async function canAddMemberships(currentMembership: Membership) {
   );
 }
 
-export default async function addMemberships(
+export default async function addMembershipToProject(
   id: string,
-  { memberships: membershipList }: AddMembershipsParams,
+  {
+    membershipId,
+    accessRole = "guest",
+    workRole = "staff",
+    multiplier = 1,
+  }: MembershipParams,
   currentUser: User
 ) {
   const project = await projectService.getProjectById(id);
@@ -40,30 +48,26 @@ export default async function addMemberships(
 
   await canAddMemberships(currentMembership);
 
-  for (const membershipData of membershipList) {
-    const membership = await membershipService.getMembershipById(
-      membershipData.id
-    );
+  const membership = await membershipService.getMembershipById(membershipId);
 
-    if (!membership) {
-      throw new BusinessError("NOT_FOUND", `Membership not found`);
-    }
-
-    if (membership.teamId !== project.teamId) {
-      throw new BusinessError(
-        "FORBIDDEN",
-        "Membership does not belong to this project team"
-      );
-    }
-
-    project.addMembership({
-      membershipId: membership.getId(),
-      accessRole: "guest",
-      workRole: membershipData.workRole || "staff",
-      multiplier: membershipData.multiplier || 1,
-      isDeleted: false,
-    });
+  if (!membership) {
+    throw new BusinessError("NOT_FOUND", `Membership not found`);
   }
+
+  if (membership.teamId !== project.teamId) {
+    throw new BusinessError(
+      "FORBIDDEN",
+      "Membership does not belong to this project team"
+    );
+  }
+
+  project.addMembership({
+    membershipId: membership.getId(),
+    accessRole,
+    workRole,
+    multiplier,
+  });
+  await projectService.save(project);
 
   return {};
 }
