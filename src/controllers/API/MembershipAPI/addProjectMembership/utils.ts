@@ -1,6 +1,6 @@
 import { InvalidParamsError } from "../../../../utils/Rejection";
 
-export default function validateAddMembershipToProjectParams(
+export default function validateAddProjectMembershipParams(
   req: any,
   res: any,
   next: any

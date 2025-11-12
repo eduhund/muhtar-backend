@@ -20,7 +20,7 @@ async function canAddMemberships(currentMembership: Membership) {
   );
 }
 
-export default async function addMembershipToProject(
+export default async function addProjectMembership(
   id: string,
   {
     membershipId,

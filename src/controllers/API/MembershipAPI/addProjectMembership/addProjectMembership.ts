@@ -1,6 +1,6 @@
-import { addMembershipToProjectFlow } from "../../../../flows";
+import { addProjectMembershipFlow } from "../../../../flows";
 
-export default async function addMembershipToProject(
+export default async function addProjectMembership(
   req: any,
   res: any,
   next: any
@@ -9,7 +9,7 @@ export default async function addMembershipToProject(
     const { actorMembership } = req.data;
     const { projectId, membershipId, accessRole, workRole, multiplier } =
       req.body;
-    const data = await addMembershipToProjectFlow(
+    const data = await addProjectMembershipFlow(
       projectId,
       { membershipId, accessRole, workRole, multiplier },
       actorMembership

@@ -11,9 +11,9 @@ import { updateTime, validateUpdateTimeParams } from "./updateTime";
 import { restoreTime, validateRestoreTimeParams } from "./restoreTime";
 import { getMemberships, validategetMembershipsParams } from "./getMemberships";
 import {
-  addMembershipToProject,
-  validateAddMembershipToProjectParams,
-} from "./addMembershipToProject";
+  addProjectMembership,
+  validateAddProjectMembershipParams,
+} from "./addProjectMembership";
 import {
   updateProjectMembership,
   validateUpdateProjectMembershipParams,
@@ -58,8 +58,8 @@ membershipApiRouter.get(
 
 membershipApiRouter.post(
   "/addMembershipToProject",
-  validateAddMembershipToProjectParams,
-  addMembershipToProject
+  validateAddProjectMembershipParams,
+  addProjectMembership
 );
 
 membershipApiRouter.post(
