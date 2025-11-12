@@ -1,10 +1,14 @@
 import { membershipService, projectService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
-import User from "../../models/User";
+import Project from "../../models/Project";
 
-async function canRemoveMembershipsFromProject(currentMembership: Membership) {
-  if (currentMembership.getAccessRoleIndex() >= 2) return true;
+async function canRemoveMembershipsFromProject(
+  currentMembership: Membership,
+  project: Project
+) {
+  if (currentMembership.isAdmin()) return true;
+  if (project.isProjectAdmin(currentMembership.getId())) return true;
 
   throw new BusinessError(
     "FORBIDDEN",
@@ -15,25 +19,14 @@ async function canRemoveMembershipsFromProject(currentMembership: Membership) {
 export default async function removeProjectMembership(
   id: string,
   membershipId: string,
-  currentUser: User
+  actorMembership: Membership
 ) {
   const project = await projectService.getProjectById(id);
   if (!project) {
     throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
-  const currentMembership = await membershipService.getMembership({
-    userId: currentUser.getId(),
-    teamId: project.teamId,
-  });
-  if (!currentMembership) {
-    throw new BusinessError(
-      "FORBIDDEN",
-      "You are not a member of this project team"
-    );
-  }
-
-  await canRemoveMembershipsFromProject(currentMembership);
+  await canRemoveMembershipsFromProject(actorMembership, project);
 
   const membership = await membershipService.getMembershipById(membershipId);
 
