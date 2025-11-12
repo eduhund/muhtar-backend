@@ -68,6 +68,11 @@ export default class ProjectService extends Service {
     return project;
   }
 
+  async save(project: Project) {
+    await this._update(project.getId(), project);
+    return project;
+  }
+
   async getProjects(params: ProjectQueryParams) {
     const query = buildProjectQuery(params);
     const data = await this._findMany(query);
