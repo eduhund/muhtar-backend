@@ -90,20 +90,17 @@ export default class Project extends BaseModel<Project, Membership> {
 
   addMembership({
     membershipId,
-    isDeleted = false,
+    accessRole = "member",
     workRole = "staff",
     multiplier = 1,
   }: ProjectMembership) {
     const index = this.memberships.findIndex(
       (membership) => membership.membershipId === membershipId
     );
-    if (index !== -1) {
-      this.memberships[index].isDeleted = isDeleted;
-    } else {
+    if (index === -1) {
       const membershipData: ProjectMembership = {
         membershipId,
-        isDeleted,
-        accessRole: "guest",
+        accessRole,
         workRole,
         multiplier,
       };
@@ -114,7 +111,7 @@ export default class Project extends BaseModel<Project, Membership> {
 
   updateMembership(
     membershipId: string,
-    update: { workRole?: string; multiplier?: number },
+    update: { accessRole?: AccessRole; workRole?: string; multiplier?: number },
     currentMembership: Membership
   ) {
     const index = this.memberships.findIndex(
@@ -122,6 +119,9 @@ export default class Project extends BaseModel<Project, Membership> {
     );
     if (index !== -1) {
       const membership = this.memberships[index];
+      if (update.accessRole !== undefined) {
+        membership.accessRole = update.accessRole;
+      }
       if (update.workRole !== undefined) {
         membership.workRole = update.workRole;
       }
@@ -143,7 +143,7 @@ export default class Project extends BaseModel<Project, Membership> {
       (membership) => membership.membershipId === membershipId
     );
     if (index !== -1) {
-      this.memberships[index].isDeleted = true;
+      this.memberships.splice(index, 1);
     }
     return this;
   }
@@ -160,14 +160,12 @@ export default class Project extends BaseModel<Project, Membership> {
 
   isProjectMembership(membershipId: string) {
     const membership = this.getProjectMembership(membershipId);
-    if (!membership || membership.isDeleted) return false;
-    return membership.accessRole !== undefined;
+    return !!membership;
   }
 
   isProjectAdmin(membershipId: string) {
     const membership = this.getProjectMembership(membershipId);
-    if (!membership || membership.isDeleted) return false;
-    return membership.accessRole === "admin";
+    return membership?.accessRole === "admin";
   }
 
   getProjectMembershipRole(membershipId: string) {
