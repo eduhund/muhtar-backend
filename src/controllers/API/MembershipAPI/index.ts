@@ -19,6 +19,11 @@ import {
   validateUpdateProjectMembershipParams,
 } from "./updateProjectMembership";
 
+import {
+  removeProjectMembership,
+  validateRemoveProjectMembershipParams,
+} from "./removeProjectMembership";
+
 const membershipApiRouter = Router();
 
 membershipApiRouter.use(checkMembershipAuth);
@@ -61,6 +66,12 @@ membershipApiRouter.post(
   "/updateProjectMembership",
   validateUpdateProjectMembershipParams,
   updateProjectMembership
+);
+
+membershipApiRouter.post(
+  "/removeProjectMembership",
+  validateRemoveProjectMembershipParams,
+  removeProjectMembership
 );
 
 export default membershipApiRouter;

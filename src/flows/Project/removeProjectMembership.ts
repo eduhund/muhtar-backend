@@ -12,7 +12,7 @@ async function canRemoveMembershipsFromProject(currentMembership: Membership) {
   );
 }
 
-export default async function removeMembershipFromProject(
+export default async function removeProjectMembership(
   id: string,
   membershipId: string,
   currentUser: User
