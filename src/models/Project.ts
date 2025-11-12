@@ -7,7 +7,14 @@ type ProjectMembership = {
   accessRole: AccessRole;
   workRole: string;
   multiplier: number;
-  isDeleted: boolean;
+};
+
+type ProjectRole = {
+  key: string;
+  name: string;
+  accessRole: AccessRole;
+  cost: number;
+  currency: string;
 };
 
 export default class Project extends BaseModel<Project, Membership> {
@@ -18,6 +25,7 @@ export default class Project extends BaseModel<Project, Membership> {
   status?: "draft" | "active" | "completed" | "terminated";
   isDeleted: boolean;
   connections: Record<string, any>;
+  roles: ProjectRole[];
   memberships: ProjectMembership[];
   visibility?: "private" | "team";
   history: any[];
@@ -31,6 +39,7 @@ export default class Project extends BaseModel<Project, Membership> {
     this.status = data.status ?? "draft";
     this.isDeleted = data.isDeleted ?? false;
     this.connections = data.connections ?? {};
+    this.roles = data.roles ?? [];
     this.memberships = data.memberships ?? [];
     this.visibility = data.visibility ?? "private";
     this.history = data.history ?? [];
