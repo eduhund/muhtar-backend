@@ -57,7 +57,7 @@ membershipApiRouter.get(
 );
 
 membershipApiRouter.post(
-  "/addMembershipToProject",
+  "/addProjectMembership",
   validateAddProjectMembershipParams,
   addProjectMembership
 );
