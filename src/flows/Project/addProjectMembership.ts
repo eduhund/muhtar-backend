@@ -3,6 +3,7 @@ import { BusinessError } from "../../utils/Rejection";
 import User from "../../models/User";
 import Membership from "../../models/Membership";
 import { AccessRole } from "../../utils/accessRoles";
+import Project from "../../models/Project";
 
 type MembershipParams = {
   membershipId: string;
@@ -11,8 +12,12 @@ type MembershipParams = {
   multiplier?: number;
 };
 
-async function canAddMemberships(currentMembership: Membership) {
-  if (currentMembership.getAccessRoleIndex() >= 2) return true;
+async function canAddMemberships(
+  currentMembership: Membership,
+  project: Project
+) {
+  if (currentMembership.isAdmin()) return true;
+  if (project.isProjectAdmin(currentMembership.getId())) return true;
 
   throw new BusinessError(
     "FORBIDDEN",
@@ -28,25 +33,14 @@ export default async function addProjectMembership(
     workRole = "staff",
     multiplier = 1,
   }: MembershipParams,
-  currentUser: User
+  actorMembership: Membership
 ) {
   const project = await projectService.getProjectById(id);
   if (!project) {
     throw new BusinessError("NOT_FOUND", `Project not found`);
   }
 
-  const currentMembership = await membershipService.getMembership({
-    userId: currentUser.getId(),
-    teamId: project.teamId,
-  });
-  if (!currentMembership) {
-    throw new BusinessError(
-      "FORBIDDEN",
-      "You are not a member of this project team"
-    );
-  }
-
-  await canAddMemberships(currentMembership);
+  await canAddMemberships(actorMembership, project);
 
   const membership = await membershipService.getMembershipById(membershipId);
 
