@@ -3,20 +3,20 @@ import Task from "../../models/Task";
 import { taskService } from "../../services";
 
 type GetProjectsFilters = {
-  assignedProjectId?: string;
+  projectId: string;
   assignedMembershipId?: string;
 };
 
 export default async function getTasks(
-  { assignedProjectId, assignedMembershipId }: GetProjectsFilters,
+  { projectId, assignedMembershipId }: GetProjectsFilters,
   actorMembership: Membership
 ) {
   const { teamId } = actorMembership;
 
-  const taskList = await taskService.getTaskList({
+  const taskList = await taskService.getTasks({
     teamId,
+    projectId,
     assignedMembershipId,
-    assignedProjectId,
   });
 
   const extentedTaskList = taskList.map((task: Task) =>

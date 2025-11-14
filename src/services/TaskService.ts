@@ -13,7 +13,7 @@ type TaskParams = {
   teamId: string;
   name: string;
   assignedMembershipId?: string | null;
-  assignedProjectId?: string | null;
+  projectId: string;
   startDate?: string | null;
   dueDate?: string | null;
   duration?: number | null;
@@ -24,7 +24,7 @@ type TaskParams = {
 type TaskQueryParams = {
   id?: string;
   teamId: string;
-  assignedProjectId?: string;
+  projectId: string;
   assignedMembershipId?: string;
   startDate?: string;
   dueDate?: string;
@@ -36,7 +36,7 @@ type TaskQueryParams = {
 type TaskQuery = {
   id?: string;
   teamId: string;
-  assignedProjectId?: string;
+  projectId: string;
   assignedMembershipId?: string;
   startDate?: string;
   dueDate?: string;
@@ -48,7 +48,7 @@ type TaskQuery = {
 function buildQuery({
   id,
   teamId,
-  assignedProjectId,
+  projectId,
   assignedMembershipId,
   startDate,
   dueDate,
@@ -58,7 +58,7 @@ function buildQuery({
   const query: Partial<TaskQuery> = {
     teamId,
   };
-  if (assignedProjectId) query.assignedProjectId = assignedProjectId;
+  if (projectId) query.projectId = projectId;
   if (assignedMembershipId) query.assignedMembershipId = assignedMembershipId;
   if (startDate) {
     query.startDate = startDate;
@@ -76,7 +76,7 @@ export default class TaskService extends Service {
       teamId,
       name,
       assignedMembershipId = null,
-      assignedProjectId = null,
+      projectId,
       startDate = null,
       dueDate = null,
       duration = null,
@@ -90,7 +90,7 @@ export default class TaskService extends Service {
       teamId,
       name,
       assignedMembershipId,
-      assignedProjectId,
+      projectId,
       startDate,
       dueDate,
       duration,
@@ -114,7 +114,7 @@ export default class TaskService extends Service {
     return task;
   }
 
-  async getTaskList(params: TaskQueryParams) {
+  async getTasks(params: TaskQueryParams) {
     const query = buildQuery(params);
     const data = await this._findMany(query);
     return data.map((task: any) => new Task(task));
@@ -154,14 +154,12 @@ export default class TaskService extends Service {
             name: membership?.name,
           }
         : null,
-      assignedProject: project
-        ? { id: project.getId(), name: project.name }
-        : null,
+      project: project ? { id: project.getId(), name: project.name } : null,
       team: team ? { id: team.getId(), name: team.name } : null,
     };
 
     delete richTask.assignedMembershipId;
-    delete richTask.assignedProjectId;
+    delete richTask.projectId;
     delete richTask.teamId;
 
     //richTask.history = await getRichHistory(task.history, memberships);

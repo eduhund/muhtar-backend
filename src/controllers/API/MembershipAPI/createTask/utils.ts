@@ -6,8 +6,9 @@ export default function validateCreateTaskParams(
   next: any
 ) {
   const {
+    projectId,
     assignedMembershipId,
-    assignedProjectId,
+    jobId,
     name,
     startDate,
     dueDate,
@@ -17,6 +18,9 @@ export default function validateCreateTaskParams(
   if (!name) throw new InvalidParamsError("name is required");
   if (typeof name !== "string")
     throw new InvalidParamsError("name must be a string");
+  if (!projectId) throw new InvalidParamsError("assignedProjectId is required");
+  if (typeof projectId !== "string" && projectId !== null)
+    throw new InvalidParamsError("assignedProjectId must be a string or null");
   if (
     assignedMembershipId &&
     typeof assignedMembershipId !== "string" &&
@@ -25,12 +29,8 @@ export default function validateCreateTaskParams(
     throw new InvalidParamsError(
       "assignedMembershipId must be a string or null"
     );
-  if (
-    assignedProjectId &&
-    typeof assignedProjectId !== "string" &&
-    assignedProjectId !== null
-  )
-    throw new InvalidParamsError("assignedProjectId must be a string or null");
+  if (jobId && typeof jobId !== "string" && jobId !== null)
+    throw new InvalidParamsError("jobId must be a string or null");
   if (startDate && startDate !== null) {
     if (typeof startDate !== "string") {
       throw new InvalidParamsError("startDate must be a string or null");

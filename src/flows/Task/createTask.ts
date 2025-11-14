@@ -10,8 +10,9 @@ import { BusinessError } from "../../utils/Rejection";
 
 type createTaskParams = {
   name: string;
+  projectId: string;
   assignedMembershipId?: string | null;
-  assignedProjectId?: string | null;
+  jobId?: string | null;
   startDate?: string | null;
   dueDate?: string | null;
   duration?: number | null;
@@ -30,8 +31,9 @@ async function canCreateTask(
 export default async function createTask(
   {
     name,
+    projectId,
     assignedMembershipId,
-    assignedProjectId,
+    jobId,
     startDate,
     dueDate,
     duration,
@@ -52,19 +54,17 @@ export default async function createTask(
   const team = await teamService.getTeamById(teamId);
   if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
 
-  const project = assignedProjectId
-    ? await projectService.getProjectById(assignedProjectId!)
-    : null;
-  if (assignedProjectId && !project)
-    throw new BusinessError("NOT_FOUND", "Project not found");
+  const project = await projectService.getProjectById(projectId);
+  if (project) throw new BusinessError("NOT_FOUND", "Project not found");
 
   await canCreateTask(actorMembership, membership, project);
 
   const taskData = {
     teamId,
+    projectId,
+    jobId,
     name,
     assignedMembershipId: membership ? membership.getId() : null,
-    assignedProjectId: project ? project.getId() : null,
     startDate: startDate || null,
     dueDate: dueDate || null,
     duration: duration || null,

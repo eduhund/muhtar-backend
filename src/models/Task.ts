@@ -4,13 +4,14 @@ import Membership from "./Membership";
 export default class Task extends BaseModel<Task, Membership> {
   ts: number;
   teamId: string;
+  projectId: string;
   name: string;
-  notes: string;
-  assignedProjectId: string | null;
   assignedMembershipId: string | null;
+  jobId: string | null;
   startDate: string | null;
   dueDate: string | null;
   duration: number | null;
+  notes: string;
   isDeleted: boolean;
   history: any[] = [];
 
@@ -18,9 +19,10 @@ export default class Task extends BaseModel<Task, Membership> {
     _id,
     ts,
     teamId,
+    projectId,
     name,
     assignedMembershipId = null,
-    assignedProjectId = null,
+    jobId = null,
     startDate = null,
     dueDate = null,
     duration = 0,
@@ -30,10 +32,11 @@ export default class Task extends BaseModel<Task, Membership> {
   }: any = {}) {
     super(_id);
     this.ts = ts;
-    this.assignedMembershipId = assignedMembershipId;
     this.teamId = teamId;
+    this.projectId = projectId;
     this.name = name;
-    this.assignedProjectId = assignedProjectId;
+    this.assignedMembershipId = assignedMembershipId;
+    this.jobId = jobId;
     this.startDate = startDate;
     this.dueDate = dueDate;
     this.duration = duration;
@@ -57,6 +60,11 @@ export default class Task extends BaseModel<Task, Membership> {
     return this;
   }
 
+  changeProject(projectId: string, membership: Membership) {
+    this._update({ projectId }, membership);
+    return this;
+  }
+
   changeAssignedMembership(
     assignedMembershipId: string,
     membership: Membership
@@ -65,8 +73,8 @@ export default class Task extends BaseModel<Task, Membership> {
     return this;
   }
 
-  changeAssignedProject(assignedProjectId: string, membership: Membership) {
-    this._update({ assignedProjectId }, membership);
+  changeJob(jobId: string | null, membership: Membership) {
+    this._update({ jobId }, membership);
     return this;
   }
 
