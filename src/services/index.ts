@@ -7,6 +7,7 @@ import ProjectAnalyticsService from "./ProjectAnalytics";
 import TeamService from "./TeamService";
 import TimeService from "./TimeService";
 import UserService from "./UserService";
+import TaskService from "./TaskService";
 
 export const apiKeysService: ApiKeyService = new ApiKeyService(
   adapter,
@@ -16,6 +17,7 @@ export const projectService: ProjectService = new ProjectService(
   adapter,
   "projects"
 );
+export const taskService: TaskService = new TaskService(adapter, "tasks");
 export const teamService: TeamService = new TeamService(adapter, "teams");
 export const timeService: TimeService = new TimeService(adapter, "time");
 export const userService: UserService = new UserService(adapter, "users");

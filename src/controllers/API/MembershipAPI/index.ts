@@ -23,6 +23,11 @@ import {
   removeProjectMembership,
   validateRemoveProjectMembershipParams,
 } from "./removeProjectMembership";
+import { createTask, validateCreateTaskParams } from "./createTask";
+import { getTasks, validateGetTasksParams } from "./getTasks";
+import { updateTask, validateUpdateTaskParams } from "./updateTask";
+import { archiveTask, validateArchiveTaskParams } from "./archiveTask";
+import { restoreTask, validateRestoreTaskParams } from "./restoreTask";
 
 const membershipApiRouter = Router();
 
@@ -72,6 +77,20 @@ membershipApiRouter.post(
   "/removeProjectMembership",
   validateRemoveProjectMembershipParams,
   removeProjectMembership
+);
+
+membershipApiRouter.get("/getTasks", validateGetTasksParams, getTasks);
+membershipApiRouter.post("/createTask", validateCreateTaskParams, createTask);
+membershipApiRouter.post("/updateTask", validateUpdateTaskParams, updateTask);
+membershipApiRouter.post(
+  "/archiveTask",
+  validateArchiveTaskParams,
+  archiveTask
+);
+membershipApiRouter.post(
+  "/restoreTask",
+  validateRestoreTaskParams,
+  restoreTask
 );
 
 export default membershipApiRouter;
