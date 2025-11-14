@@ -19,9 +19,13 @@ export default async function getTasks(
     assignedProjectId,
   });
 
-  const extentedTaskList = await Promise.all(
-    taskList.map((task: Task) => taskService.getRichTask({ task }))
+  console.log("taskList", taskList);
+
+  const extentedTaskList = taskList.map((task: Task) =>
+    taskService.getRichTask({ task })
   );
+
+  console.log("extentedTaskList", extentedTaskList);
 
   return extentedTaskList;
 }

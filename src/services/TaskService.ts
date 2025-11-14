@@ -2,6 +2,12 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Task from "../models/Task";
+import {
+  getRichMembership,
+  getRichObject,
+  getRichProject,
+  getRichTeam,
+} from "../utils/getRichObject";
 
 type TaskParams = {
   teamId: string;
@@ -139,8 +145,24 @@ export default class TaskService extends Service {
     return data.map((task: any) => new Task(task));
   }
 
-  async getRichTask({ task, membership, project, team, memberships }: any) {
-    const richTask = { ...task.toJSON() };
+  getRichTask({ task, membership, project, team }: any) {
+    const richTask = {
+      ...task.toJSON(),
+      assignedMembership: task.assignedMembershipId
+        ? {
+            id: membership?.getId(),
+            name: membership?.name,
+          }
+        : null,
+      assignedProject: project
+        ? { id: project.getId(), name: project.name }
+        : null,
+      team: team ? { id: team.getId(), name: team.name } : null,
+    };
+
+    delete richTask.assignedMembershipId;
+    delete richTask.assignedProjectId;
+    delete richTask.teamId;
 
     //richTask.history = await getRichHistory(task.history, memberships);
     return richTask;
