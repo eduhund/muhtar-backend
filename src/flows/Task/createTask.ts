@@ -15,6 +15,7 @@ type createTaskParams = {
   jobId?: string | null;
   startDate?: string | null;
   dueDate?: string | null;
+  doneDate?: string | null;
   duration?: number | null;
   notes?: string | null;
   history?: any[];
@@ -36,6 +37,7 @@ export default async function createTask(
     jobId,
     startDate,
     dueDate,
+    doneDate,
     duration,
     notes,
     history,
@@ -65,8 +67,9 @@ export default async function createTask(
     jobId,
     name,
     assignedMembershipId: membership ? membership.getId() : null,
-    startDate: startDate || null,
-    dueDate: dueDate || null,
+    startDate: startDate ? new Date(startDate).toISOString() : null,
+    dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+    doneDate: doneDate ? new Date(doneDate).toISOString() : null,
     duration: duration || null,
     notes: notes || "",
     history: history || [],

@@ -10,6 +10,7 @@ export default class Task extends BaseModel<Task, Membership> {
   jobId: string | null;
   startDate: string | null;
   dueDate: string | null;
+  doneDate: string | null;
   duration: number | null;
   notes: string;
   isDeleted: boolean;
@@ -25,6 +26,7 @@ export default class Task extends BaseModel<Task, Membership> {
     jobId = null,
     startDate = null,
     dueDate = null,
+    doneDate = null,
     duration = 0,
     notes = "",
     isDeleted = false,
@@ -39,6 +41,7 @@ export default class Task extends BaseModel<Task, Membership> {
     this.jobId = jobId;
     this.startDate = startDate;
     this.dueDate = dueDate;
+    this.doneDate = doneDate;
     this.duration = duration;
     this.notes = notes;
     this.isDeleted = isDeleted;
@@ -85,6 +88,11 @@ export default class Task extends BaseModel<Task, Membership> {
 
   changeDueDate(dueDate: string | null, membership: Membership) {
     this._update({ dueDate }, membership);
+    return this;
+  }
+
+  changeDoneDate(doneDate: string | null, membership: Membership) {
+    this._update({ doneDate }, membership);
     return this;
   }
 

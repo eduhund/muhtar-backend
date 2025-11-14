@@ -7,7 +7,6 @@ import {
   taskService,
   teamService,
 } from "../../services";
-import { dateOnlyIsoString } from "../../utils/date";
 import { BusinessError } from "../../utils/Rejection";
 
 type updateTaskParams = {
@@ -16,6 +15,7 @@ type updateTaskParams = {
   jobId?: string | null;
   startDate?: Date | null;
   dueDate?: Date | null;
+  doneDate?: Date | null;
   duration?: number | null;
   notes?: string;
 };
@@ -61,6 +61,7 @@ export default async function updateTask(
     jobId,
     startDate,
     dueDate,
+    doneDate,
     duration,
     notes,
   }: updateTaskParams,
@@ -77,7 +78,7 @@ export default async function updateTask(
 
   const newAssignedMembership = assignedMembershipId
     ? await getNewAssignedMembership(assignedMembershipId)
-    : task.assignedMembershipId;
+    : null;
 
   const { teamId } = actorMembership;
   const team = await teamService.getTeamById(teamId);
@@ -88,8 +89,9 @@ export default async function updateTask(
       assignedMembershipId,
       projectId,
       jobId,
-      startDate: startDate ? dateOnlyIsoString(new Date(startDate)) : undefined,
-      dueDate: dueDate ? dateOnlyIsoString(new Date(dueDate)) : undefined,
+      startDate: startDate ? new Date(startDate).toISOString() : undefined,
+      dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
+      doneDate: doneDate ? new Date(doneDate).toISOString() : undefined,
       duration,
       notes,
     },

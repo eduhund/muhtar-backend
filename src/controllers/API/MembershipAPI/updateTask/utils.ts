@@ -12,6 +12,7 @@ export default function validateUpdateTaskParams(
     jobId,
     startDate,
     dueDate,
+    doneDate,
     duration,
     notes,
   } = req.body;
@@ -24,17 +25,23 @@ export default function validateUpdateTaskParams(
     throw new InvalidParamsError("projectId must be a string");
   if (jobId && typeof jobId !== "string")
     throw new InvalidParamsError("jobId must be a string");
-  if (startDate) {
+  if (startDate && startDate !== null) {
     if (typeof startDate !== "string")
       throw new InvalidParamsError("startDate must be a string");
     if (isNaN(new Date(startDate).getTime()))
       throw new InvalidParamsError("startDate must be a valid date string");
   }
-  if (dueDate) {
+  if (dueDate && dueDate !== null) {
     if (typeof dueDate !== "string")
       throw new InvalidParamsError("dueDate must be a string");
     if (isNaN(new Date(dueDate).getTime()))
       throw new InvalidParamsError("dueDate must be a valid date string");
+  }
+  if (doneDate && doneDate !== null) {
+    if (typeof doneDate !== "string")
+      throw new InvalidParamsError("doneDate must be a string");
+    if (isNaN(new Date(doneDate).getTime()))
+      throw new InvalidParamsError("doneDate must be a valid date string");
   }
   if (duration && isNaN(duration))
     throw new InvalidParamsError("duration must be a valid number");
