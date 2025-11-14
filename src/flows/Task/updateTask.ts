@@ -1,7 +1,12 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import Task from "../../models/Task";
-import { membershipService, projectService, taskService } from "../../services";
+import {
+  membershipService,
+  projectService,
+  taskService,
+  teamService,
+} from "../../services";
 import { dateOnlyIsoString } from "../../utils/date";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -66,12 +71,17 @@ export default async function updateTask(
     throw new BusinessError("NOT_FOUND", `Task not found`);
   }
 
-  const newAssignedMembership = assignedMembershipId
-    ? await getNewAssignedMembership(assignedMembershipId)
-    : task.assignedMembershipId;
   const newProject = await getNewProject(projectId || task.projectId);
 
   await canUpdateTask(actorMembership, task, newProject);
+
+  const newAssignedMembership = assignedMembershipId
+    ? await getNewAssignedMembership(assignedMembershipId)
+    : task.assignedMembershipId;
+
+  const { teamId } = actorMembership;
+  const team = await teamService.getTeamById(teamId);
+  if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
 
   task.update(
     {
@@ -92,7 +102,7 @@ export default async function updateTask(
     task,
     membership: newAssignedMembership,
     project: newProject,
-    team: task.teamId,
+    team: team,
   });
 
   return richTask;
