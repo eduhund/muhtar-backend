@@ -21,30 +21,10 @@ type createTaskParams = {
 
 async function canCreateTask(
   currentMembership: Membership,
-  userMembership: Membership,
-  project: Project
+  userMembership: Membership | null,
+  project: Project | null
 ) {
-  if (currentMembership.isAdmin()) return true;
-  if (project.visibility === "team") return true;
-
-  const projectActorMembershipRole = project.getProjectMembershipRole(
-    currentMembership.getId()
-  );
-
-  const isMembershipInProject = project.isProjectMembership(
-    userMembership.getId()
-  );
-
-  if (projectActorMembershipRole === "admin" && isMembershipInProject)
-    return true;
-
-  if (
-    currentMembership.getId() === userMembership.getId() &&
-    isMembershipInProject
-  )
-    return true;
-
-  throw new BusinessError("FORBIDDEN", "User is not allowed to add time");
+  return true;
 }
 
 export default async function createTask(
@@ -62,29 +42,32 @@ export default async function createTask(
 ) {
   const membership = assignedMembershipId
     ? await membershipService.getMembershipById(assignedMembershipId)
-    : actorMembership;
+    : null;
 
-  if (!membership) {
+  if (assignedMembershipId && !membership) {
     throw new BusinessError("NOT_FOUND", "Membership not found");
   }
-  const { teamId } = membership;
-
-  const project = await projectService.getProjectById(assignedProjectId!);
-  if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
+  const { teamId } = actorMembership;
 
   const team = await teamService.getTeamById(teamId);
   if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
+
+  const project = assignedProjectId
+    ? await projectService.getProjectById(assignedProjectId!)
+    : null;
+  if (assignedProjectId && !project)
+    throw new BusinessError("NOT_FOUND", "Project not found");
 
   await canCreateTask(actorMembership, membership, project);
 
   const taskData = {
     teamId,
     name,
-    assignedMembershipId: membership.getId(),
-    assignedProjectId,
+    assignedMembershipId: membership ? membership.getId() : null,
+    assignedProjectId: project ? project.getId() : null,
     startDate: startDate || null,
     dueDate: dueDate || null,
-    duration: duration || 0,
+    duration: duration || null,
     notes: notes || "",
     history: history || [],
   };

@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
-import Task from "../models/Time";
+import Task from "../models/Task";
 
 type TaskParams = {
   teamId: string;
@@ -73,13 +73,12 @@ export default class TaskService extends Service {
       assignedProjectId = null,
       startDate = null,
       dueDate = null,
-      duration = 0,
+      duration = null,
       notes = "",
-      history = [],
     }: TaskParams,
     currentMembership: any
   ) {
-    const time = new Task({
+    const task = new Task({
       _id: uuidv7(),
       ts: Date.now(),
       teamId,
@@ -100,8 +99,8 @@ export default class TaskService extends Service {
         },
       ],
     });
-    await this._create(time);
-    return time;
+    await this._create(task);
+    return task;
   }
 
   async save(task: Task) {
