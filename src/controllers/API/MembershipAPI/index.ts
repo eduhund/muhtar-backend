@@ -24,6 +24,7 @@ import {
   validateRemoveProjectMembershipParams,
 } from "./removeProjectMembership";
 import { createTask, validateCreateTaskParams } from "./createTask";
+import { getTasks, validateGetTasksParams } from "./getTasks";
 
 const membershipApiRouter = Router();
 
@@ -75,6 +76,7 @@ membershipApiRouter.post(
   removeProjectMembership
 );
 
+membershipApiRouter.get("/getTasks", validateGetTasksParams, getTasks);
 membershipApiRouter.post("/createTask", validateCreateTaskParams, createTask);
 
 export default membershipApiRouter;
