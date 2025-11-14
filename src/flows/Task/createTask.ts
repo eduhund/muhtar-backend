@@ -55,7 +55,7 @@ export default async function createTask(
   if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
 
   const project = await projectService.getProjectById(projectId);
-  if (project) throw new BusinessError("NOT_FOUND", "Project not found");
+  if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
   await canCreateTask(actorMembership, membership, project);
 

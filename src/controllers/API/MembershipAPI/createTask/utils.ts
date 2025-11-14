@@ -18,9 +18,9 @@ export default function validateCreateTaskParams(
   if (!name) throw new InvalidParamsError("name is required");
   if (typeof name !== "string")
     throw new InvalidParamsError("name must be a string");
-  if (!projectId) throw new InvalidParamsError("assignedProjectId is required");
+  if (!projectId) throw new InvalidParamsError("projectId is required");
   if (typeof projectId !== "string" && projectId !== null)
-    throw new InvalidParamsError("assignedProjectId must be a string or null");
+    throw new InvalidParamsError("projectId must be a string or null");
   if (
     assignedMembershipId &&
     typeof assignedMembershipId !== "string" &&
