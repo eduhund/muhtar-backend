@@ -11,7 +11,7 @@ export default class Task extends BaseModel<Task, Membership> {
   startDate: string | null;
   dueDate: string | null;
   doneDate: string | null;
-  duration: number | null;
+  duration: number | [number, number] | null;
   notes: string;
   isDeleted: boolean;
   history: any[] = [];

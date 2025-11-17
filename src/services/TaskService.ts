@@ -16,7 +16,7 @@ type TaskParams = {
   projectId: string;
   startDate?: string | null;
   dueDate?: string | null;
-  duration?: number | null;
+  duration?: number | [number, number] | null;
   notes?: string | null;
   history?: any[];
 };
@@ -28,7 +28,7 @@ type TaskQueryParams = {
   assignedMembershipId?: string;
   startDate?: string;
   dueDate?: string;
-  duration?: number;
+  duration?: number | [number, number];
   notes?: string;
   withArchived?: boolean;
 };
@@ -40,7 +40,7 @@ type TaskQuery = {
   assignedMembershipId?: string;
   startDate?: string;
   dueDate?: string;
-  duration?: number;
+  duration?: number | [number, number];
   notes?: string;
   isDeleted?: boolean;
 };

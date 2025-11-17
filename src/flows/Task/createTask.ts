@@ -16,7 +16,7 @@ type createTaskParams = {
   startDate?: string | null;
   dueDate?: string | null;
   doneDate?: string | null;
-  duration?: number | null;
+  duration?: number | [number, number] | null;
   notes?: string | null;
   history?: any[];
 };
