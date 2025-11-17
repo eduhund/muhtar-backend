@@ -13,6 +13,8 @@ type TaskParams = {
   teamId: string;
   name: string;
   assignedMembershipId?: string | null;
+  workRoleKey?: string | null;
+  jobId?: string | null;
   projectId: string;
   startDate?: string | null;
   dueDate?: string | null;
@@ -25,7 +27,9 @@ type TaskQueryParams = {
   id?: string;
   teamId: string;
   projectId: string;
+  workRoleKey?: string;
   assignedMembershipId?: string;
+  jobId?: string;
   startDate?: string;
   dueDate?: string;
   duration?: number | [number, number];
@@ -38,6 +42,8 @@ type TaskQuery = {
   teamId: string;
   projectId: string;
   assignedMembershipId?: string;
+  workRoleKey?: string;
+  jobId?: string;
   startDate?: string;
   dueDate?: string;
   duration?: number | [number, number];
@@ -74,9 +80,11 @@ export default class TaskService extends Service {
   async create(
     {
       teamId,
+      projectId,
       name,
       assignedMembershipId = null,
-      projectId,
+      workRoleKey = null,
+      jobId = null,
       startDate = null,
       dueDate = null,
       duration = null,
@@ -88,9 +96,11 @@ export default class TaskService extends Service {
       _id: uuidv7(),
       ts: Date.now(),
       teamId,
+      projectId,
       name,
       assignedMembershipId,
-      projectId,
+      workRoleKey,
+      jobId,
       startDate,
       dueDate,
       duration,

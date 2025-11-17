@@ -8,6 +8,7 @@ export default function validateCreateTaskParams(
   const {
     projectId,
     assignedMembershipId,
+    workRoleKey,
     jobId,
     name,
     startDate,
@@ -30,8 +31,12 @@ export default function validateCreateTaskParams(
     throw new InvalidParamsError(
       "assignedMembershipId must be a string or null"
     );
+
   if (jobId && typeof jobId !== "string" && jobId !== null)
     throw new InvalidParamsError("jobId must be a string or null");
+  if (workRoleKey && typeof workRoleKey !== "string" && workRoleKey !== null)
+    throw new InvalidParamsError("workRoleKey must be a string or null");
+
   if (startDate && startDate !== null) {
     if (typeof startDate !== "string") {
       throw new InvalidParamsError("startDate must be a string or null");

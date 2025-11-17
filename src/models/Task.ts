@@ -6,6 +6,7 @@ export default class Task extends BaseModel<Task, Membership> {
   teamId: string;
   projectId: string;
   name: string;
+  workRoleKey: string;
   assignedMembershipId: string | null;
   jobId: string | null;
   startDate: string | null;
@@ -22,6 +23,7 @@ export default class Task extends BaseModel<Task, Membership> {
     teamId,
     projectId,
     name,
+    workRoleKey,
     assignedMembershipId = null,
     jobId = null,
     startDate = null,
@@ -37,6 +39,7 @@ export default class Task extends BaseModel<Task, Membership> {
     this.teamId = teamId;
     this.projectId = projectId;
     this.name = name;
+    this.workRoleKey = workRoleKey;
     this.assignedMembershipId = assignedMembershipId;
     this.jobId = jobId;
     this.startDate = startDate;

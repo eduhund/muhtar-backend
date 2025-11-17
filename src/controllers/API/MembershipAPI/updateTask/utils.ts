@@ -7,8 +7,9 @@ export default function validateUpdateTaskParams(
 ) {
   const {
     id,
-    assignedMembershipId,
     projectId,
+    assignedMembershipId,
+    workRoleKey,
     jobId,
     startDate,
     dueDate,
@@ -19,12 +20,19 @@ export default function validateUpdateTaskParams(
   if (!id) throw new InvalidParamsError("id is required");
   if (typeof id !== "string")
     throw new InvalidParamsError("id must be a string");
+
   if (assignedMembershipId && typeof assignedMembershipId !== "string")
     throw new InvalidParamsError("assignedMembershipId must be a string");
+
   if (projectId && typeof projectId !== "string")
     throw new InvalidParamsError("projectId must be a string");
+
+  if (workRoleKey && typeof workRoleKey !== "string")
+    throw new InvalidParamsError("workRoleKey must be a string");
+
   if (jobId && typeof jobId !== "string")
     throw new InvalidParamsError("jobId must be a string");
+
   if (startDate && startDate !== null) {
     if (typeof startDate !== "string")
       throw new InvalidParamsError("startDate must be a string");
