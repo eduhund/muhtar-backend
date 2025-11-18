@@ -1,5 +1,6 @@
 import Membership from "../models/Membership";
 import Project from "../models/Project";
+import Task from "../models/Task";
 import Team from "../models/Team";
 import Time from "../models/Time";
 import User from "../models/User";
@@ -174,6 +175,23 @@ export function getRichTeam(object: any, team?: Team | null) {
   } else {
     object.team = null;
     delete object.teamId;
+  }
+  return object;
+}
+
+export function getRichTask(object: any, task?: Task | null) {
+  if (task) {
+    const taskId = task.getId();
+    if (object.taskId === taskId) {
+      object.task = {
+        id: taskId,
+        name: task.name,
+      };
+      delete object.taskId;
+    } else throw new Error("Task ID does not match the object's taskId");
+  } else {
+    object.task = null;
+    delete object.taskId;
   }
   return object;
 }

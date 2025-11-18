@@ -6,6 +6,7 @@ import {
   getRichHistory,
   getRichMembership,
   getRichProject,
+  getRichTask,
   getRichTeam,
 } from "../utils/getRichObject";
 
@@ -151,11 +152,19 @@ export default class TimeService extends Service {
     return data.map((time: any) => new Time(time));
   }
 
-  async getRichTime({ time, membership, project, team, memberships }: any) {
+  async getRichTime({
+    time,
+    membership,
+    project,
+    team,
+    memberships,
+    task,
+  }: any) {
     const richTime = { ...time.toJSON() };
     await getRichMembership(richTime, membership);
     await getRichProject(richTime, project);
     await getRichTeam(richTime, team);
+    await getRichTask(richTime, task);
 
     richTime.history = await getRichHistory(time.history, memberships);
 
