@@ -61,8 +61,18 @@ export default function validateCreateTaskParams(
       throw new InvalidParamsError("doneDate must be a valid date string");
   }
 
-  if (duration !== undefined && duration !== null && isNaN(duration))
-    throw new InvalidParamsError("duration must be a valid number or null");
+  if (duration) {
+    if (Array.isArray(duration)) {
+      if (duration.length !== 2 || isNaN(duration[0]) || isNaN(duration[1])) {
+        throw new InvalidParamsError(
+          "duration array must contain two valid numbers"
+        );
+      }
+    } else if (isNaN(duration)) {
+      throw new InvalidParamsError("duration must be a valid number");
+    }
+  }
+
   if (notes && typeof notes !== "string" && notes !== null)
     throw new InvalidParamsError("notes must be a string or null");
 
