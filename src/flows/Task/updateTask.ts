@@ -84,14 +84,24 @@ export default async function updateTask(
   const team = await teamService.getTeamById(teamId);
   if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
 
+  function normalizeDateField(val: any) {
+    if (val === undefined) return undefined;
+    if (val === null) return null;
+    if (typeof val === "string" || val instanceof Date) {
+      const dateObj = new Date(val);
+      return isNaN(dateObj.getTime()) ? null : dateObj.toISOString();
+    }
+    return undefined;
+  }
+
   task.update(
     {
       assignedMembershipId,
       projectId,
       jobId,
-      startDate: startDate ? new Date(startDate).toISOString() : undefined,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
-      doneDate: doneDate ? new Date(doneDate).toISOString() : undefined,
+      startDate: normalizeDateField(startDate),
+      dueDate: normalizeDateField(dueDate),
+      doneDate: normalizeDateField(doneDate),
       duration,
       notes,
     },
