@@ -1,11 +1,13 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
+import Task from "../../models/Task";
 import Time from "../../models/Time";
 import {
   projectService,
   timeService,
   teamService,
   membershipService,
+  taskService,
 } from "../../services";
 
 type GetTimeListParams = {
@@ -39,6 +41,8 @@ export default async function getTimetable(
   const projects = (await projectService.getProjectsByTeam(
     teamId
   )) as Project[];
+
+  const tasks = await taskService.getTasksByTeam(teamId);
 
   if (actorMembership.isAdmin()) {
     timetable = await timeService.getTimeList({
@@ -93,12 +97,15 @@ export default async function getTimetable(
       const project = projects.find(
         (p: Project) => p.getId() === time.projectId
       );
+
+      const task = tasks.find((t: Task) => t.getId() === time.taskId);
       const richTime = await timeService.getRichTime({
         time,
         membership,
         project,
         team,
         memberships,
+        task,
       });
       return richTime;
     })

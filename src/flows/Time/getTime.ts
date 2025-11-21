@@ -6,6 +6,7 @@ import {
   timeService,
   teamService,
   membershipService,
+  taskService,
 } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -38,7 +39,7 @@ export default async function getTime(
     throw new BusinessError("NOT_FOUND", "Time entry not found");
   }
 
-  const { teamId, projectId, membershipId } = timeData;
+  const { teamId, projectId, membershipId, taskId } = timeData;
 
   const membership = await membershipService.getMembershipById(membershipId);
 
@@ -50,9 +51,15 @@ export default async function getTime(
   if (!project) {
     throw new BusinessError("INTERNAL_ERROR", "Project not found");
   }
+
   const team = await teamService.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("INTERNAL_ERROR", "Team not found");
+  }
+
+  const task = taskId ? await taskService.getTaskById(taskId) : null;
+  if (taskId && !task) {
+    throw new BusinessError("INTERNAL_ERROR", "Task not found");
   }
 
   const memberships = await membershipService.getMembershipsByTeam(teamId);
@@ -70,5 +77,6 @@ export default async function getTime(
     project,
     team,
     memberships,
+    task,
   });
 }

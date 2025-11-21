@@ -1,15 +1,10 @@
 import Membership from "../models/Membership";
 import Project from "../models/Project";
+import Task from "../models/Task";
 import Team from "../models/Team";
 import Time from "../models/Time";
 import User from "../models/User";
-import {
-  membershipService,
-  projectService,
-  teamService,
-  timeService,
-  userService,
-} from "../services";
+import { membershipService, timeService } from "../services";
 
 function groupTimeByMembership(projectTimeList: Time[]) {
   const timelistPerMembership: Record<
@@ -29,10 +24,7 @@ function groupTimeByMembership(projectTimeList: Time[]) {
   return timelistPerMembership;
 }
 
-export async function getRichHistory(
-  history: any[],
-  teamMemberships: Membership[]
-) {
+export function getRichHistory(history: any[], teamMemberships: Membership[]) {
   const actorMembershipsMap = Object.fromEntries(
     teamMemberships.map((m: any) => [m.getId(), m])
   );
@@ -117,7 +109,7 @@ export async function getRichMembershipList(project: Project) {
   });
 }
 
-export async function getRichUser(object: any, user?: User | null) {
+export function getRichUser(object: any, user?: User | null) {
   if (user) {
     const userId = user.getId();
     if (object.membershipId === userId) {
@@ -128,25 +120,13 @@ export async function getRichUser(object: any, user?: User | null) {
       delete object.userId;
     } else throw new Error("User ID does not match the object's userId");
   } else {
-    const findedUser = await userService.getUserById(object.userId);
-    if (findedUser) {
-      const findedUserId = findedUser.getId();
-      object.user = {
-        id: findedUserId,
-        name: findedUser.getFullName(),
-      };
-      delete object.userId;
-    } else {
-      throw new Error("User not found");
-    }
+    object.user = null;
+    delete object.userId;
   }
   return object;
 }
 
-export async function getRichMembership(
-  object: any,
-  membership?: Membership | null
-) {
+export function getRichMembership(object: any, membership?: Membership | null) {
   if (membership) {
     const membershipId = membership.getId();
     if (object.membershipId === membershipId) {
@@ -158,24 +138,13 @@ export async function getRichMembership(
     } else
       throw new Error("Membership ID does not match the object's membershipId");
   } else {
-    const findedMembership = await membershipService.getMembershipById(
-      object.membershipId
-    );
-    if (findedMembership) {
-      const findedMembershipId = findedMembership.getId();
-      object.membership = {
-        id: findedMembershipId,
-        name: findedMembership.name,
-      };
-      delete object.membershipId;
-    } else {
-      throw new Error("Membership not found");
-    }
+    object.membership = null;
+    delete object.membershipId;
   }
   return object;
 }
 
-export async function getRichProject(object: any, project?: Project | null) {
+export function getRichProject(object: any, project?: Project | null) {
   if (project) {
     const projectId = project.getId();
     if (object.projectId === projectId) {
@@ -187,23 +156,13 @@ export async function getRichProject(object: any, project?: Project | null) {
       delete object.projectId;
     } else throw new Error("Project ID does not match the object's projectId");
   } else {
-    const findedProject = await projectService.getProjectById(object.projectId);
-    if (findedProject) {
-      const findedProjectId = findedProject.getId();
-      object.project = {
-        id: findedProjectId,
-        name: findedProject.name,
-        customer: findedProject.customer,
-      };
-      delete object.projectId;
-    } else {
-      throw new Error("Project not found");
-    }
+    object.project = null;
+    delete object.projectId;
   }
   return object;
 }
 
-export async function getRichTeam(object: any, team?: Team | null) {
+export function getRichTeam(object: any, team?: Team | null) {
   if (team) {
     const teamId = team.getId();
     if (object.teamId === teamId) {
@@ -214,22 +173,30 @@ export async function getRichTeam(object: any, team?: Team | null) {
       delete object.teamId;
     } else throw new Error("Team ID does not match the object's teamId");
   } else {
-    const findedTeam = await teamService.getTeamById(object.teamId);
-    if (findedTeam) {
-      const findedTeamId = findedTeam.getId();
-      object.team = {
-        id: findedTeamId,
-        name: findedTeam.name,
-      };
-      delete object.teamId;
-    } else {
-      throw new Error("Team not found");
-    }
+    object.team = null;
+    delete object.teamId;
   }
   return object;
 }
 
-export async function getRichObject({
+export function getRichTask(object: any, task?: Task | null) {
+  if (task) {
+    const taskId = task.getId();
+    if (object.taskId === taskId) {
+      object.task = {
+        id: taskId,
+        name: task.name,
+      };
+      delete object.taskId;
+    } else throw new Error("Task ID does not match the object's taskId");
+  } else {
+    object.task = null;
+    delete object.taskId;
+  }
+  return object;
+}
+
+export function getRichObject({
   baseObject,
   user,
   membership,
@@ -243,10 +210,10 @@ export async function getRichObject({
   team?: Team | null;
 }) {
   const richObject = { ...baseObject.toJSON() };
-  richObject.userId && (await getRichUser(richObject, user));
-  richObject.membershipId && (await getRichMembership(richObject, membership));
-  richObject.projectId && (await getRichProject(richObject, project));
-  richObject.teamId && (await getRichTeam(richObject, team));
+  richObject.userId && getRichUser(richObject, user);
+  richObject.membershipId && getRichMembership(richObject, membership);
+  richObject.projectId && getRichProject(richObject, project);
+  richObject.teamId && getRichTeam(richObject, team);
 
   return richObject;
 }
