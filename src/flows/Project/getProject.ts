@@ -1,6 +1,7 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import { projectService } from "../../services";
+import { BusinessError } from "../../utils/Rejection";
 
 function canGetProject(currentMembership: Membership, project: Project) {
   if (currentMembership.isAdmin() || project.visibility === "team") return true;
@@ -17,9 +18,13 @@ export default async function getProject(
 ) {
   const project = await projectService.getProjectById(id);
 
-  if (!project) return;
+  if (!project) throw new BusinessError("NOT_FOUND", "Project not found");
 
-  return canGetProject(actorMembership, project)
-    ? projectService.getRichProject({ project })
-    : undefined;
+  if (!canGetProject(actorMembership, project))
+    throw new BusinessError(
+      "UNAUTHORIZED",
+      "You are not allowed to access this project"
+    );
+
+  return projectService.getRichProject({ project });
 }

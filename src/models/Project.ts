@@ -14,6 +14,37 @@ type ProjectRole = {
   name: string;
   accessRole: AccessRole;
   cost: number;
+};
+
+type ProjectPlanResource = {
+  type: string;
+  value: number;
+};
+
+type ProjectPlanRole = {
+  key: string;
+  resources: ProjectPlanResource[];
+};
+
+type ProjectPlanJob = {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  taskIds: string[];
+  roles: ProjectPlanRole[];
+  children: ProjectPlanJob[];
+};
+
+type ProjectPlan = {
+  startDate: string;
+  endDate: string;
+  totalBudget: number;
+  totalResources: ProjectPlanResource[];
+  jobs: ProjectPlanJob[];
+};
+
+type ProjectContract = {
   currency: string;
 };
 
@@ -29,7 +60,8 @@ export default class Project extends BaseModel<Project, Membership> {
   memberships: ProjectMembership[];
   visibility?: "private" | "team";
   history: any[];
-  totalHours: number;
+  contract: ProjectContract;
+  plan: ProjectPlan;
   constructor(data: any = {}) {
     super(data._id);
     this.name = data.name ?? "";
@@ -43,7 +75,8 @@ export default class Project extends BaseModel<Project, Membership> {
     this.memberships = data.memberships ?? [];
     this.visibility = data.visibility ?? "private";
     this.history = data.history ?? [];
-    this.totalHours = data.totalHours ?? 0;
+    this.contract = data.contract ?? { currency: "USD" };
+    this.plan = data.plan ?? null;
   }
 
   update(data: Partial<Project>, membership: Membership) {
@@ -170,11 +203,6 @@ export default class Project extends BaseModel<Project, Membership> {
 
   getProjectMembershipRole(membershipId: string) {
     return this.getProjectMembership(membershipId)?.accessRole || null;
-  }
-
-  setTotalHours(totalHours: number) {
-    this._systemUpdate({ totalHours });
-    return this;
   }
 
   toString() {
