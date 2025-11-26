@@ -23,6 +23,7 @@ export default class ProjectContractService extends Service {
         },
       ],
     });
+    await this._create(contract);
     return contract;
   }
 

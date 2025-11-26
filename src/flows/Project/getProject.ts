@@ -31,10 +31,10 @@ export default async function getProject(
     );
 
   const activePlan = project.activePlanId
-    ? projectPlanService.getPlanById(project.activePlanId)
+    ? await projectPlanService.getPlanById(project.activePlanId)
     : null;
   const activeContract = project.activeContractId
-    ? projectContractService.getContractById(project.activeContractId)
+    ? await projectContractService.getContractById(project.activeContractId)
     : null;
   return projectService.getRichProject({ project, activePlan, activeContract });
 }

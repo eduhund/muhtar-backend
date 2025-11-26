@@ -34,6 +34,7 @@ export default class ProjectPlanService extends Service {
         },
       ],
     });
+    await this._create(plan);
     return plan;
   }
 

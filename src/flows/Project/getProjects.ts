@@ -24,12 +24,12 @@ export default async function getProjects(
   });
 
   const extentedProjectList = await Promise.all(
-    projectList.map((project: Project) => {
+    projectList.map(async (project: Project) => {
       const activePlan = project.activePlanId
-        ? projectPlanService.getPlanById(project.activePlanId)
+        ? await projectPlanService.getPlanById(project.activePlanId)
         : null;
       const activeContract = project.activeContractId
-        ? projectContractService.getContractById(project.activeContractId)
+        ? await projectContractService.getContractById(project.activeContractId)
         : null;
       return projectService.getRichProject({
         project,
