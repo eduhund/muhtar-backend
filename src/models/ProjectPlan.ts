@@ -41,10 +41,10 @@ export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
     this.teamId = data.teamId;
     this.projectId = data.projectId;
     this.version = data.version ?? 1;
-    this.date = data.date ?? "";
+    this.date = data.date ?? null;
     this.approvedDate = data.approvedDate ?? null;
-    this.startDate = data.startDate ?? "";
-    this.endDate = data.endDate ?? "";
+    this.startDate = data.startDate ?? null;
+    this.endDate = data.endDate ?? null;
     this.totalBudget = data.totalBudget ?? 0;
     this.totalResources = data.totalResources ?? [];
     this.roles = data.roles ?? [];
