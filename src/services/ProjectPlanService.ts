@@ -14,7 +14,7 @@ function createJobsWithId(jobs: ProjectPlanJob[]): ProjectPlanJob[] {
 }
 
 export default class ProjectPlanService extends Service {
-  async createProject(data: any, currentMembership: Membership) {
+  async createPlan(data: any, currentMembership: Membership) {
     const currentMembershipId = currentMembership.getId();
 
     const plan = new ProjectPlan({

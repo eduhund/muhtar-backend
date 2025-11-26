@@ -5,7 +5,7 @@ import Membership from "../models/Membership";
 import ProjectContract from "../models/ProjectContract";
 
 export default class ProjectContractService extends Service {
-  async createProject(data: any, currentMembership: Membership) {
+  async createContract(data: any, currentMembership: Membership) {
     const currentMembershipId = currentMembership.getId();
 
     const contract = new ProjectContract({

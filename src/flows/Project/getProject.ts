@@ -1,6 +1,10 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import { projectService } from "../../services";
+import {
+  projectContractService,
+  projectPlanService,
+  projectService,
+} from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 function canGetProject(currentMembership: Membership, project: Project) {
@@ -26,5 +30,11 @@ export default async function getProject(
       "You are not allowed to access this project"
     );
 
-  return projectService.getRichProject({ project });
+  const activePlan = project.activePlanId
+    ? projectPlanService.getPlanById(project.activePlanId)
+    : null;
+  const activeContract = project.activeContractId
+    ? projectContractService.getContractById(project.activeContractId)
+    : null;
+  return projectService.getRichProject({ project, activePlan, activeContract });
 }
