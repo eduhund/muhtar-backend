@@ -17,6 +17,7 @@ export type ProjectPlanJob = {
   startDate: string;
   endDate: string;
   prevJobId: string | null;
+  status: "backlog" | "active" | "completed" | "canceled";
   roles: ProjectJobRole[];
   resources: ProjectJobResource[];
   children: ProjectPlanJob[];
@@ -65,6 +66,33 @@ export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
 
   restore(membership: Membership) {
     this._restore(membership);
+    return this;
+  }
+
+  updateJobStatus(
+    jobId: string,
+    status: "backlog" | "active" | "completed" | "canceled",
+    membership: Membership
+  ) {
+    const updateJobStatusRecursively = (
+      jobs: ProjectPlanJob[]
+    ): ProjectPlanJob[] => {
+      return jobs.map((job) => {
+        if (job.id === jobId) {
+          return { ...job, status };
+        }
+        if (job.children && job.children.length > 0) {
+          return {
+            ...job,
+            children: updateJobStatusRecursively(job.children),
+          };
+        }
+        return job;
+      });
+    };
+
+    this.jobs = updateJobStatusRecursively(this.jobs);
+    this._update({ jobs: this.jobs }, membership);
     return this;
   }
 
