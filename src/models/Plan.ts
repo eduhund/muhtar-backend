@@ -31,6 +31,7 @@ export default class Plan extends BaseModel<Plan, Membership> {
   endDate: string;
   totalBudget: number;
   totalResources: ProjectPlanResource[];
+  roles: ProjectPlanRole[];
   jobs: ProjectPlanJob[];
   history: any[];
   isDeleted: boolean;
@@ -44,6 +45,7 @@ export default class Plan extends BaseModel<Plan, Membership> {
     this.endDate = data.endDate ?? "";
     this.totalBudget = data.totalBudget ?? 0;
     this.totalResources = data.totalResources ?? [];
+    this.roles = data.roles ?? [];
     this.jobs = data.jobs ?? [];
     this.history = data.history ?? [];
     this.isDeleted = data.isDeleted ?? false;
