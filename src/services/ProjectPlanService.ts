@@ -2,7 +2,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Membership from "../models/Membership";
-import Plan, { ProjectPlanJob } from "../models/Plan";
+import Plan, { ProjectPlanJob } from "../models/ProjectPlan";
 
 function createJobsWithId(jobs: ProjectPlanJob[]): ProjectPlanJob[] {
   return jobs.map((job) => ({

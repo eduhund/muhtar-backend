@@ -22,7 +22,7 @@ export type ProjectPlanJob = {
   children: ProjectPlanJob[];
 };
 
-export default class Plan extends BaseModel<Plan, Membership> {
+export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
   teamId: string;
   version: number;
   date: string;
@@ -51,7 +51,7 @@ export default class Plan extends BaseModel<Plan, Membership> {
     this.isDeleted = data.isDeleted ?? false;
   }
 
-  update(data: Partial<Plan>, membership: Membership) {
+  update(data: Partial<ProjectPlan>, membership: Membership) {
     this._update(data, membership);
     return this;
   }
