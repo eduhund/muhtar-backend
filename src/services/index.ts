@@ -3,7 +3,6 @@ import ApiKeyService from "./ApiKeyService";
 import AuthService from "./AuthService";
 import MembershipService from "./MembershipService";
 import ProjectService from "./ProjectService";
-import ProjectAnalyticsService from "./ProjectAnalytics";
 import TeamService from "./TeamService";
 import TimeService from "./TimeService";
 import UserService from "./UserService";
@@ -35,6 +34,3 @@ export const authService: AuthService = new AuthService({
   userService,
   membershipService,
 });
-
-export const projectAnalytics: ProjectAnalyticsService =
-  new ProjectAnalyticsService(projectService, timeService);
