@@ -2,7 +2,7 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import Membership from "../models/Membership";
-import Plan, { ProjectPlanJob } from "../models/ProjectPlan";
+import ProjectPlan, { ProjectPlanJob } from "../models/ProjectPlan";
 
 function createJobsWithId(jobs: ProjectPlanJob[]): ProjectPlanJob[] {
   return jobs.map((job) => ({
@@ -12,11 +12,11 @@ function createJobsWithId(jobs: ProjectPlanJob[]): ProjectPlanJob[] {
   }));
 }
 
-export default class PlanService extends Service {
+export default class ProjectPlanService extends Service {
   async createProject(data: any, currentMembership: Membership) {
     const currentMembershipId = currentMembership.getId();
 
-    const plan = new Plan({
+    const plan = new ProjectPlan({
       ...data,
       _id: uuidv7(),
       teamId: currentMembership.teamId,
@@ -36,18 +36,18 @@ export default class PlanService extends Service {
     return plan;
   }
 
-  async save(plan: Plan) {
+  async save(plan: ProjectPlan) {
     await this._update(plan.getId(), plan);
     return plan;
   }
 
   async getPlanById(_id: string) {
     const data = await this._findOne({ _id });
-    return data ? new Plan(data) : null;
+    return data ? new ProjectPlan(data) : null;
   }
 
   async getPlansByTeam(teamId: string) {
     const data = await this._findMany({ teamId });
-    return data.map((plan: any) => new Plan(plan));
+    return data.map((plan: any) => new ProjectPlan(plan));
   }
 }
