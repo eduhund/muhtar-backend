@@ -16,34 +16,6 @@ type ProjectRole = {
   cost: number;
 };
 
-type ProjectPlanResource = {
-  type: string;
-  value: number;
-};
-
-type ProjectPlanRole = {
-  key: string;
-  resources: ProjectPlanResource[];
-};
-
-type ProjectPlanJob = {
-  id: string;
-  name: string;
-  startDate: string;
-  endDate: string;
-  taskIds: string[];
-  roles: ProjectPlanRole[];
-  children: ProjectPlanJob[];
-};
-
-type ProjectPlan = {
-  startDate: string;
-  endDate: string;
-  totalBudget: number;
-  totalResources: ProjectPlanResource[];
-  jobs: ProjectPlanJob[];
-};
-
 type ProjectContract = {
   currency: string;
 };
@@ -61,7 +33,7 @@ export default class Project extends BaseModel<Project, Membership> {
   visibility?: "private" | "team";
   history: any[];
   contract: ProjectContract;
-  plan: ProjectPlan;
+  activePlanId: string | null;
   constructor(data: any = {}) {
     super(data._id);
     this.name = data.name ?? "";
@@ -76,7 +48,7 @@ export default class Project extends BaseModel<Project, Membership> {
     this.visibility = data.visibility ?? "private";
     this.history = data.history ?? [];
     this.contract = data.contract ?? { currency: "USD" };
-    this.plan = data.plan ?? null;
+    this.activePlanId = data.activePlanId ?? null;
   }
 
   update(data: Partial<Project>, membership: Membership) {
