@@ -28,6 +28,10 @@ import { getTasks, validateGetTasksParams } from "./getTasks";
 import { updateTask, validateUpdateTaskParams } from "./updateTask";
 import { archiveTask, validateArchiveTaskParams } from "./archiveTask";
 import { restoreTask, validateRestoreTaskParams } from "./restoreTask";
+import {
+  createProjectPlan,
+  validateCreateProjectPlanParams,
+} from "./createProjectPlan";
 
 const membershipApiRouter = Router();
 
@@ -91,6 +95,12 @@ membershipApiRouter.post(
   "/restoreTask",
   validateRestoreTaskParams,
   restoreTask
+);
+
+membershipApiRouter.post(
+  "/createProjectPlan",
+  validateCreateProjectPlanParams,
+  createProjectPlan
 );
 
 export default membershipApiRouter;
