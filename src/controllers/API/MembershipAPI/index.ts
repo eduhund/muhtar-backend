@@ -32,6 +32,10 @@ import {
   createProjectPlan,
   validateCreateProjectPlanParams,
 } from "./createProjectPlan";
+import {
+  createProjectContract,
+  validateCreateProjectContractParams,
+} from "./createProjectContract";
 
 const membershipApiRouter = Router();
 
@@ -101,6 +105,12 @@ membershipApiRouter.post(
   "/createProjectPlan",
   validateCreateProjectPlanParams,
   createProjectPlan
+);
+
+membershipApiRouter.post(
+  "/createProjectContract",
+  validateCreateProjectContractParams,
+  createProjectContract
 );
 
 export default membershipApiRouter;
