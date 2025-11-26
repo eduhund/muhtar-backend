@@ -18,6 +18,7 @@ export default class ProjectContract extends BaseModel<
   Membership
 > {
   teamId: string;
+  projectId: string;
   version: number;
   date: string;
   startDate: string;
@@ -32,6 +33,7 @@ export default class ProjectContract extends BaseModel<
   constructor(data: any = {}) {
     super(data._id);
     this.teamId = data.teamId;
+    this.projectId = data.projectId;
     this.version = data.version ?? 1;
     this.date = data.date ?? "";
     this.startDate = data.startDate ?? null;

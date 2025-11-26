@@ -24,6 +24,7 @@ export type ProjectPlanJob = {
 
 export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
   teamId: string;
+  projectId: string;
   version: number;
   date: string;
   approvedDate: string | null;
@@ -38,6 +39,7 @@ export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
   constructor(data: any = {}) {
     super(data._id);
     this.teamId = data.teamId;
+    this.projectId = data.projectId;
     this.version = data.version ?? 1;
     this.date = data.date ?? "";
     this.approvedDate = data.approvedDate ?? null;

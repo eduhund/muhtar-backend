@@ -50,4 +50,9 @@ export default class ProjectPlanService extends Service {
     const data = await this._findMany({ teamId });
     return data.map((plan: any) => new ProjectPlan(plan));
   }
+
+  async getPlansByProject(projectId: string) {
+    const data = await this._findMany({ projectId });
+    return data.map((plan: any) => new ProjectPlan(plan));
+  }
 }

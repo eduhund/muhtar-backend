@@ -40,4 +40,9 @@ export default class ProjectContractService extends Service {
     const data = await this._findMany({ teamId });
     return data.map((contract: any) => new ProjectContract(contract));
   }
+
+  async getContractsByProject(projectId: string) {
+    const data = await this._findMany({ projectId });
+    return data.map((contract: any) => new ProjectContract(contract));
+  }
 }
