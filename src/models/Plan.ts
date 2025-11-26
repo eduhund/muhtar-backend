@@ -11,7 +11,7 @@ type ProjectPlanRole = {
   resources: ProjectPlanResource[];
 };
 
-type ProjectPlanJob = {
+export type ProjectPlanJob = {
   id: string;
   name: string;
   startDate: string;
