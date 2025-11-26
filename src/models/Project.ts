@@ -9,46 +9,33 @@ type ProjectMembership = {
   multiplier: number;
 };
 
-type ProjectRole = {
-  key: string;
-  name: string;
-  accessRole: AccessRole;
-  cost: number;
-};
-
-type ProjectContract = {
-  currency: string;
-};
-
 export default class Project extends BaseModel<Project, Membership> {
   name: string;
   description: string;
   customer: string | null;
   teamId: string;
-  status?: "draft" | "active" | "completed" | "terminated";
+  status?: "backlog" | "active" | "completed" | "canceled";
   isDeleted: boolean;
   connections: Record<string, any>;
-  roles: ProjectRole[];
   memberships: ProjectMembership[];
-  visibility?: "private" | "team";
-  history: any[];
-  contract: ProjectContract;
+  visibility?: "private" | "team" | "public";
   activePlanId: string | null;
+  activeContractId: string | null;
+  history: any[];
   constructor(data: any = {}) {
     super(data._id);
     this.name = data.name ?? "";
     this.description = data.description ?? "";
     this.customer = data.customer ?? null;
     this.teamId = data.teamId;
-    this.status = data.status ?? "draft";
+    this.status = data.status ?? "backlog";
     this.isDeleted = data.isDeleted ?? false;
     this.connections = data.connections ?? {};
-    this.roles = data.roles ?? [];
     this.memberships = data.memberships ?? [];
     this.visibility = data.visibility ?? "private";
-    this.history = data.history ?? [];
-    this.contract = data.contract ?? { currency: "USD" };
     this.activePlanId = data.activePlanId ?? null;
+    this.activeContractId = data.activeContractId ?? null;
+    this.history = data.history ?? [];
   }
 
   update(data: Partial<Project>, membership: Membership) {

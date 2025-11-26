@@ -1,14 +1,14 @@
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
-type ProjectPlanResource = {
+type ProjectJobResource = {
   type: string;
   value: number;
 };
 
-type ProjectPlanRole = {
+type ProjectJobRole = {
   key: string;
-  resources: ProjectPlanResource[];
+  resources: ProjectJobResource[];
 };
 
 export type ProjectPlanJob = {
@@ -17,8 +17,8 @@ export type ProjectPlanJob = {
   startDate: string;
   endDate: string;
   prevJobId: string | null;
-  roles: ProjectPlanRole[];
-  resources: ProjectPlanResource[];
+  roles: ProjectJobRole[];
+  resources: ProjectJobResource[];
   children: ProjectPlanJob[];
 };
 
@@ -30,8 +30,8 @@ export default class Plan extends BaseModel<Plan, Membership> {
   startDate: string;
   endDate: string;
   totalBudget: number;
-  totalResources: ProjectPlanResource[];
-  roles: ProjectPlanRole[];
+  totalResources: ProjectJobResource[];
+  roles: ProjectJobRole[];
   jobs: ProjectPlanJob[];
   history: any[];
   isDeleted: boolean;
