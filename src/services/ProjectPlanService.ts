@@ -3,6 +3,7 @@ import { v7 as uuidv7 } from "uuid";
 import Service from "./Service";
 import Membership from "../models/Membership";
 import ProjectPlan, { ProjectPlanJob } from "../models/ProjectPlan";
+import { dateOnlyIsoString } from "../utils/date";
 
 function createJobsWithId(jobs: ProjectPlanJob[]): ProjectPlanJob[] {
   return jobs.map((job) => ({
@@ -21,7 +22,7 @@ export default class ProjectPlanService extends Service {
       _id: uuidv7(),
       teamId: currentMembership.teamId,
       version: data.version || 1,
-      date: data.date || new Date().toISOString(),
+      date: data.date || dateOnlyIsoString(new Date()),
       approvedDate: null,
       jobs: createJobsWithId(data.jobs || []),
       isDeleted: false,
