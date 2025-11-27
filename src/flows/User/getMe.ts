@@ -1,7 +1,13 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import User from "../../models/User";
-import { membershipService, projectService, teamService } from "../../services";
+import {
+  membershipService,
+  projectContractService,
+  projectPlanService,
+  projectService,
+  teamService,
+} from "../../services";
 
 export default async function getMe(actorUser: User) {
   const userId = actorUser.getId();
@@ -36,7 +42,21 @@ export default async function getMe(actorUser: User) {
       teamId: activeTeam.getId(),
     });
 
-    data.activeTeam.projects = teamProjects.map((p: Project) => p.toJSON());
+    data.activeTeam.projects = await Promise.all(
+      teamProjects.map(async (p: Project) => {
+        const activePlan = p.activePlanId
+          ? await projectPlanService.getPlanById(p.activePlanId)
+          : null;
+        const activeContract = p.activeContractId
+          ? await projectContractService.getContractById(p.activeContractId)
+          : null;
+        return projectService.getRichProject({
+          project: p,
+          activePlan,
+          activeContract,
+        });
+      })
+    );
   }
 
   delete data.activeMembershipId;

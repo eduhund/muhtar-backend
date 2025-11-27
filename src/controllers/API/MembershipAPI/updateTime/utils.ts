@@ -5,8 +5,7 @@ export default function validateUpdateTimeParams(
   res: any,
   next: any
 ) {
-  const { id, membershipId, projectId, taskId, date, duration, comment } =
-    req.body;
+  const { id, membershipId, projectId, date, duration, comment } = req.body;
   if (!id) throw new InvalidParamsError("id is required");
   if (typeof id !== "string")
     throw new InvalidParamsError("id must be a string");
@@ -14,8 +13,6 @@ export default function validateUpdateTimeParams(
     throw new InvalidParamsError("membershipId must be a string");
   if (projectId && typeof projectId !== "string")
     throw new InvalidParamsError("projectId must be a string");
-  if (taskId && typeof taskId !== "string")
-    throw new InvalidParamsError("taskId must be a string");
   if (date && typeof date !== "string")
     throw new InvalidParamsError("date must be a string");
   if (isNaN(new Date(date).getTime()))

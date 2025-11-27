@@ -9,41 +9,33 @@ type ProjectMembership = {
   multiplier: number;
 };
 
-type ProjectRole = {
-  key: string;
-  name: string;
-  accessRole: AccessRole;
-  cost: number;
-  currency: string;
-};
-
 export default class Project extends BaseModel<Project, Membership> {
   name: string;
   description: string;
   customer: string | null;
   teamId: string;
-  status?: "draft" | "active" | "completed" | "terminated";
+  status?: "backlog" | "active" | "completed" | "canceled";
   isDeleted: boolean;
   connections: Record<string, any>;
-  roles: ProjectRole[];
   memberships: ProjectMembership[];
-  visibility?: "private" | "team";
+  visibility?: "private" | "team" | "public";
+  activePlanId: string | null;
+  activeContractId: string | null;
   history: any[];
-  totalHours: number;
   constructor(data: any = {}) {
     super(data._id);
     this.name = data.name ?? "";
     this.description = data.description ?? "";
     this.customer = data.customer ?? null;
     this.teamId = data.teamId;
-    this.status = data.status ?? "draft";
+    this.status = data.status ?? "backlog";
     this.isDeleted = data.isDeleted ?? false;
     this.connections = data.connections ?? {};
-    this.roles = data.roles ?? [];
     this.memberships = data.memberships ?? [];
     this.visibility = data.visibility ?? "private";
+    this.activePlanId = data.activePlanId ?? null;
+    this.activeContractId = data.activeContractId ?? null;
     this.history = data.history ?? [];
-    this.totalHours = data.totalHours ?? 0;
   }
 
   update(data: Partial<Project>, membership: Membership) {
@@ -170,11 +162,6 @@ export default class Project extends BaseModel<Project, Membership> {
 
   getProjectMembershipRole(membershipId: string) {
     return this.getProjectMembership(membershipId)?.accessRole || null;
-  }
-
-  setTotalHours(totalHours: number) {
-    this._systemUpdate({ totalHours });
-    return this;
   }
 
   toString() {
