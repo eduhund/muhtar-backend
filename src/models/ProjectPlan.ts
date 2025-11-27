@@ -29,8 +29,8 @@ export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
   version: number;
   date: string;
   approvedDate: string | null;
-  startDate: string;
-  endDate: string;
+  planStart: string;
+  planEnd: string;
   totalBudget: number;
   totalResources: ProjectJobResource[];
   roles: ProjectJobRole[];
@@ -44,8 +44,8 @@ export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
     this.version = data.version ?? 1;
     this.date = data.date ?? null;
     this.approvedDate = data.approvedDate ?? null;
-    this.startDate = data.startDate ?? null;
-    this.endDate = data.endDate ?? null;
+    this.planStart = data.planStart ?? null;
+    this.planEnd = data.planEnd ?? null;
     this.totalBudget = data.totalBudget ?? 0;
     this.totalResources = data.totalResources ?? [];
     this.roles = data.roles ?? [];
