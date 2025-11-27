@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
-import Time from "../models/Time";
+import Time, { ResourceTarget } from "../models/Time";
 import {
   getRichHistory,
   getRichMembership,
@@ -17,6 +17,8 @@ type TimeParams = {
   taskId?: string | null;
   createdBy?: string;
   date: Date;
+  type?: string;
+  target?: ResourceTarget | null;
   duration?: number;
   comment?: string | null;
 };
@@ -78,6 +80,8 @@ export default class TimeService extends Service {
       projectId,
       teamId,
       date,
+      type = "time",
+      target = null,
       duration = 0,
       comment = "",
     }: TimeParams,
@@ -91,6 +95,8 @@ export default class TimeService extends Service {
       projectId,
       teamId,
       date,
+      type,
+      target,
       duration,
       comment,
       history: [

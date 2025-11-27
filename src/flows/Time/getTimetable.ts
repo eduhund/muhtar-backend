@@ -1,6 +1,5 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import Task from "../../models/Task";
 import Time from "../../models/Time";
 import {
   projectService,
@@ -98,14 +97,12 @@ export default async function getTimetable(
         (p: Project) => p.getId() === time.projectId
       );
 
-      const task = tasks.find((t: Task) => t.getId() === time.taskId);
       const richTime = await timeService.getRichTime({
         time,
         membership,
         project,
         team,
         memberships,
-        task,
       });
       return richTime;
     })

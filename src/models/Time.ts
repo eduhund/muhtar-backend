@@ -1,12 +1,19 @@
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
+export type ResourceTarget = {
+  type: "project" | "task";
+  id: string;
+};
+
 export default class Time extends BaseModel<Time, Membership> {
   membershipId: string;
   teamId: string;
   projectId: string;
   ts: number;
   date: string;
+  type: string;
+  target: ResourceTarget | null;
   duration: number;
   comment: string;
   history: any[] = [];
@@ -18,6 +25,8 @@ export default class Time extends BaseModel<Time, Membership> {
     projectId,
     ts,
     date,
+    type = "time",
+    target = null,
     duration = 0,
     comment = "",
     isDeleted = false,
@@ -29,6 +38,8 @@ export default class Time extends BaseModel<Time, Membership> {
     this.projectId = projectId;
     this.ts = ts;
     this.date = date;
+    this.type = type;
+    this.target = target;
     this.duration = duration;
     this.comment = comment;
     this.isDeleted = isDeleted;
