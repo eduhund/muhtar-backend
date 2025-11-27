@@ -13,7 +13,6 @@ import { BusinessError } from "../../utils/Rejection";
 type updateTimeParams = {
   membershipId?: string;
   projectId?: string;
-  taskId?: string | null;
   date?: Date;
   duration?: number;
   comment?: string;
@@ -60,14 +59,7 @@ async function getNewProject(projectId: string) {
 
 export default async function updateTime(
   id: string,
-  {
-    membershipId,
-    projectId,
-    taskId,
-    date,
-    duration,
-    comment,
-  }: updateTimeParams,
+  { membershipId, projectId, date, duration, comment }: updateTimeParams,
   actorMembership: Membership
 ) {
   const time = await timeService.getTimeById(id);
@@ -86,7 +78,6 @@ export default async function updateTime(
     {
       membershipId,
       projectId,
-      taskId,
       date: date ? dateOnlyIsoString(new Date(date)) : undefined,
       duration,
       comment,

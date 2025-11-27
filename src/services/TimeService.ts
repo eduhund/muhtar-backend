@@ -77,7 +77,6 @@ export default class TimeService extends Service {
       membershipId,
       projectId,
       teamId,
-      taskId = null,
       date,
       duration = 0,
       comment = "",
@@ -91,7 +90,6 @@ export default class TimeService extends Service {
       membershipId,
       projectId,
       teamId,
-      taskId,
       date,
       duration,
       comment,
@@ -152,19 +150,11 @@ export default class TimeService extends Service {
     return data.map((time: any) => new Time(time));
   }
 
-  async getRichTime({
-    time,
-    membership,
-    project,
-    team,
-    memberships,
-    task,
-  }: any) {
+  async getRichTime({ time, membership, project, team, memberships }: any) {
     const richTime = { ...time.toJSON() };
     await getRichMembership(richTime, membership);
     await getRichProject(richTime, project);
     await getRichTeam(richTime, team);
-    await getRichTask(richTime, task);
 
     richTime.history = await getRichHistory(time.history, memberships);
 

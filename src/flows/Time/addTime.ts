@@ -11,7 +11,6 @@ import { BusinessError } from "../../utils/Rejection";
 type AddTimeParams = {
   membershipId: string;
   projectId: string;
-  taskId?: string | null;
   date: Date;
   duration: number;
   comment: string | null;
@@ -46,7 +45,7 @@ async function canAddTime(
 }
 
 export default async function addTime(
-  { membershipId, projectId, taskId, date, duration, comment }: AddTimeParams,
+  { membershipId, projectId, date, duration, comment }: AddTimeParams,
   actorMembership: Membership
 ) {
   const membership = membershipId
@@ -70,7 +69,6 @@ export default async function addTime(
     membershipId: membership.getId(),
     projectId,
     teamId,
-    taskId,
     date,
     duration,
     comment,
