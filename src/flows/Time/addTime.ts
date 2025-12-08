@@ -1,5 +1,6 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
+import { ResourceTarget } from "../../models/Time";
 import {
   projectService,
   teamService,
@@ -12,6 +13,7 @@ type AddTimeParams = {
   membershipId: string;
   projectId: string;
   date: Date;
+  target: ResourceTarget | null;
   duration: number;
   comment: string | null;
 };
@@ -45,7 +47,7 @@ async function canAddTime(
 }
 
 export default async function addTime(
-  { membershipId, projectId, date, duration, comment }: AddTimeParams,
+  { membershipId, projectId, date, target, duration, comment }: AddTimeParams,
   actorMembership: Membership
 ) {
   const membership = membershipId
@@ -70,6 +72,7 @@ export default async function addTime(
     projectId,
     teamId,
     date,
+    target,
     duration,
     comment,
   };

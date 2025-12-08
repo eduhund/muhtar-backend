@@ -2,7 +2,7 @@ import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
 export type ResourceTarget = {
-  type: "project" | "task";
+  type: "job" | "task";
   id: string;
 };
 
