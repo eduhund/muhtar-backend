@@ -14,10 +14,12 @@ export default function validateUpdateTimeParams(
     throw new InvalidParamsError("membershipId must be a string");
   if (projectId && typeof projectId !== "string")
     throw new InvalidParamsError("projectId must be a string");
-  if (date && typeof date !== "string")
-    throw new InvalidParamsError("date must be a string");
-  if (isNaN(new Date(date).getTime()))
-    throw new InvalidParamsError("date must be a valid date string");
+  if (
+    date !== undefined &&
+    typeof date !== "string" &&
+    isNaN(new Date(date).getTime())
+  )
+    throw new InvalidParamsError("date must be a valid string");
   if (target !== null && typeof target !== "object")
     throw new InvalidParamsError("target must be an object or null");
   if (duration && isNaN(duration))
