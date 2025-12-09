@@ -1,14 +1,35 @@
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
-type ProjectJobResource = {
+type ProjectResource = {
   type: string;
   value: number;
 };
 
 type ProjectJobRole = {
   key: string;
-  resources: ProjectJobResource[];
+  resources: ProjectResource[];
+};
+
+type ProjectOutcomeIcon =
+  | "document"
+  | "image"
+  | "video"
+  | "audio"
+  | "code"
+  | "design"
+  | "presentation"
+  | "meeting"
+  | "other";
+
+type ProjectOutcome = {
+  id: string;
+  name: string;
+  icon: ProjectOutcomeIcon;
+  description?: string;
+  date?: string;
+  quantity?: number;
+  resourcesPerUnit?: ProjectResource[];
 };
 
 export type ProjectPlanJob = {
@@ -19,7 +40,8 @@ export type ProjectPlanJob = {
   prevJobId: string | null;
   status: "backlog" | "active" | "completed" | "canceled";
   roles: ProjectJobRole[];
-  resources: ProjectJobResource[];
+  resources: ProjectResource[];
+  outcomes: ProjectOutcome[];
   children: ProjectPlanJob[];
 };
 
@@ -32,7 +54,7 @@ export default class ProjectPlan extends BaseModel<ProjectPlan, Membership> {
   planStart: string;
   planEnd: string;
   totalBudget: number;
-  totalResources: ProjectJobResource[];
+  totalResources: ProjectResource[];
   roles: ProjectJobRole[];
   jobs: ProjectPlanJob[];
   history: any[];

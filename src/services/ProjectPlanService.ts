@@ -5,10 +5,21 @@ import Membership from "../models/Membership";
 import ProjectPlan, { ProjectPlanJob } from "../models/ProjectPlan";
 import { dateOnlyIsoString } from "../utils/date";
 
+function createOutcomesWithId(
+  outcomes: ProjectPlan["jobs"][0]["outcomes"]
+): ProjectPlan["jobs"][0]["outcomes"] {
+  return outcomes.map((outcome: ProjectPlan["jobs"][0]["outcomes"][0]) => ({
+    ...outcome,
+    id: outcome.id || uuidv7(),
+    icon: outcome.icon || "other",
+  }));
+}
+
 function createJobsWithId(jobs: ProjectPlanJob[]): ProjectPlanJob[] {
   return jobs.map((job) => ({
     ...job,
     id: job.id || uuidv7(),
+    outcomes: createOutcomesWithId(job.outcomes || []),
     children: createJobsWithId(job.children || []),
   }));
 }
