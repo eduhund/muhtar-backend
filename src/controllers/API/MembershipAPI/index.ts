@@ -28,6 +28,14 @@ import { getTasks, validateGetTasksParams } from "./getTasks";
 import { updateTask, validateUpdateTaskParams } from "./updateTask";
 import { archiveTask, validateArchiveTaskParams } from "./archiveTask";
 import { restoreTask, validateRestoreTaskParams } from "./restoreTask";
+import {
+  createProjectPlan,
+  validateCreateProjectPlanParams,
+} from "./createProjectPlan";
+import {
+  createProjectContract,
+  validateCreateProjectContractParams,
+} from "./createProjectContract";
 
 const membershipApiRouter = Router();
 
@@ -91,6 +99,18 @@ membershipApiRouter.post(
   "/restoreTask",
   validateRestoreTaskParams,
   restoreTask
+);
+
+membershipApiRouter.post(
+  "/createProjectPlan",
+  validateCreateProjectPlanParams,
+  createProjectPlan
+);
+
+membershipApiRouter.post(
+  "/createProjectContract",
+  validateCreateProjectContractParams,
+  createProjectContract
 );
 
 export default membershipApiRouter;

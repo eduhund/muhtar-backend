@@ -1,12 +1,23 @@
 import ApiKey from "./ApiKey";
 import Membership from "./Membership";
 import Project from "./Project";
+import ProjectContract from "./ProjectContract";
+import ProjectPlan from "./ProjectPlan";
 import Task from "./Task";
 import Team from "./Team";
 import Time from "./Time";
 import User from "./User";
 
-type ModelType = User | Membership | Task | Time | Team | Project | ApiKey;
+type ModelType =
+  | User
+  | Membership
+  | Task
+  | Time
+  | Team
+  | Project
+  | ProjectContract
+  | ProjectPlan
+  | ApiKey;
 type ActorType = User | Membership;
 
 type ChangesObject<T> = {

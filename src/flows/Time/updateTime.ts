@@ -1,6 +1,6 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import Time from "../../models/Time";
+import Time, { ResourceTarget } from "../../models/Time";
 import {
   membershipService,
   projectService,
@@ -13,8 +13,8 @@ import { BusinessError } from "../../utils/Rejection";
 type updateTimeParams = {
   membershipId?: string;
   projectId?: string;
-  taskId?: string | null;
   date?: Date;
+  target?: ResourceTarget | null;
   duration?: number;
   comment?: string;
 };
@@ -63,8 +63,8 @@ export default async function updateTime(
   {
     membershipId,
     projectId,
-    taskId,
     date,
+    target,
     duration,
     comment,
   }: updateTimeParams,
@@ -86,8 +86,8 @@ export default async function updateTime(
     {
       membershipId,
       projectId,
-      taskId,
       date: date ? dateOnlyIsoString(new Date(date)) : undefined,
+      target,
       duration,
       comment,
     },

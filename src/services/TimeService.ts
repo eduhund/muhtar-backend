@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
-import Time from "../models/Time";
+import Time, { ResourceTarget } from "../models/Time";
 import {
   getRichHistory,
   getRichMembership,
@@ -17,6 +17,8 @@ type TimeParams = {
   taskId?: string | null;
   createdBy?: string;
   date: Date;
+  type?: string;
+  target?: ResourceTarget | null;
   duration?: number;
   comment?: string | null;
 };
@@ -77,8 +79,9 @@ export default class TimeService extends Service {
       membershipId,
       projectId,
       teamId,
-      taskId = null,
       date,
+      type = "time",
+      target = null,
       duration = 0,
       comment = "",
     }: TimeParams,
@@ -91,8 +94,9 @@ export default class TimeService extends Service {
       membershipId,
       projectId,
       teamId,
-      taskId,
       date,
+      type,
+      target,
       duration,
       comment,
       history: [
@@ -152,19 +156,11 @@ export default class TimeService extends Service {
     return data.map((time: any) => new Time(time));
   }
 
-  async getRichTime({
-    time,
-    membership,
-    project,
-    team,
-    memberships,
-    task,
-  }: any) {
+  async getRichTime({ time, membership, project, team, memberships }: any) {
     const richTime = { ...time.toJSON() };
     await getRichMembership(richTime, membership);
     await getRichProject(richTime, project);
     await getRichTeam(richTime, team);
-    await getRichTask(richTime, task);
 
     richTime.history = await getRichHistory(time.history, memberships);
 
