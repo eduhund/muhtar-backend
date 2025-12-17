@@ -1,29 +1,17 @@
-import User from "../../models/User";
-import { membershipService, projectService } from "../../services";
+import Membership from "../../models/Membership";
+import { projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
 type AddProjectParams = {
   name: string;
   description?: string;
-  teamId: string;
 };
 
 export default async function createProject(
-  { name, description = "", teamId }: AddProjectParams,
-  currentUser: User
+  { name, description = "" }: AddProjectParams,
+  actorMembership: Membership
 ) {
-  const currentMembership = await membershipService.getMembership({
-    userId: currentUser.getId(),
-    teamId: teamId,
-  });
-  if (!currentMembership) {
-    throw new BusinessError(
-      "FORBIDDEN",
-      "You are not a member of this project team"
-    );
-  }
-
-  if (!currentMembership.isOwner() && !currentMembership.isAdmin()) {
+  if (!actorMembership.isAdmin() && !actorMembership.isMember()) {
     throw new BusinessError(
       "FORBIDDEN",
       "You are not allowed to create a project in this team"
@@ -35,7 +23,7 @@ export default async function createProject(
       name,
       description,
     },
-    currentMembership
+    actorMembership
   );
   return newProject;
 }
