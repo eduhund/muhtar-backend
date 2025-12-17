@@ -36,6 +36,7 @@ import {
   createProjectContract,
   validateCreateProjectContractParams,
 } from "./createProjectContract";
+import { createProject, validateCreateProjectParams } from "./createProject";
 
 const membershipApiRouter = Router();
 
@@ -99,6 +100,12 @@ membershipApiRouter.post(
   "/restoreTask",
   validateRestoreTaskParams,
   restoreTask
+);
+
+membershipApiRouter.post(
+  "/createProject",
+  validateCreateProjectParams,
+  createProject
 );
 
 membershipApiRouter.post(

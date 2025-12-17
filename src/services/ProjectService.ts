@@ -65,6 +65,7 @@ export default class ProjectService extends Service {
         },
       ],
     });
+    await this._create(project);
     return project;
   }
 
