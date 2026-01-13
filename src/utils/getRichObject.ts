@@ -2,7 +2,7 @@ import Membership from "../models/Membership";
 import Project from "../models/Project";
 import Task from "../models/Task";
 import Team from "../models/Team";
-import Time from "../models/Time";
+import Time from "../models/Resource";
 import User from "../models/User";
 import { membershipService, timeService } from "../services";
 

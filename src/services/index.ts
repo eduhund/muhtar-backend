@@ -6,7 +6,7 @@ import ProjectService from "./ProjectService";
 import ProjectContractService from "./ProjectContractService";
 import ProjectPlanService from "./ProjectPlanService";
 import TeamService from "./TeamService";
-import TimeService from "./TimeService";
+import ResourceService from "./ResourceService";
 import UserService from "./UserService";
 import TaskService from "./TaskService";
 
@@ -26,7 +26,10 @@ export const projectPlanService: ProjectPlanService = new ProjectPlanService(
 );
 export const taskService: TaskService = new TaskService(adapter, "tasks");
 export const teamService: TeamService = new TeamService(adapter, "teams");
-export const timeService: TimeService = new TimeService(adapter, "time");
+export const resourceService: ResourceService = new ResourceService(
+  adapter,
+  "resources"
+);
 export const userService: UserService = new UserService(adapter, "users");
 
 export const membershipService: MembershipService = new MembershipService(

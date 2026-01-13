@@ -5,7 +5,7 @@ import ProjectContract from "./ProjectContract";
 import ProjectPlan from "./ProjectPlan";
 import Task from "./Task";
 import Team from "./Team";
-import Time from "./Time";
+import Time from "./Resource";
 import User from "./User";
 
 type ModelType =
