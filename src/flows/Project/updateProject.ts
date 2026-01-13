@@ -11,14 +11,7 @@ type RecourceParams = {
   budget?: number;
 };
 
-type PlanParams = {
-  startDate?: string;
-  endDate?: string;
-  currency?: "RUB" | "USD" | "EUR";
-  resources?: RecourceParams[];
-};
-
-type updateTimeParams = {
+type updateProjectParams = {
   name?: string;
   description?: string;
   plan?: any;
@@ -44,7 +37,7 @@ async function canUpdateProject(
 
 export default async function updateProject(
   id: string,
-  { name, description, plan }: updateTimeParams,
+  { name, description, plan }: updateProjectParams,
   currentUser: User
 ) {
   const project = await projectService.getProjectById(id);

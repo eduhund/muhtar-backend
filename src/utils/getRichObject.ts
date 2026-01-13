@@ -2,26 +2,26 @@ import Membership from "../models/Membership";
 import Project from "../models/Project";
 import Task from "../models/Task";
 import Team from "../models/Team";
-import Time from "../models/Resource";
+import Resource from "../models/Resource";
 import User from "../models/User";
-import { membershipService, timeService } from "../services";
+import { membershipService, resourceService } from "../services";
 
-function groupTimeByMembership(projectTimeList: Time[]) {
-  const timelistPerMembership: Record<
+function groupResourcesByMembership(projectResourceList: Resource[]) {
+  const resourcesPerMembership: Record<
     string,
-    { list: Time[]; totalValue: number }
+    { list: Resource[]; totalValue: number }
   > = {};
 
-  for (const entry of projectTimeList) {
+  for (const entry of projectResourceList) {
     const { membershipId, duration } = entry;
-    if (!timelistPerMembership[membershipId]) {
-      timelistPerMembership[membershipId] = { list: [], totalValue: 0 };
+    if (!resourcesPerMembership[membershipId]) {
+      resourcesPerMembership[membershipId] = { list: [], totalValue: 0 };
     }
-    timelistPerMembership[membershipId].list.push(entry);
-    timelistPerMembership[membershipId].totalValue += duration;
+    resourcesPerMembership[membershipId].list.push(entry);
+    resourcesPerMembership[membershipId].totalValue += duration;
   }
 
-  return timelistPerMembership;
+  return resourcesPerMembership;
 }
 
 export function getRichHistory(history: any[], teamMemberships: Membership[]) {
@@ -57,9 +57,11 @@ export function getRichHistory(history: any[], teamMemberships: Membership[]) {
 }
 
 export async function getRichMembershipList(project: Project) {
-  const projectTimeList = await timeService.getTimeByProject(project.getId());
-  const timelistPerMembership = groupTimeByMembership(projectTimeList);
-  const totalSpentTime = Object.values(timelistPerMembership).reduce(
+  const projectResources = await resourceService.getResourceByProject(
+    project.getId()
+  );
+  const resourcesPerMembership = groupResourcesByMembership(projectResources);
+  const totalSpentResources = Object.values(resourcesPerMembership).reduce(
     (sum: number, { totalValue }) => sum + totalValue,
     0
   );
@@ -73,16 +75,16 @@ export async function getRichMembershipList(project: Project) {
       const membership = await membershipService.getMembershipById(
         m.membershipId
       );
-      const membershipTotalSpentTime =
-        timelistPerMembership[m.membershipId]?.totalValue || 0;
+      const membershipTotalSpentResources =
+        resourcesPerMembership[m.membershipId]?.totalValue || 0;
       return Object.assign(m, {
         name: membership?.name || "Unknown Membership",
-        membershipTotalSpentTime,
+        membershipTotalSpentResources,
       });
     })
   );
 
-  const guestMembershipIds = Object.keys(timelistPerMembership).filter(
+  const guestMembershipIds = Object.keys(resourcesPerMembership).filter(
     (id) => !projectMembershipIds.has(id)
   );
 
@@ -91,13 +93,13 @@ export async function getRichMembershipList(project: Project) {
       const membership = await membershipService.getMembershipById(
         membershipId
       );
-      const membershipTotalSpentTime =
-        timelistPerMembership[membershipId]?.totalValue || 0;
+      const membershipTotalSpentResources =
+        resourcesPerMembership[membershipId]?.totalValue || 0;
       return {
         membershipId,
         name: membership?.name || "Unknown Membership",
-        membershipTotalSpentTime,
-        timeList: timelistPerMembership[membershipId].list,
+        membershipTotalSpentResources,
+        resources: resourcesPerMembership[membershipId].list,
       };
     })
   );
@@ -105,7 +107,7 @@ export async function getRichMembershipList(project: Project) {
   return Object.assign(project, {
     memberships: projectMemberships,
     guests: projectGuests,
-    totalSpentTime,
+    totalSpentResources,
   });
 }
 

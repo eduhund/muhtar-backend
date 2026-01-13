@@ -1,6 +1,6 @@
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
-import Time from "../../models/Resource";
+import Resource from "../../models/Resource";
 import {
   projectService,
   resourceService,
@@ -9,14 +9,14 @@ import {
 } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
-type GetTimeParams = {
+type GetResourceParams = {
   id: string;
 };
 
 function canGetResource(
   currentMembership: Membership,
   project: Project,
-  resource: Time
+  resource: Resource
 ) {
   if (currentMembership.isAdmin()) return true;
 
@@ -29,7 +29,7 @@ function canGetResource(
 }
 
 export default async function getResource(
-  { id }: GetTimeParams,
+  { id }: GetResourceParams,
   actorMembership: Membership
 ) {
   const resourceData = await resourceService.getResourceById(id);

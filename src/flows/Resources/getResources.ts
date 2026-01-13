@@ -9,7 +9,7 @@ import {
   taskService,
 } from "../../services";
 
-type GetTimeListParams = {
+type GetResourcesParams = {
   projectId?: string;
   membershipId?: string;
   date?: string;
@@ -27,7 +27,7 @@ function sortResources(resources: Resource[]) {
 }
 
 export default async function getResources(
-  { projectId, membershipId, date, from, to, withArchived }: GetTimeListParams,
+  { projectId, membershipId, date, from, to, withArchived }: GetResourcesParams,
   actorMembership: Membership
 ) {
   const { teamId } = actorMembership;
@@ -35,7 +35,7 @@ export default async function getResources(
 
   let resources: Resource[] = [];
 
-  // Add Guest access to their own time entries
+  // Add Guest access to their own resource entries
 
   const projects = (await projectService.getProjectsByTeam(
     teamId
@@ -68,7 +68,7 @@ export default async function getResources(
 
     for (const project of projects) {
       if (project.isProjectAdmin(actorMembershipId)) {
-        const projectTime = await resourceService.getResourceList({
+        const projectResource = await resourceService.getResourceList({
           teamId,
           projectId: project.getId(),
           membershipId,
@@ -77,12 +77,12 @@ export default async function getResources(
           to,
           withArchived,
         });
-        const projectTimeExceptActorTime = projectTime.filter(
+        const projectResourceExceptActorResource = projectResource.filter(
           (resource: Resource) => {
             return resource.membershipId !== actorMembershipId;
           }
         );
-        resources = resources.concat(projectTimeExceptActorTime);
+        resources = resources.concat(projectResourceExceptActorResource);
       }
     }
   }

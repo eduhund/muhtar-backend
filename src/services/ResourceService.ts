@@ -10,7 +10,7 @@ import {
   getRichTeam,
 } from "../utils/getRichObject";
 
-type TimeParams = {
+type ResourceParams = {
   membershipId: string;
   projectId: string;
   teamId: string;
@@ -23,7 +23,7 @@ type TimeParams = {
   comment?: string | null;
 };
 
-type TimeQueryParams = {
+type ResourceQueryParams = {
   id?: string;
   teamId: string;
   projectId?: string;
@@ -34,7 +34,7 @@ type TimeQueryParams = {
   withArchived?: boolean;
 };
 
-type TimeQuery = {
+type ResourceQuery = {
   id?: string;
   teamId: string;
   projectId?: string;
@@ -54,9 +54,9 @@ function buildQuery({
   from,
   to,
   withArchived,
-}: TimeQueryParams): Partial<TimeQuery> {
+}: ResourceQueryParams): Partial<ResourceQuery> {
   if (id) return { id };
-  const query: Partial<TimeQuery> = {
+  const query: Partial<ResourceQuery> = {
     teamId,
   };
   if (projectId) query.projectId = projectId;
@@ -73,7 +73,7 @@ function buildQuery({
   return query;
 }
 
-export default class TimeService extends Service {
+export default class ResourceService extends Service {
   async create(
     {
       membershipId,
@@ -84,7 +84,7 @@ export default class TimeService extends Service {
       target = null,
       duration = 0,
       comment = "",
-    }: TimeParams,
+    }: ResourceParams,
     currentMembership: any
   ) {
     const resource = new Resource({
@@ -117,10 +117,10 @@ export default class TimeService extends Service {
     return resource;
   }
 
-  async getResourceList(params: TimeQueryParams) {
+  async getResourceList(params: ResourceQueryParams) {
     const query = buildQuery(params);
     const data = await this._findMany(query);
-    return data.map((time: any) => new Resource(time));
+    return data.map((resource: any) => new Resource(resource));
   }
 
   async getResourceById(id: string) {

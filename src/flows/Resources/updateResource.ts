@@ -58,7 +58,7 @@ async function getNewProject(projectId: string) {
   return project;
 }
 
-export default async function updateTime(
+export default async function updateResource(
   id: string,
   {
     membershipId,
