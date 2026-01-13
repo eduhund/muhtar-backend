@@ -14,7 +14,7 @@ export default class Resource extends BaseModel<Resource, Membership> {
   date: string;
   type: string;
   target: ResourceTarget | null;
-  duration: number;
+  consumed: number;
   comment: string;
   history: any[] = [];
 
@@ -27,7 +27,7 @@ export default class Resource extends BaseModel<Resource, Membership> {
     date,
     type = "time",
     target = null,
-    duration = 0,
+    consumed = 0,
     comment = "",
     isDeleted = false,
     history = [],
@@ -40,7 +40,7 @@ export default class Resource extends BaseModel<Resource, Membership> {
     this.date = date;
     this.type = type;
     this.target = target;
-    this.duration = duration;
+    this.consumed = consumed;
     this.comment = comment;
     this.isDeleted = isDeleted;
     this.history = history;
@@ -66,8 +66,8 @@ export default class Resource extends BaseModel<Resource, Membership> {
     return this;
   }
 
-  changeDuration(duration: number, membership: Membership) {
-    this._update({ duration }, membership);
+  changeconsumed(consumed: number, membership: Membership) {
+    this._update({ consumed }, membership);
     return this;
   }
 

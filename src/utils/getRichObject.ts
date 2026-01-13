@@ -13,12 +13,12 @@ function groupResourcesByMembership(projectResourceList: Resource[]) {
   > = {};
 
   for (const entry of projectResourceList) {
-    const { membershipId, duration } = entry;
+    const { membershipId, consumed } = entry;
     if (!resourcesPerMembership[membershipId]) {
       resourcesPerMembership[membershipId] = { list: [], totalValue: 0 };
     }
     resourcesPerMembership[membershipId].list.push(entry);
-    resourcesPerMembership[membershipId].totalValue += duration;
+    resourcesPerMembership[membershipId].totalValue += consumed;
   }
 
   return resourcesPerMembership;

@@ -6,7 +6,7 @@ export default function validateSpendResourceParams(
   res: any,
   next: any
 ) {
-  const { membershipId, projectId, date, target, duration, comment } = req.body;
+  const { membershipId, projectId, date, target, consumed, comment } = req.body;
   if (!projectId) throw new InvalidParamsError("projectId is required");
   if (typeof projectId !== "string")
     throw new InvalidParamsError("projectId must be a string");
@@ -17,11 +17,11 @@ export default function validateSpendResourceParams(
     throw new InvalidParamsError("date must be a valid date string");
   if (target !== null && typeof target !== "object")
     throw new InvalidParamsError("target must be an object or null");
-  if (!duration) throw new InvalidParamsError("duration is required");
-  if (isNaN(duration))
-    throw new InvalidParamsError("duration must be a valid number");
-  if (duration <= 0)
-    throw new InvalidParamsError("duration must be greater than 0");
+  if (!consumed) throw new InvalidParamsError("consumed is required");
+  if (isNaN(consumed))
+    throw new InvalidParamsError("consumed must be a valid number");
+  if (consumed <= 0)
+    throw new InvalidParamsError("consumed must be greater than 0");
   if (comment && typeof comment !== "string")
     throw new InvalidParamsError("comment must be a string");
   if (membershipId && typeof membershipId !== "string")

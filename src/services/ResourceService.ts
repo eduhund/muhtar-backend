@@ -19,7 +19,7 @@ type ResourceParams = {
   date: Date;
   type?: string;
   target?: ResourceTarget | null;
-  duration?: number;
+  consumed?: number;
   comment?: string | null;
 };
 
@@ -82,7 +82,7 @@ export default class ResourceService extends Service {
       date,
       type = "time",
       target = null,
-      duration = 0,
+      consumed = 0,
       comment = "",
     }: ResourceParams,
     currentMembership: any
@@ -97,7 +97,7 @@ export default class ResourceService extends Service {
       date,
       type,
       target,
-      duration,
+      consumed,
       comment,
       history: [
         {

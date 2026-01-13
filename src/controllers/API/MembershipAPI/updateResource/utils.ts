@@ -5,7 +5,7 @@ export default function validateUpdateResourceParams(
   res: any,
   next: any
 ) {
-  const { id, membershipId, projectId, date, target, duration, comment } =
+  const { id, membershipId, projectId, date, target, consumed, comment } =
     req.body;
   if (!id) throw new InvalidParamsError("id is required");
   if (typeof id !== "string")
@@ -22,8 +22,8 @@ export default function validateUpdateResourceParams(
     throw new InvalidParamsError("date must be a valid string");
   if (target !== null && typeof target !== "object")
     throw new InvalidParamsError("target must be an object or null");
-  if (duration && isNaN(duration))
-    throw new InvalidParamsError("duration must be a valid number");
+  if (consumed && isNaN(consumed))
+    throw new InvalidParamsError("consumed must be a valid number");
   if (comment && typeof comment !== "string")
     throw new InvalidParamsError("comment must be a string");
 

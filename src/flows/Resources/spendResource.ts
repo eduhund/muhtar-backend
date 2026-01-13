@@ -15,7 +15,7 @@ type SpendResourceParams = {
   type: string;
   date: Date;
   target: ResourceTarget | null;
-  duration: number;
+  consumed: number;
   comment: string | null;
 };
 
@@ -54,7 +54,7 @@ export default async function spendResource(
     type,
     date,
     target,
-    duration,
+    consumed,
     comment,
   }: SpendResourceParams,
   actorMembership: Membership
@@ -83,7 +83,7 @@ export default async function spendResource(
     type,
     date,
     target,
-    duration,
+    consumed,
     comment,
   };
 

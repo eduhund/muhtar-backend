@@ -15,7 +15,7 @@ type updateResourceParams = {
   projectId?: string;
   date?: Date;
   target?: ResourceTarget | null;
-  duration?: number;
+  consumed?: number;
   comment?: string;
 };
 
@@ -65,7 +65,7 @@ export default async function updateResource(
     projectId,
     date,
     target,
-    duration,
+    consumed,
     comment,
   }: updateResourceParams,
   actorMembership: Membership
@@ -87,7 +87,7 @@ export default async function updateResource(
       projectId,
       date: date ? dateOnlyIsoString(new Date(date)) : undefined,
       target,
-      duration,
+      consumed,
       comment,
     },
     actorMembership
