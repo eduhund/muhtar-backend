@@ -39,6 +39,7 @@ export default class MembershipService extends Service {
       ...data,
       createdAt: new Date(),
     });
+    await this._create(membership);
     return membership;
   }
 
@@ -65,7 +66,7 @@ export default class MembershipService extends Service {
       return this.getMembershipById(user.activeMembershipId);
     } else {
       const membership = await this.getMembershipsByUser(userId).then(
-        (m) => m[0] || null
+        (m) => m[0] || null,
       );
       if (membership) {
         user.setActiveMembershipId(membership.getId());
