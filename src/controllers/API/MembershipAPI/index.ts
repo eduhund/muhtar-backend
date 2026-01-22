@@ -1,14 +1,20 @@
 import { Router } from "express";
 
 import { checkMembershipAuth } from "./utils";
-import { addTime, validateAddTimeParams } from "./addTime";
-import { archiveTime, validateArchiveTimeParams } from "./archiveTime";
+import { spendResource, validateSpendResourceParams } from "./spendResource";
+import {
+  archiveResource,
+  validateArchiveResourceParams,
+} from "./archiveResource";
 import { getProject, validateGetProjectParams } from "./getProject";
 import { getProjects, validateGetProjectsParams } from "./getProjects";
-import { getTime, validateGetTimeParams } from "./getTime";
-import { getTimetable, validateGetTimetableParams } from "./getTimetable";
-import { updateTime, validateUpdateTimeParams } from "./updateTime";
-import { restoreTime, validateRestoreTimeParams } from "./restoreTime";
+import { getResource, validateGetResourceParams } from "./getResource";
+import { getResources, validateGetResourcesParams } from "./getResources";
+import { updateResource, validateUpdateResourceParams } from "./updateResource";
+import {
+  restoreResource,
+  validateRestoreResourceParams,
+} from "./restoreResource";
 import { getMemberships, validategetMembershipsParams } from "./getMemberships";
 import {
   addProjectMembership,
@@ -44,26 +50,33 @@ membershipApiRouter.use(checkMembershipAuth);
 
 membershipApiRouter.get("/getProject", validateGetProjectParams, getProject);
 membershipApiRouter.get("/getProjects", validateGetProjectsParams, getProjects);
-membershipApiRouter.get("/getTime", validateGetTimeParams, getTime);
+membershipApiRouter.get("/getResource", validateGetResourceParams, getResource);
 membershipApiRouter.get(
-  "/getTimetable",
-  validateGetTimetableParams,
-  getTimetable
+  "/getResources",
+  validateGetResourcesParams,
+  getResources
 );
 
-membershipApiRouter.post("/addTime", validateAddTimeParams, addTime);
 membershipApiRouter.post(
-  "/archiveTime",
-  validateArchiveTimeParams,
-  archiveTime
+  "/spendResource",
+  validateSpendResourceParams,
+  spendResource
 );
 membershipApiRouter.post(
-  "/restoreTime",
-  validateRestoreTimeParams,
-  restoreTime
+  "/archiveResource",
+  validateArchiveResourceParams,
+  archiveResource
 );
-membershipApiRouter.post("/updateTime", validateUpdateTimeParams, updateTime);
-
+membershipApiRouter.post(
+  "/restoreResource",
+  validateRestoreResourceParams,
+  restoreResource
+);
+membershipApiRouter.post(
+  "/updateResource",
+  validateUpdateResourceParams,
+  updateResource
+);
 membershipApiRouter.get(
   "/getMemberships",
   validategetMembershipsParams,
