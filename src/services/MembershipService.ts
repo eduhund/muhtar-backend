@@ -43,6 +43,11 @@ export default class MembershipService extends Service {
     return membership;
   }
 
+  async save(membership: Membership) {
+    await this._update(membership.getId(), membership);
+    return membership;
+  }
+
   async getMembership({ userId, teamId }: { userId: string; teamId: string }) {
     const data = await this._findOne({ userId, teamId });
     return data ? new Membership(data) : null;
@@ -94,6 +99,17 @@ export default class MembershipService extends Service {
       "connections.slack.teamId": teamId,
     });
     return data ? new Membership(data) : null;
+  }
+
+  async getMembershipByUserAndTeam({
+    userId,
+    teamId,
+  }: {
+    userId: string;
+    teamId: string;
+  }) {
+    const data = await this._findMany({ userId, teamId });
+    return data.map((membership: any) => new Membership(membership));
   }
 
   async getMembershipsByTeam(teamId: string) {

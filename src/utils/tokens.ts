@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import { apiKeysService } from "../services";
 import { readFile, writeFile } from "./fs";
 
@@ -9,6 +11,12 @@ export type Token = {
   teamId?: string;
   ts: number;
 };
+
+const { JWT_SECRET } = process.env;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET must be set in environment");
+}
 
 function rand() {
   return Math.random().toString(36).substring(2);
@@ -58,4 +66,55 @@ export function getBearerToken(header: string | undefined) {
   const matches = header.match(/Bearer (.+)/);
   if (!matches) return null;
   return matches[1];
+}
+
+export function signToken(payload: Record<string, any>): string {
+  const header = { alg: "HS256" };
+  const encodedHeader = Buffer.from(JSON.stringify(header)).toString(
+    "base64url",
+  );
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString(
+    "base64url",
+  );
+
+  const dataToSign = encodedHeader + "." + encodedPayload;
+  const signature = crypto
+    .createHmac("sha256", JWT_SECRET!)
+    .update(dataToSign)
+    .digest("base64url");
+
+  return dataToSign + "." + signature;
+}
+
+export function verifyToken(token: string): Record<string, any> | null {
+  const parts = token.split(".");
+  if (parts.length !== 3) {
+    return null;
+  }
+
+  const [encodedHeader, encodedPayload, signature] = parts;
+  const dataToSign = encodedHeader + "." + encodedPayload;
+
+  const expectedSignature = crypto
+    .createHmac("sha256", JWT_SECRET!)
+    .update(dataToSign)
+    .digest("base64url");
+
+  if (
+    !crypto.timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expectedSignature),
+    )
+  ) {
+    return null;
+  }
+
+  try {
+    const payloadStr = Buffer.from(encodedPayload, "base64url").toString(
+      "utf8",
+    );
+    return JSON.parse(payloadStr);
+  } catch {
+    return null;
+  }
 }

@@ -18,8 +18,16 @@ export function createHash(data: string) {
 export function compareHash(
   inputData: string,
   storedHash: string,
-  storedSalt: string
+  storedSalt: string,
 ) {
   const saltedInput = storedSalt + inputData;
   return storedHash === generateHash(saltedInput);
+}
+
+export function createHashWithoutSalt(data: string) {
+  return generateHash(data);
+}
+
+export function compareHashWithoutSalt(inputData: string, storedHash: string) {
+  return storedHash === generateHash(inputData);
 }
