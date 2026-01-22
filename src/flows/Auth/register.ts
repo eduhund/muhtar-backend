@@ -1,3 +1,6 @@
+import { authService, userService } from "../../services";
+import { BusinessError } from "../../utils/Rejection";
+
 type RegisterFlowParams = {
   email: string;
   password: string;
@@ -5,74 +8,29 @@ type RegisterFlowParams = {
   lastName: string;
 };
 
-export default class RegisterFlow {
-  authService: any;
-  constructor({
-    authService,
-  }: //responseAdapter,
-  any) {
-    this.authService = authService;
-    //this.responseAdapter = responseAdapter;
+export default async function registerFlow({
+  email,
+  password,
+  firstName,
+  lastName,
+}: RegisterFlowParams) {
+  const isEmailUsed = await userService.isEmailUsed(email);
+  if (isEmailUsed) {
+    throw new BusinessError("INVALID_CREDENTIALS", "Email already exists");
   }
 
-  execute = async ({
+  const user = await userService.create({
     email,
     password,
     firstName,
     lastName,
-  }: RegisterFlowParams) => {
-    /*
-    const user = await getUser({ email });
-    if (user) {
-      return next({ code: 10105 });
-    }
-    const passwordHash = await hashPassword(password);
-    const newUser = {
-      userId: uuidv4(),
-      email,
-      password: passwordHash,
-      firstName,
-      lastName,
-      registerDate: new Date(),
-    };
-    await createUser(newUser);
-    if (!organizationId) {
-      const newOrganizationId = uuidv4();
-      await createOrganization({
-        organizationId: newOrganizationId,
-        name: "My organization",
-      });
-      await createMembership({
-        userId: newUser.userId,
-        organizationId: newOrganizationId,
-        role: "owner",
-        status: "active",
-      });
-    } else {
-      const membership = await setMembership(
-        {
-          userId: newUser.userId,
-          organizationId,
-        },
-        { status: "active" }
-      );
+  });
 
-      if (!membership) {
-        return next({ code: 10106 });
-      }
-    }
+  const userAccessToken = authService.generateUserToken(user);
 
-    /*
-    const user = await this.authService.userService.getUserByEmail(email);
-    if (!user) throw new Error("User not found");
-
-    const isValid = await this.authService.verifyPassword(
-      user.getId(),
-      password
-    );
-    if (!isValid) throw new Error("Invalid password");
-
-    return this.authService.generateToken(user);
-    */
+  return {
+    tokens: {
+      user: { accessToken: userAccessToken },
+    },
   };
 }

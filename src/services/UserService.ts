@@ -86,4 +86,9 @@ export default class UserService extends Service {
     if (!user) throw new Error("User not found");
     return user.getPassword();
   }
+
+  async isEmailUsed(email: string) {
+    const user = await this.getUserByEmail(email);
+    return !!user;
+  }
 }
