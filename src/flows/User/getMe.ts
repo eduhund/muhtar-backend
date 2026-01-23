@@ -12,16 +12,26 @@ import {
 export default async function getMe(actorUser: User) {
   const userId = actorUser.getId();
   const memberships = await membershipService.getMembershipsByUser(userId);
-  const activeMembership = await membershipService.getActiveUserMembership(
-    userId
+  const teams = await Promise.all(
+    memberships.map(async (m: Membership) => {
+      const team = await teamService.getTeamById(m.teamId);
+      return team;
+    }),
   );
+
+  teams.forEach((t: any) => {
+    t.membership = memberships.find((m: Membership) => m.teamId === t.getId());
+  });
+
+  const activeMembership =
+    await membershipService.getActiveUserMembership(userId);
   const activeTeam = activeMembership
     ? await teamService.getTeamById(activeMembership.teamId)
     : null;
 
   const data: any = {
     ...actorUser.toJSON(),
-    memberships: memberships.map((m: Membership) => m.toJSON()),
+    teams: teams.map((t: any) => t.toJSON()),
   };
 
   if (activeMembership) {
@@ -35,7 +45,7 @@ export default async function getMe(actorUser: User) {
       teamId: activeTeam.getId(),
     });
     data.activeTeam.memberships = teamMemberships.map((m: Membership) =>
-      m.toJSON()
+      m.toJSON(),
     );
 
     const teamProjects = await projectService.getProjects({
@@ -55,7 +65,7 @@ export default async function getMe(actorUser: User) {
           activePlan,
           activeContract,
         });
-      })
+      }),
     );
   }
 
