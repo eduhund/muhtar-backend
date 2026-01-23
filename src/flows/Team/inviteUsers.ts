@@ -17,25 +17,24 @@ async function canInvite(teamId: string, currentMembership: Membership) {
 
   throw new BusinessError(
     "FORBIDDEN",
-    "You are not allowed to invite users to the team"
+    "You are not allowed to invite users to the team",
   );
 }
 
 export default async function inviteUsers(
   teamId: string,
   { invitees }: InviteUsersParams,
-  currentUser: User
+  actorUser: User,
 ) {
-  const currentMembership = await membershipService.getMembership({
-    userId: currentUser.getId(),
+  const actorMembership = await membershipService.getMembership({
+    userId: actorUser.getId(),
     teamId: teamId,
   });
-  if (!currentMembership) {
+  if (!actorMembership) {
     throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
-  await canInvite(teamId, currentMembership);
-
+  await canInvite(teamId, actorMembership);
   for (const invitee of invitees) {
     const { email, accessRole = "user" } = invitee;
     const user =
@@ -52,7 +51,7 @@ export default async function inviteUsers(
         teamId,
         accessRole,
       }));
-    membership.invite(currentMembership);
+    membership.invite(actorMembership);
   }
 
   return {};

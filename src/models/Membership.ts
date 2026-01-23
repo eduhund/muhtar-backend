@@ -39,7 +39,7 @@ export default class Membership extends BaseModel<Membership, Membership> {
   }
 
   invite(membership: Membership) {
-    return this.changeStatus("pending", membership);
+    return this.changeStatus("invited", membership);
   }
 
   accept(membership: Membership) {
@@ -53,11 +53,11 @@ export default class Membership extends BaseModel<Membership, Membership> {
   connectTo(
     service: string,
     { userId, teamId }: { userId: string; teamId: string },
-    membership: Membership
+    membership: Membership,
   ) {
     this._update(
       { connections: { [service]: { userId, teamId } } },
-      membership
+      membership,
     );
     return this;
   }
