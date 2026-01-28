@@ -6,6 +6,7 @@ import {
   teamService,
   membershipService,
   bookedResourceService,
+  workRoleService,
 } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -55,7 +56,10 @@ export default async function bookResource(
       throw new BusinessError("NOT_FOUND", "Membership not found");
     }
   } else if (target.type === "role") {
-    // Additional validations for role can be added here
+    const workRole = await workRoleService.getWorkRoleById(target.id);
+    if (!workRole || workRole.teamId !== team.getId()) {
+      throw new BusinessError("NOT_FOUND", "Work role not found");
+    }
   } else {
     throw new BusinessError("BAD_REQUEST", "Invalid target type");
   }

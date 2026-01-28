@@ -10,6 +10,7 @@ import ResourceService from "./ResourceService";
 import UserService from "./UserService";
 import TaskService from "./TaskService";
 import BookedResourceService from "./BookedResourceService";
+import WorkRoleService from "./WorkRoleService";
 
 export const apiKeysService: ApiKeyService = new ApiKeyService(
   adapter,
@@ -50,3 +51,8 @@ export const authService: AuthService = new AuthService({
   userService,
   membershipService,
 });
+
+export const workRoleService: WorkRoleService = new WorkRoleService(
+  adapter,
+  "workRoles",
+);
