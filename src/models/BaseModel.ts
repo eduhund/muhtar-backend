@@ -7,6 +7,8 @@ import Task from "./Task";
 import Team from "./Team";
 import Resource from "./Resource";
 import User from "./User";
+import WorkRole from "./WorkRole";
+import BookedResource from "./BookedResource";
 
 type ModelType =
   | User
@@ -17,7 +19,9 @@ type ModelType =
   | Project
   | ProjectContract
   | ProjectPlan
-  | ApiKey;
+  | ApiKey
+  | WorkRole
+  | BookedResource;
 type ActorType = User | Membership;
 
 type ChangesObject<T> = {
@@ -30,13 +34,13 @@ type ModelJSON<T> = { id: BinaryID } & Partial<T>;
 
 function cleanData<T>(data: Partial<T>): Partial<T> {
   return Object.fromEntries(
-    Object.entries(data).filter(([_, value]) => value !== undefined)
+    Object.entries(data).filter(([_, value]) => value !== undefined),
   ) as Partial<T>;
 }
 
 function createChanges<T extends ModelType>(
   oldData: T,
-  newData: Partial<T>
+  newData: Partial<T>,
 ): ChangesObject<T> {
   const changes: ChangesObject<T> = {};
   for (const key of Object.keys(newData) as (keyof T)[]) {

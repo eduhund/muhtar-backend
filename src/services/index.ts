@@ -9,27 +9,32 @@ import TeamService from "./TeamService";
 import ResourceService from "./ResourceService";
 import UserService from "./UserService";
 import TaskService from "./TaskService";
+import BookedResourceService from "./BookedResourceService";
 
 export const apiKeysService: ApiKeyService = new ApiKeyService(
   adapter,
-  "apiKeys"
+  "apiKeys",
 );
 export const projectService: ProjectService = new ProjectService(
   adapter,
-  "projects"
+  "projects",
 );
 export const projectContractService: ProjectContractService =
   new ProjectContractService(adapter, "projectContracts");
 export const projectPlanService: ProjectPlanService = new ProjectPlanService(
   adapter,
-  "projectPlans"
+  "projectPlans",
 );
 export const taskService: TaskService = new TaskService(adapter, "tasks");
 export const teamService: TeamService = new TeamService(adapter, "teams");
 export const resourceService: ResourceService = new ResourceService(
   adapter,
-  "resources"
+  "resources",
 );
+
+export const bookedResourceService: BookedResourceService =
+  new BookedResourceService(adapter, "bookedResources");
+
 export const userService: UserService = new UserService(adapter, "users");
 
 export const membershipService: MembershipService = new MembershipService(
@@ -38,7 +43,7 @@ export const membershipService: MembershipService = new MembershipService(
   {
     teamService,
     userService,
-  }
+  },
 );
 
 export const authService: AuthService = new AuthService({
