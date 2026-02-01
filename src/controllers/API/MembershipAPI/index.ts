@@ -43,6 +43,10 @@ import {
   validateCreateProjectContractParams,
 } from "./createProjectContract";
 import { createProject, validateCreateProjectParams } from "./createProject";
+import {
+  getBookedResources,
+  validateGetBookedResourcesParams,
+} from "./getBookedResources";
 import { bookResource, validateBookResourceParams } from "./bookResource";
 import { rebookResource, validateRebookResourceParams } from "./rebookResource";
 import { unbookResource, validateUnbookResourceParams } from "./unbookResource";
@@ -134,6 +138,12 @@ membershipApiRouter.post(
   "/createProjectContract",
   validateCreateProjectContractParams,
   createProjectContract,
+);
+
+membershipApiRouter.get(
+  "/getBookedResources",
+  validateGetBookedResourcesParams,
+  getBookedResources,
 );
 
 membershipApiRouter.post(
