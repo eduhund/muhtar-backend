@@ -4,7 +4,9 @@ import spendResourceFlow from "./spendResource";
 import updateResourceFlow from "./updateResource";
 import archiveResourceFlow from "./archiveResource";
 import restoreResourceFlow from "./restoreResource";
-import bookResource from "./bookResource";
+import bookResourceFlow from "./bookResource";
+import rebookResourceFlow from "./rebookResource";
+import unbookResourceFlow from "./unbookResource";
 
 export {
   getResourceFlow,
@@ -13,5 +15,7 @@ export {
   updateResourceFlow,
   archiveResourceFlow,
   restoreResourceFlow,
-  bookResource,
+  bookResourceFlow,
+  rebookResourceFlow,
+  unbookResourceFlow,
 };

@@ -12,6 +12,7 @@ import { BusinessError } from "../../utils/Rejection";
 
 type SpendResourceParams = {
   projectId: string;
+  period: "day" | "week" | "month";
   date: Date;
   resource: {
     type: string;
@@ -39,7 +40,7 @@ async function canBookResource(
 }
 
 export default async function bookResource(
-  { projectId, date, resource, target }: SpendResourceParams,
+  { projectId, period = "week", date, resource, target }: SpendResourceParams,
   actorMembership: Membership,
 ) {
   const team = await teamService.getTeamById(actorMembership.teamId);
@@ -67,6 +68,7 @@ export default async function bookResource(
   const resourceData = {
     teamId: team.getId(),
     projectId,
+    period,
     date,
     resource,
     target,
