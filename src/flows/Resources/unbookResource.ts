@@ -1,13 +1,9 @@
-import { ok } from "assert";
-import { BookedResourceTarget } from "../../models/BookedResource";
 import Membership from "../../models/Membership";
 import Project from "../../models/Project";
 import {
   projectService,
   teamService,
-  membershipService,
   bookedResourceService,
-  workRoleService,
 } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
@@ -30,11 +26,10 @@ async function canUnbookResource(
 }
 
 export default async function unbookResource(
-  { bookedResourceId }: { bookedResourceId: string },
+  { id }: { id: string },
   actorMembership: Membership,
 ) {
-  const bookedResource =
-    await bookedResourceService.getBookedResourceById(bookedResourceId);
+  const bookedResource = await bookedResourceService.getBookedResourceById(id);
   if (!bookedResource) {
     throw new BusinessError("NOT_FOUND", "Booked resource not found");
   }

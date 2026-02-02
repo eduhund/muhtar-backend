@@ -5,11 +5,9 @@ export default function validateUnbookResourceParams(
   res: any,
   next: any,
 ) {
-  const { bookedResourceId } = req.body;
-  if (!bookedResourceId)
-    throw new InvalidParamsError("bookedResourceId is required");
-  if (typeof bookedResourceId !== "string")
-    throw new InvalidParamsError("bookedResourceId must be a string");
-
+  const { id } = req.body;
+  if (!id) throw new InvalidParamsError("id is required");
+  if (typeof id !== "string")
+    throw new InvalidParamsError("id must be a string");
   return next();
 }

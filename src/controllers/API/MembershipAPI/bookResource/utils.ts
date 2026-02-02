@@ -33,8 +33,8 @@ export default function validateBookResourceParams(
     throw new InvalidParamsError("resource must be an object");
   if (!resource.type || resource.type !== "time")
     throw new InvalidParamsError("resource.type must be 'time'");
-  if (typeof resource.id !== "string")
-    throw new InvalidParamsError("resource.id must be a string");
+  if (typeof resource.value !== "number")
+    throw new InvalidParamsError("resource.value must be a number");
 
   return next();
 }
