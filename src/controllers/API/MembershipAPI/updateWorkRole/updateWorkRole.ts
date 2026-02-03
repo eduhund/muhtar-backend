@@ -9,7 +9,7 @@ export default async function updateWorkRole(req: any, res: any, next: any) {
       id,
       workRoleName,
       update,
-      currentUser
+      currentUser,
     );
     return next({ data });
   } catch (e) {

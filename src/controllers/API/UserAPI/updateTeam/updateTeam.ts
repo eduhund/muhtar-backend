@@ -1,6 +1,6 @@
 import { updateTeamFlow } from "../../../../flows";
 
-export default async function update(req: any, res: any, next: any) {
+export default async function updateTeam(req: any, res: any, next: any) {
   try {
     const { id } = req.params;
     const { currentUser } = req.data;
@@ -10,7 +10,7 @@ export default async function update(req: any, res: any, next: any) {
       {
         name,
       },
-      currentUser
+      currentUser,
     );
     return next({ data: {} });
   } catch (e) {

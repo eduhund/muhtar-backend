@@ -8,7 +8,7 @@ export default async function changeAccessRole(req: any, res: any, next: any) {
     await changeMembershipAccessRoleFlow(
       id,
       { membershipId, accessRole },
-      currentUser
+      currentUser,
     );
     return next({ data: {} });
   } catch (e) {
