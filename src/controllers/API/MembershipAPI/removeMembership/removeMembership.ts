@@ -1,13 +1,10 @@
 import { removeMembershipFromTeamFlow } from "../../../../flows";
+import { withMembership } from "../utils";
 
-export default async function changeAccessRole(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    const { membershipId } = req.body;
-    await removeMembershipFromTeamFlow(id, membershipId, currentUser);
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { id } = req.params;
+  const { actorMembership } = req.data;
+  const { membershipId } = req.body;
+  await removeMembershipFromTeamFlow(id, membershipId, actorMembership);
+  return {};
+});

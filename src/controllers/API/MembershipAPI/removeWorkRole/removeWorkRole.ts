@@ -1,13 +1,9 @@
 import { removeWorkRoleFlow } from "../../../../flows";
+import { withMembership } from "../utils";
 
-export default async function removeWorkRole(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    const { workRoleName } = req.body;
-    const data = await removeWorkRoleFlow(id, workRoleName, currentUser);
-    return next({ data });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { id } = req.params;
+  const { actorMembership } = req.data;
+  const { workRoleName } = req.body;
+  return removeWorkRoleFlow(id, workRoleName, actorMembership);
+});

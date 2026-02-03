@@ -1,17 +1,14 @@
 import { changeMembershipAccessRoleFlow } from "../../../../flows";
+import { withMembership } from "../utils";
 
-export default async function changeAccessRole(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    const { membershipId, accessRole } = req.body;
-    await changeMembershipAccessRoleFlow(
-      id,
-      { membershipId, accessRole },
-      currentUser,
-    );
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { id } = req.params;
+  const { actorMembership } = req.data;
+  const { membershipId, accessRole } = req.body;
+  await changeMembershipAccessRoleFlow(
+    id,
+    { membershipId, accessRole },
+    actorMembership,
+  );
+  return {};
+});

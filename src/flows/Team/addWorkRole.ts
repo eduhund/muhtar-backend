@@ -1,32 +1,27 @@
-import { membershipService, teamService } from "../../services";
+import { teamService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
 import { WorkRole } from "../../models/Team";
-import User from "../../models/User";
 
 function canAddWorkRole(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
 
   throw new BusinessError(
     "FORBIDDEN",
-    "You are not allowed to add work roles to the team"
+    "You are not allowed to add work roles to the team",
   );
 }
 
 export default async function addWorkRole(
   teamId: string,
   workRole: WorkRole,
-  currentUser: User
+  actorMembership: Membership,
 ) {
-  const currentMembership = await membershipService.getMembership({
-    userId: currentUser.getId(),
-    teamId: teamId,
-  });
-  if (!currentMembership) {
+  if (actorMembership.teamId !== teamId) {
     throw new BusinessError("FORBIDDEN", "You are not a member of this team");
   }
 
-  canAddWorkRole(currentMembership);
+  canAddWorkRole(actorMembership);
 
   const team = await teamService.getTeamById(teamId);
   if (!team) {
@@ -35,11 +30,11 @@ export default async function addWorkRole(
   if (team.hasWorkRole(workRole)) {
     throw new BusinessError(
       "CONFLICT",
-      `Work role with name ${workRole.name} already exists`
+      `Work role with name ${workRole.name} already exists`,
     );
   }
 
-  await team.addWorkRole(workRole, currentMembership);
+  await team.addWorkRole(workRole, actorMembership);
 
   return {};
 }

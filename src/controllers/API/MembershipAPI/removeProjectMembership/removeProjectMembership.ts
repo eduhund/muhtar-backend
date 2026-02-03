@@ -1,20 +1,8 @@
 import { removeProjectMembershipFlow } from "../../../../flows";
+import { withMembership } from "../utils";
 
-export default async function removeProjectMembership(
-  req: any,
-  res: any,
-  next: any
-) {
-  try {
-    const { actorMembership } = req.data;
-    const { projectId, membershipId } = req.body;
-    const data = await removeProjectMembershipFlow(
-      projectId,
-      membershipId,
-      actorMembership
-    );
-    return next({ data });
-  } catch (e) {
-    next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { actorMembership } = req.data;
+  const { projectId, membershipId } = req.body;
+  return removeProjectMembershipFlow(projectId, membershipId, actorMembership);
+});

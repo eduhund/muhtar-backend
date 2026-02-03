@@ -1,11 +1,7 @@
 import { getTasksFlow } from "../../../../flows";
+import { withMembership } from "../utils";
 
-export default async function getTasks(req: any, res: any, next: any) {
-  try {
-    const { actorMembership } = req.data;
-    const data = await getTasksFlow(req.query, actorMembership);
-    return next({ data });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { actorMembership } = req.data;
+  return getTasksFlow(req.query, actorMembership);
+});
