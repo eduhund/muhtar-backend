@@ -26,7 +26,7 @@ import { getBookedResources } from "./getBookedResources";
 import { bookResource } from "./bookResource";
 import { rebookResource } from "./rebookResource";
 import { unbookResource } from "./unbookResource";
-import { addWorkRole } from "./addWorkRole";
+import { createWorkRole } from "./createWorkRole";
 import { changeAccessRole } from "./changeAccessRole";
 
 const membershipApiRouter = Router();
@@ -70,7 +70,7 @@ membershipApiRouter.post("/rebookResource", rebookResource);
 
 membershipApiRouter.post("/unbookResource", unbookResource);
 
-membershipApiRouter.post("/addWorkRole", addWorkRole);
+membershipApiRouter.post("/createWorkRole", createWorkRole);
 membershipApiRouter.post("/changeAccessRole", changeAccessRole);
 
 export default membershipApiRouter;

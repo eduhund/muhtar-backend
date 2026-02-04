@@ -6,17 +6,25 @@ import WorkRole from "../models/WorkRole";
 type WorkRoleParams = {
   teamId: string;
   name: string;
-  key: string;
+  description?: string;
+  baseRate: {
+    currency: string;
+    amount: number;
+  };
 };
 
 export default class WorkRoleService extends Service {
-  async create({ teamId, name, key }: WorkRoleParams, currentMembership: any) {
+  async create(
+    { teamId, name, description = "", baseRate }: WorkRoleParams,
+    currentMembership: any,
+  ) {
     const workRole = new WorkRole({
       _id: uuidv7(),
       ts: Date.now(),
       teamId,
       name,
-      key,
+      description,
+      baseRate,
       isDeleted: false,
       history: [
         {

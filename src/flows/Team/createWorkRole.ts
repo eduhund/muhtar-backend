@@ -1,7 +1,15 @@
-import { teamService } from "../../services";
+import { teamService, workRoleService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
-import { WorkRole } from "../../models/Team";
+
+export type NewWorkRole = {
+  name: string;
+  description?: string;
+  baseRate: {
+    currency: string;
+    amount: number;
+  };
+};
 
 function canAddWorkRole(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
@@ -12,8 +20,8 @@ function canAddWorkRole(currentMembership: Membership) {
   );
 }
 
-export default async function addWorkRole(
-  { workRole }: { workRole: WorkRole },
+export default async function createWorkRole(
+  { name, description, baseRate }: NewWorkRole,
   actorMembership: Membership,
 ) {
   const teamId = actorMembership.teamId;
@@ -24,15 +32,16 @@ export default async function addWorkRole(
   if (!team) {
     throw new BusinessError("NOT_FOUND", `Team not found`);
   }
-  if (team.hasWorkRole(workRole)) {
-    throw new BusinessError(
-      "CONFLICT",
-      `Work role with name ${workRole.name} already exists`,
-    );
-  }
 
-  team.addWorkRole(workRole, actorMembership);
-  await teamService.save(team);
+  await workRoleService.create(
+    {
+      teamId,
+      name,
+      description,
+      baseRate,
+    },
+    actorMembership,
+  );
 
   return {};
 }
