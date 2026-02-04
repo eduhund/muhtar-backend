@@ -12,6 +12,12 @@ import {
   validateDeclineInvitationParams,
 } from "./declineInvitation";
 import { getMe } from "./getMe";
+import { archiveTeam } from "./archiveTeam";
+import { getTeam } from "./getTeam";
+import { getTeams } from "./getTeams";
+import { inviteToTeam } from "./inviteToTeam";
+import { restoreTeam } from "./restoreTeam";
+import { updateTeam } from "./updateTeam";
 
 const userApiRouter = Router();
 
@@ -30,5 +36,11 @@ userApiRouter.post(
   validateDeclineInvitationParams,
   declineInvitation,
 );
+userApiRouter.get("/getTeams", getTeams);
+userApiRouter.get("/getTeam/:id", getTeam);
+userApiRouter.post("/inviteToTeam/:id", inviteToTeam);
+userApiRouter.post("/updateTeam/:id", updateTeam);
+userApiRouter.post("/archiveTeam/:id", archiveTeam);
+userApiRouter.post("/restoreTeam/:id", restoreTeam);
 
 export default userApiRouter;
