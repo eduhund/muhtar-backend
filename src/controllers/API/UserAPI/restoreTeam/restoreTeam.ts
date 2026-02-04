@@ -1,12 +1,9 @@
 import { restoreTeamFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function restoreTeam(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    await restoreTeamFlow(id, currentUser);
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { id } = req.params;
+  const { actorUser } = req.data;
+  await restoreTeamFlow(id, actorUser);
+  return {};
+});

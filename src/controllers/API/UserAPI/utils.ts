@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 import {
   checkAccessToken,
   checkApiKey,
@@ -6,6 +6,7 @@ import {
 } from "../../../utils/tokens";
 import { userService } from "../../../services";
 import { BusinessError } from "../../../utils/Rejection";
+import User from "../../../models/User";
 
 async function checkToken(token: string) {
   const tokenData = checkAccessToken("user", token);
@@ -29,7 +30,7 @@ async function getUserByToken(token: string) {
   if (!bearerlessToken) {
     throw new BusinessError(
       "UNAUTHORIZED",
-      "You not provided a valid access token or API key"
+      "You not provided a valid access token or API key",
     );
   }
 
@@ -46,7 +47,7 @@ async function getUserByToken(token: string) {
 export async function checkUserAuth(
   req: any,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { authorization } = req.headers;
@@ -56,4 +57,23 @@ export async function checkUserAuth(
   } catch (e) {
     return next(e);
   }
+}
+
+export type UserRequest = Request & {
+  data: {
+    actorUser: User;
+  };
+};
+
+type UserHandler<T> = (req: UserRequest) => Promise<T>;
+
+export function withUser<T>(handler: UserHandler<T>): RequestHandler {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const data = await handler(req as UserRequest);
+      return next({ data });
+    } catch (e) {
+      return next(e);
+    }
+  };
 }

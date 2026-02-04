@@ -1,11 +1,7 @@
 import { getTeamsFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function getProjects(req: any, res: any, next: any) {
-  try {
-    const { currentUser } = req.data;
-    const data = await getTeamsFlow(currentUser);
-    return next({ data });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { actorUser } = req.data;
+  return getTeamsFlow(actorUser);
+});

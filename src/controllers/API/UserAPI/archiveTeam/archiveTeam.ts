@@ -1,12 +1,9 @@
 import { archiveTeamFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function archiveTeam(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    await archiveTeamFlow(id, currentUser);
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { id } = req.params;
+  const { actorUser } = req.data;
+  await archiveTeamFlow(id, actorUser);
+  return {};
+});

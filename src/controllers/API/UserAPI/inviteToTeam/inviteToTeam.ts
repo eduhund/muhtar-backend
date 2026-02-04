@@ -1,13 +1,9 @@
 import { inviteUsersFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function inviteToTeam(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    const { invitees } = req.body;
-    const data = await inviteUsersFlow(id, { invitees }, currentUser);
-    return next({ data });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { id } = req.params;
+  const { actorUser } = req.data;
+  const { invitees } = req.body;
+  return inviteUsersFlow(id, { invitees }, actorUser);
+});
