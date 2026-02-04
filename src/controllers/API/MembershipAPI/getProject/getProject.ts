@@ -1,7 +1,14 @@
 import { getProjectFlow } from "../../../../flows";
+import { InvalidParamsError } from "../../../../utils/Rejection";
 import { withMembership } from "../utils";
 
 export default withMembership(async (req) => {
   const { actorMembership } = req.data;
-  return getProjectFlow(req.query, actorMembership);
+  const { id } = req.query;
+
+  if (typeof id !== "string") {
+    throw new InvalidParamsError("id must be a string");
+  }
+
+  return getProjectFlow({ id }, actorMembership);
 });

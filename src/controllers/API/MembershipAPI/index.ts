@@ -6,9 +6,9 @@ import {
   archiveResource,
   validateArchiveResourceParams,
 } from "./archiveResource";
-import { getProject, validateGetProjectParams } from "./getProject";
+import { getProject } from "./getProject";
 import { getProjects, validateGetProjectsParams } from "./getProjects";
-import { getResource, validateGetResourceParams } from "./getResource";
+import { getResource } from "./getResource";
 import { getResources, validateGetResourcesParams } from "./getResources";
 import { updateResource, validateUpdateResourceParams } from "./updateResource";
 import {
@@ -30,7 +30,7 @@ import {
   validateRemoveProjectMembershipParams,
 } from "./removeProjectMembership";
 import { createTask, validateCreateTaskParams } from "./createTask";
-import { getTasks, validateGetTasksParams } from "./getTasks";
+import { getTasks } from "./getTasks";
 import { updateTask, validateUpdateTaskParams } from "./updateTask";
 import { archiveTask, validateArchiveTaskParams } from "./archiveTask";
 import { restoreTask, validateRestoreTaskParams } from "./restoreTask";
@@ -55,9 +55,9 @@ const membershipApiRouter = Router();
 
 membershipApiRouter.use(checkMembershipAuth);
 
-membershipApiRouter.get("/getProject", validateGetProjectParams, getProject);
+membershipApiRouter.get("/getProject", getProject);
 membershipApiRouter.get("/getProjects", validateGetProjectsParams, getProjects);
-membershipApiRouter.get("/getResource", validateGetResourceParams, getResource);
+membershipApiRouter.get("/getResource", getResource);
 membershipApiRouter.get(
   "/getResources",
   validateGetResourcesParams,
@@ -108,7 +108,7 @@ membershipApiRouter.post(
   removeProjectMembership,
 );
 
-membershipApiRouter.get("/getTasks", validateGetTasksParams, getTasks);
+membershipApiRouter.get("/getTasks", getTasks);
 membershipApiRouter.post("/createTask", validateCreateTaskParams, createTask);
 membershipApiRouter.post("/updateTask", validateUpdateTaskParams, updateTask);
 membershipApiRouter.post(
