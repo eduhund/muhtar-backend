@@ -5,7 +5,7 @@ import {
   getBearerToken,
 } from "../../../utils/tokens";
 import { membershipService } from "../../../services";
-import { BusinessError } from "../../../utils/Rejection";
+import { BusinessError, InvalidParamsError } from "../../../utils/Rejection";
 import Membership from "../../../models/Membership";
 
 async function checkToken(token: string) {
@@ -79,4 +79,14 @@ export function withMembership<T>(
       return next(e);
     }
   };
+}
+
+export function checkDateString(dateStr: string) {
+  if (typeof dateStr !== "string")
+    throw new InvalidParamsError("'date' must be a string");
+
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!isoDateRegex.test(dateStr)) {
+    throw new InvalidParamsError("'date' must be in ISO format YYYY-MM-DD");
+  }
 }

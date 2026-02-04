@@ -13,13 +13,10 @@ function canAddWorkRole(currentMembership: Membership) {
 }
 
 export default async function addWorkRole(
-  teamId: string,
-  workRole: WorkRole,
+  { workRole }: { workRole: WorkRole },
   actorMembership: Membership,
 ) {
-  if (actorMembership.teamId !== teamId) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
-  }
+  const teamId = actorMembership.teamId;
 
   canAddWorkRole(actorMembership);
 
@@ -34,7 +31,8 @@ export default async function addWorkRole(
     );
   }
 
-  await team.addWorkRole(workRole, actorMembership);
+  team.addWorkRole(workRole, actorMembership);
+  await teamService.save(team);
 
   return {};
 }

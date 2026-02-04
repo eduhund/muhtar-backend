@@ -23,13 +23,10 @@ async function canRemoveMembershipFromTeam(
 }
 
 export default async function removeMembershipFromTeam(
-  teamId: string,
-  membershipId: string,
+  { membershipId }: { membershipId: string },
   actorMembership: Membership,
 ) {
-  if (actorMembership.teamId !== teamId) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
-  }
+  const teamId = actorMembership.teamId;
 
   const membership = await membershipService.getMembershipById(membershipId);
   if (!membership) {

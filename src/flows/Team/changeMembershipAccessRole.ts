@@ -29,13 +29,10 @@ async function canUpdateTeamMembership(
 }
 
 export default async function changeMembershipAccessRole(
-  teamId: string,
   { membershipId, accessRole }: changeTeamMembershipParams,
   actorMembership: Membership,
 ) {
-  if (actorMembership.teamId !== teamId) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
-  }
+  const { teamId } = actorMembership;
 
   const membership = await membershipService.getMembershipById(membershipId);
   if (!membership) {

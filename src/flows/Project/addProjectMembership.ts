@@ -1,27 +1,26 @@
 import { membershipService, projectService } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
-import User from "../../models/User";
 import Membership from "../../models/Membership";
 import { AccessRole } from "../../utils/accessRoles";
 import Project from "../../models/Project";
 
 type MembershipParams = {
   membershipId: string;
-  accessRole?: AccessRole;
+  accessRole: AccessRole;
   workRole?: string;
   multiplier?: number;
 };
 
 async function canAddMemberships(
   currentMembership: Membership,
-  project: Project
+  project: Project,
 ) {
   if (currentMembership.isAdmin()) return true;
   if (project.isProjectAdmin(currentMembership.getId())) return true;
 
   throw new BusinessError(
     "FORBIDDEN",
-    "You are not allowed to add users to the project"
+    "You are not allowed to add users to the project",
   );
 }
 
@@ -33,7 +32,7 @@ export default async function addProjectMembership(
     workRole = "staff",
     multiplier = 1,
   }: MembershipParams,
-  actorMembership: Membership
+  actorMembership: Membership,
 ) {
   const project = await projectService.getProjectById(id);
   if (!project) {
@@ -51,7 +50,7 @@ export default async function addProjectMembership(
   if (membership.teamId !== project.teamId) {
     throw new BusinessError(
       "FORBIDDEN",
-      "Membership does not belong to this project team"
+      "Membership does not belong to this project team",
     );
   }
 

@@ -12,16 +12,14 @@ function canRemoveWorkRole(currentMembership: Membership) {
 }
 
 export default async function removeWorkRole(
-  teamId: string,
-  workRole: WorkRole,
+  { id }: { id: string },
   actorMembership: Membership,
 ) {
-  if (actorMembership.teamId !== teamId) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
-  }
+  const teamId = actorMembership.teamId;
 
   canRemoveWorkRole(actorMembership);
 
+  /*
   const team = await teamService.getTeamById(teamId);
   if (!team) {
     throw new BusinessError("NOT_FOUND", `Team not found`);
@@ -34,6 +32,7 @@ export default async function removeWorkRole(
   }
 
   await team.removeWorkRole(workRole.name, actorMembership);
+  */
 
   return {};
 }

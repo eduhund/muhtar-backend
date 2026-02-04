@@ -1,167 +1,76 @@
 import { Router } from "express";
 
 import { checkMembershipAuth } from "./utils";
-import { spendResource, validateSpendResourceParams } from "./spendResource";
-import {
-  archiveResource,
-  validateArchiveResourceParams,
-} from "./archiveResource";
+import { spendResource } from "./spendResource";
+import { archiveResource } from "./archiveResource";
 import { getProject } from "./getProject";
-import { getProjects, validateGetProjectsParams } from "./getProjects";
+import { getProjects } from "./getProjects";
 import { getResource } from "./getResource";
-import { getResources, validateGetResourcesParams } from "./getResources";
-import { updateResource, validateUpdateResourceParams } from "./updateResource";
-import {
-  restoreResource,
-  validateRestoreResourceParams,
-} from "./restoreResource";
-import { getMemberships, validategetMembershipsParams } from "./getMemberships";
-import {
-  addProjectMembership,
-  validateAddProjectMembershipParams,
-} from "./addProjectMembership";
-import {
-  updateProjectMembership,
-  validateUpdateProjectMembershipParams,
-} from "./updateProjectMembership";
+import { getResources } from "./getResources";
+import { updateResource } from "./updateResource";
+import { restoreResource } from "./restoreResource";
+import { getMemberships } from "./getMemberships";
+import { addProjectMembership } from "./addProjectMembership";
+import { updateProjectMembership } from "./updateProjectMembership";
 
-import {
-  removeProjectMembership,
-  validateRemoveProjectMembershipParams,
-} from "./removeProjectMembership";
-import { createTask, validateCreateTaskParams } from "./createTask";
+import { removeProjectMembership } from "./removeProjectMembership";
+import { createTask } from "./createTask";
 import { getTasks } from "./getTasks";
-import { updateTask, validateUpdateTaskParams } from "./updateTask";
-import { archiveTask, validateArchiveTaskParams } from "./archiveTask";
-import { restoreTask, validateRestoreTaskParams } from "./restoreTask";
-import {
-  createProjectPlan,
-  validateCreateProjectPlanParams,
-} from "./createProjectPlan";
-import {
-  createProjectContract,
-  validateCreateProjectContractParams,
-} from "./createProjectContract";
-import { createProject, validateCreateProjectParams } from "./createProject";
-import {
-  getBookedResources,
-  validateGetBookedResourcesParams,
-} from "./getBookedResources";
-import { bookResource, validateBookResourceParams } from "./bookResource";
-import { rebookResource, validateRebookResourceParams } from "./rebookResource";
-import { unbookResource, validateUnbookResourceParams } from "./unbookResource";
+import { updateTask } from "./updateTask";
+import { archiveTask } from "./archiveTask";
+import { restoreTask } from "./restoreTask";
+import { createProjectPlan } from "./createProjectPlan";
+import { createProjectContract } from "./createProjectContract";
+import { createProject } from "./createProject";
+import { getBookedResources } from "./getBookedResources";
+import { bookResource } from "./bookResource";
+import { rebookResource } from "./rebookResource";
+import { unbookResource } from "./unbookResource";
+import { addWorkRole } from "./addWorkRole";
+import { changeAccessRole } from "./changeAccessRole";
 
 const membershipApiRouter = Router();
 
 membershipApiRouter.use(checkMembershipAuth);
 
 membershipApiRouter.get("/getProject", getProject);
-membershipApiRouter.get("/getProjects", validateGetProjectsParams, getProjects);
+membershipApiRouter.get("/getProjects", getProjects);
 membershipApiRouter.get("/getResource", getResource);
-membershipApiRouter.get(
-  "/getResources",
-  validateGetResourcesParams,
-  getResources,
-);
+membershipApiRouter.get("/getResources", getResources);
 
-membershipApiRouter.post(
-  "/spendResource",
-  validateSpendResourceParams,
-  spendResource,
-);
-membershipApiRouter.post(
-  "/archiveResource",
-  validateArchiveResourceParams,
-  archiveResource,
-);
-membershipApiRouter.post(
-  "/restoreResource",
-  validateRestoreResourceParams,
-  restoreResource,
-);
-membershipApiRouter.post(
-  "/updateResource",
-  validateUpdateResourceParams,
-  updateResource,
-);
-membershipApiRouter.get(
-  "/getMemberships",
-  validategetMembershipsParams,
-  getMemberships,
-);
+membershipApiRouter.post("/spendResource", spendResource);
+membershipApiRouter.post("/archiveResource", archiveResource);
+membershipApiRouter.post("/restoreResource", restoreResource);
+membershipApiRouter.post("/updateResource", updateResource);
+membershipApiRouter.get("/getMemberships", getMemberships);
 
-membershipApiRouter.post(
-  "/addProjectMembership",
-  validateAddProjectMembershipParams,
-  addProjectMembership,
-);
+membershipApiRouter.post("/addProjectMembership", addProjectMembership);
 
-membershipApiRouter.post(
-  "/updateProjectMembership",
-  validateUpdateProjectMembershipParams,
-  updateProjectMembership,
-);
+membershipApiRouter.post("/updateProjectMembership", updateProjectMembership);
 
-membershipApiRouter.post(
-  "/removeProjectMembership",
-  validateRemoveProjectMembershipParams,
-  removeProjectMembership,
-);
+membershipApiRouter.post("/removeProjectMembership", removeProjectMembership);
 
 membershipApiRouter.get("/getTasks", getTasks);
-membershipApiRouter.post("/createTask", validateCreateTaskParams, createTask);
-membershipApiRouter.post("/updateTask", validateUpdateTaskParams, updateTask);
-membershipApiRouter.post(
-  "/archiveTask",
-  validateArchiveTaskParams,
-  archiveTask,
-);
-membershipApiRouter.post(
-  "/restoreTask",
-  validateRestoreTaskParams,
-  restoreTask,
-);
+membershipApiRouter.post("/createTask", createTask);
+membershipApiRouter.post("/updateTask", updateTask);
+membershipApiRouter.post("/archiveTask", archiveTask);
+membershipApiRouter.post("/restoreTask", restoreTask);
 
-membershipApiRouter.post(
-  "/createProject",
-  validateCreateProjectParams,
-  createProject,
-);
+membershipApiRouter.post("/createProject", createProject);
 
-membershipApiRouter.post(
-  "/createProjectPlan",
-  validateCreateProjectPlanParams,
-  createProjectPlan,
-);
+membershipApiRouter.post("/createProjectPlan", createProjectPlan);
 
-membershipApiRouter.post(
-  "/createProjectContract",
-  validateCreateProjectContractParams,
-  createProjectContract,
-);
+membershipApiRouter.post("/createProjectContract", createProjectContract);
 
-membershipApiRouter.get(
-  "/getBookedResources",
-  validateGetBookedResourcesParams,
-  getBookedResources,
-);
+membershipApiRouter.get("/getBookedResources", getBookedResources);
 
-membershipApiRouter.post(
-  "/bookResource",
-  validateBookResourceParams,
-  bookResource,
-);
+membershipApiRouter.post("/bookResource", bookResource);
 
-membershipApiRouter.post(
-  "/rebookResource",
-  validateRebookResourceParams,
-  rebookResource,
-);
+membershipApiRouter.post("/rebookResource", rebookResource);
 
-membershipApiRouter.post(
-  "/unbookResource",
-  validateUnbookResourceParams,
-  unbookResource,
-);
+membershipApiRouter.post("/unbookResource", unbookResource);
+
+membershipApiRouter.post("/addWorkRole", addWorkRole);
+membershipApiRouter.post("/changeAccessRole", changeAccessRole);
 
 export default membershipApiRouter;
