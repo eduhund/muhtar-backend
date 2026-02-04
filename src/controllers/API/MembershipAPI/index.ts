@@ -10,7 +10,7 @@ import { getResources } from "./getResources";
 import { updateResource } from "./updateResource";
 import { restoreResource } from "./restoreResource";
 import { getMemberships } from "./getMemberships";
-import { addProjectMembership } from "./addProjectMembership";
+import { addMembershipToProject } from "./addMembershipToProject";
 import { updateProjectMembership } from "./updateProjectMembership";
 
 import { removeProjectMembership } from "./removeProjectMembership";
@@ -44,7 +44,7 @@ membershipApiRouter.post("/restoreResource", restoreResource);
 membershipApiRouter.post("/updateResource", updateResource);
 membershipApiRouter.get("/getMemberships", getMemberships);
 
-membershipApiRouter.post("/addProjectMembership", addProjectMembership);
+membershipApiRouter.post("/addMembershipToProject", addMembershipToProject);
 
 membershipApiRouter.post("/updateProjectMembership", updateProjectMembership);
 

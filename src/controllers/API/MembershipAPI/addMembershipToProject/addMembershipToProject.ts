@@ -1,4 +1,4 @@
-import { addProjectMembershipFlow } from "../../../../flows";
+import { addMembershipToProjectFlow } from "../../../../flows";
 import { ACCESS_ROLES } from "../../../../utils/accessRoles";
 import { InvalidParamsError } from "../../../../utils/Rejection";
 import { withMembership } from "../utils";
@@ -24,7 +24,7 @@ export default withMembership(async (req) => {
   if (typeof multiplier !== "number")
     throw new InvalidParamsError("multiplier must be a number");
 
-  return addProjectMembershipFlow(
+  return addMembershipToProjectFlow(
     projectId,
     { membershipId, accessRole, workRole, multiplier },
     actorMembership,
