@@ -1,8 +1,8 @@
 import { inviteUsersFlow } from "../../../../flows";
-import { withUser } from "../../UserAPI/utils";
+import { withMembership } from "../utils";
 
-export default withUser(async (req) => {
-  const { actorUser } = req.data;
+export default withMembership(async (req) => {
+  const { actorMembership } = req.data;
   const { invitees } = req.body;
-  return inviteUsersFlow({ invitees }, actorUser);
+  return inviteUsersFlow({ invitees }, actorMembership);
 });
