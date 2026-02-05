@@ -3,7 +3,7 @@ import { Router } from "express";
 import { checkUserAuth } from "./utils";
 import { acceptInvitation } from "./acceptInvitation";
 import { changeTeam } from "./changeTeam";
-import { createTeam, validateCreateTeamParams } from "./createTeam";
+import { createTeam } from "./createTeam";
 import {
   declineInvitation,
   validateDeclineInvitationParams,
@@ -23,7 +23,7 @@ userApiRouter.use(checkUserAuth);
 userApiRouter.get("/getMe", getMe);
 userApiRouter.post("/acceptInvitation", acceptInvitation);
 userApiRouter.post("/changeTeam", changeTeam);
-userApiRouter.post("/createTeam", validateCreateTeamParams, createTeam);
+userApiRouter.post("/createTeam", createTeam);
 userApiRouter.post(
   "/declineInvitation",
   validateDeclineInvitationParams,
