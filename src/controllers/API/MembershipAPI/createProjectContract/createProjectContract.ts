@@ -1,15 +1,14 @@
 import { createProjectContractFlow } from "../../../../flows";
+import { InvalidParamsError } from "../../../../utils/Rejection";
+import { withMembership } from "../utils";
 
-export default async function createProjectContract(
-  req: any,
-  res: any,
-  next: any
-) {
-  try {
-    const { actorMembership } = req.data;
-    const data = await createProjectContractFlow(req.body, actorMembership);
-    return next({ data });
-  } catch (e) {
-    next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { actorMembership } = req.data;
+  const { projectId } = req.body;
+
+  if (!projectId) throw new InvalidParamsError("projectId is required");
+  if (typeof projectId !== "string" && projectId !== null)
+    throw new InvalidParamsError("projectId must be a string or null");
+
+  return createProjectContractFlow(req.body, actorMembership);
+});

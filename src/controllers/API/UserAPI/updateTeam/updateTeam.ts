@@ -1,19 +1,17 @@
 import { updateTeamFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function updateTeam(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    const { name } = req.body;
-    await updateTeamFlow(
-      id,
-      {
-        name,
-      },
-      currentUser,
-    );
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { actorUser } = req.data;
+  const { id, name } = req.body;
+  if (!id) throw new Error("id is required");
+  if (typeof id !== "string") throw new Error("id must be a string");
+  await updateTeamFlow(
+    id,
+    {
+      name,
+    },
+    actorUser,
+  );
+  return {};
+});

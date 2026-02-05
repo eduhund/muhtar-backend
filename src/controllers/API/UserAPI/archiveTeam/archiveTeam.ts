@@ -1,12 +1,13 @@
 import { archiveTeamFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function archiveTeam(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    await archiveTeamFlow(id, currentUser);
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { actorUser } = req.data;
+  const { id } = req.query;
+
+  if (!id) throw new Error("id is required");
+  if (typeof id !== "string") throw new Error("id must be a string");
+
+  await archiveTeamFlow(id, actorUser);
+  return {};
+});

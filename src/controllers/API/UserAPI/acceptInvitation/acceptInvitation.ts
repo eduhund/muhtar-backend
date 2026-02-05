@@ -1,12 +1,17 @@
 import { acceptInvitationFlow } from "../../../../flows";
+import { InvalidParamsError } from "../../../../utils/Rejection";
+import { withUser } from "../utils";
 
-export default async function acceptInvitation(req: any, res: any, next: any) {
-  try {
-    const { teamId } = req.body;
-    const { actorUser } = req.data;
-    const data = await acceptInvitationFlow({ teamId }, actorUser);
-    return next({ data });
-  } catch (e) {
-    return next(e);
+export default withUser(async (req) => {
+  const { actorUser } = req.data;
+  const { teamId } = req.body;
+
+  if (!teamId) {
+    throw new InvalidParamsError("teamId is required");
   }
-}
+  if (typeof teamId !== "string") {
+    throw new InvalidParamsError("teamId must be a string");
+  }
+
+  return acceptInvitationFlow({ teamId }, actorUser);
+});

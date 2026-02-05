@@ -40,7 +40,7 @@ async function canBookResource(
 }
 
 export default async function bookResource(
-  { projectId, period = "week", date, resource, target }: SpendResourceParams,
+  { projectId, period, date, resource, target }: SpendResourceParams,
   actorMembership: Membership,
 ) {
   const team = await teamService.getTeamById(actorMembership.teamId);

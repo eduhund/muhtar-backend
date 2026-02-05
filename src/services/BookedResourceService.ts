@@ -2,19 +2,15 @@ import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
 import { BookedResourceTarget } from "../models/BookedResource";
-import {
-  getRichMembership,
-  getRichProject,
-  getRichTeam,
-} from "../utils/getRichObject";
+import { getRichProject, getRichTeam } from "../utils/getRichObject";
 import BookedResource from "../models/BookedResource";
 
 type ResourceParams = {
   projectId: string;
   teamId: string;
-  taskId?: string | null;
   createdBy?: string;
   date: Date;
+  period: "day" | "week" | "month";
   resource: {
     type: string;
     value: number;
@@ -27,6 +23,7 @@ type BookedResourceQueryParams = {
   teamId: string;
   projectId?: string;
   date?: string;
+  period: "day" | "week" | "month";
   resource: {
     type: string;
     value: number;
@@ -40,6 +37,7 @@ type BookedResourceQuery = {
   teamId: string;
   projectId?: string;
   date?: string;
+  period: "day" | "week" | "month";
   resource: {
     type: string;
     value: number;
@@ -53,6 +51,7 @@ function buildQuery({
   teamId,
   projectId,
   date,
+  period,
   withArchived,
 }: BookedResourceQueryParams): Partial<BookedResourceQuery> {
   if (id) return { id };
@@ -64,12 +63,13 @@ function buildQuery({
     query.date = date;
   }
   if (withArchived !== undefined) query.isDeleted = false;
+  if (period) query.period = period;
   return query;
 }
 
 export default class BookedResourceService extends Service {
   async create(
-    { projectId, teamId, date, resource, target }: ResourceParams,
+    { projectId, teamId, date, period, resource, target }: ResourceParams,
     currentMembership: any,
   ) {
     const bookedResource = new BookedResource({
@@ -79,6 +79,7 @@ export default class BookedResourceService extends Service {
       projectId,
       teamId,
       date,
+      period,
       resource,
       target,
       history: [
@@ -143,9 +144,8 @@ export default class BookedResourceService extends Service {
     );
   }
 
-  async getRichBookedResource({ resource, membership, project, team }: any) {
+  async getRichBookedResource({ resource, project, team }: any) {
     const richResource = { ...resource.toJSON() };
-    await getRichMembership(richResource, membership);
     await getRichProject(richResource, project);
     await getRichTeam(richResource, team);
 

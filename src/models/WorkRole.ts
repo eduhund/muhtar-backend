@@ -1,10 +1,19 @@
 import BaseModel from "./BaseModel";
 import Membership from "./Membership";
 
+export type resourceRate = {
+  type: string;
+  pricePerUnit: {
+    currency: string;
+    amount: number;
+  };
+};
+
 export default class WorkRole extends BaseModel<WorkRole, Membership> {
   teamId: string;
   name: string;
-  key: string;
+  description?: string;
+  baseRates: resourceRate[];
   isDeleted: boolean;
   history: any[] = [];
 
@@ -12,14 +21,16 @@ export default class WorkRole extends BaseModel<WorkRole, Membership> {
     _id,
     teamId,
     name,
-    key,
+    description,
+    baseRates = [],
     isDeleted = false,
     history = [],
   }: any = {}) {
     super(_id);
     this.teamId = teamId;
     this.name = name;
-    this.key = key;
+    this.description = description;
+    this.baseRates = baseRates;
     this.isDeleted = isDeleted;
     this.history = history;
   }

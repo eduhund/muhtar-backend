@@ -1,12 +1,13 @@
 import { restoreTeamFlow } from "../../../../flows";
+import { withUser } from "../utils";
 
-export default async function restoreTeam(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    await restoreTeamFlow(id, currentUser);
-    return next({ data: {} });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withUser(async (req) => {
+  const { actorUser } = req.data;
+  const { id } = req.body;
+
+  if (!id) throw new Error("id is required");
+  if (typeof id !== "string") throw new Error("id must be a string");
+
+  await restoreTeamFlow(id, actorUser);
+  return {};
+});

@@ -1,18 +1,9 @@
 import { updateWorkRoleFlow } from "../../../../flows";
+import { withMembership } from "../utils";
 
-export default async function updateWorkRole(req: any, res: any, next: any) {
-  try {
-    const { id } = req.params;
-    const { currentUser } = req.data;
-    const { workRoleName, update } = req.body;
-    const data = await updateWorkRoleFlow(
-      id,
-      workRoleName,
-      update,
-      currentUser,
-    );
-    return next({ data });
-  } catch (e) {
-    return next(e);
-  }
-}
+export default withMembership(async (req) => {
+  const { actorMembership } = req.data;
+  const { id, update } = req.body;
+  //TODO: validate params
+  return updateWorkRoleFlow(id, update, actorMembership);
+});

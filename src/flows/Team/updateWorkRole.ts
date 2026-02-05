@@ -1,45 +1,36 @@
-import { membershipService, teamService } from "../../services";
+import { workRoleService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
-import { WorkRole } from "../../models/Team";
-import User from "../../models/User";
+import WorkRole from "../../models/WorkRole";
 
 function canUpdateWorkRole(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
   throw new BusinessError(
     "FORBIDDEN",
-    "You are not allowed to add work roles to the team"
+    "You are not allowed to update work roles in the team",
   );
 }
 
 export default async function updateWorkRole(
-  teamId: string,
-  currentWorkRole: WorkRole,
-  newData: WorkRole,
-  currentUser: User
+  id: string,
+  newData: Partial<WorkRole>,
+  actorMembership: Membership,
 ) {
-  const currentMembership = await membershipService.getMembership({
-    userId: currentUser.getId(),
-    teamId: teamId,
-  });
-  if (!currentMembership) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
+  const teamId = actorMembership.teamId;
+
+  canUpdateWorkRole(actorMembership);
+
+  const workRole = await workRoleService.getWorkRoleById(id);
+
+  if (!workRole) {
+    throw new BusinessError("NOT_FOUND", "Work role not found");
+  }
+  if (workRole.teamId !== teamId) {
+    throw new BusinessError("FORBIDDEN", "Work role does not belong to team");
   }
 
-  canUpdateWorkRole(currentMembership);
+  workRole.update(newData, actorMembership);
+  await workRoleService.save(workRole);
 
-  const team = await teamService.getTeamById(teamId);
-  if (!team) {
-    throw new BusinessError("NOT_FOUND", `Team not found`);
-  }
-  if (!team.hasWorkRole(currentWorkRole)) {
-    throw new BusinessError(
-      "CONFLICT",
-      `Work role with name ${currentWorkRole} is not found`
-    );
-  }
-
-  await team.updateWorkRole(currentWorkRole.name, newData, currentMembership);
-
-  return {};
+  return workRole;
 }
