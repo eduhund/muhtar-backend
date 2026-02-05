@@ -1,7 +1,5 @@
-import { teamService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
-import { WorkRole } from "../../models/Team";
 
 function canRemoveWorkRole(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
