@@ -1,40 +1,36 @@
-import { teamService } from "../../services";
+import { workRoleService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
-import { WorkRole } from "../../models/Team";
+import WorkRole from "../../models/WorkRole";
 
 function canUpdateWorkRole(currentMembership: Membership) {
   if (currentMembership.isOwner() || currentMembership.isAdmin()) return true;
   throw new BusinessError(
     "FORBIDDEN",
-    "You are not allowed to add work roles to the team",
+    "You are not allowed to update work roles in the team",
   );
 }
 
 export default async function updateWorkRole(
-  teamId: string,
-  currentWorkRole: WorkRole,
-  newData: WorkRole,
+  id: string,
+  newData: Partial<WorkRole>,
   actorMembership: Membership,
 ) {
-  if (actorMembership.teamId !== teamId) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
-  }
+  const teamId = actorMembership.teamId;
 
   canUpdateWorkRole(actorMembership);
 
-  const team = await teamService.getTeamById(teamId);
-  if (!team) {
-    throw new BusinessError("NOT_FOUND", `Team not found`);
+  const workRole = await workRoleService.getWorkRoleById(id);
+
+  if (!workRole) {
+    throw new BusinessError("NOT_FOUND", "Work role not found");
   }
-  if (!team.hasWorkRole(currentWorkRole)) {
-    throw new BusinessError(
-      "CONFLICT",
-      `Work role with name ${currentWorkRole} is not found`,
-    );
+  if (workRole.teamId !== teamId) {
+    throw new BusinessError("FORBIDDEN", "Work role does not belong to team");
   }
 
-  await team.updateWorkRole(currentWorkRole.name, newData, actorMembership);
+  workRole.update(newData, actorMembership);
+  await workRoleService.save(workRole);
 
-  return {};
+  return workRole;
 }
