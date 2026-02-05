@@ -1,21 +1,18 @@
 import { v7 as uuidv7 } from "uuid";
 
 import Service from "./Service";
-import WorkRole from "../models/WorkRole";
+import WorkRole, { resourceRate } from "../models/WorkRole";
 
 type WorkRoleParams = {
   teamId: string;
   name: string;
   description?: string;
-  baseRate: {
-    currency: string;
-    amount: number;
-  };
+  baseRates: resourceRate[];
 };
 
 export default class WorkRoleService extends Service {
   async create(
-    { teamId, name, description = "", baseRate }: WorkRoleParams,
+    { teamId, name, description = "", baseRates }: WorkRoleParams,
     currentMembership: any,
   ) {
     const workRole = new WorkRole({
@@ -24,7 +21,7 @@ export default class WorkRoleService extends Service {
       teamId,
       name,
       description,
-      baseRate,
+      baseRates,
       isDeleted: false,
       history: [
         {

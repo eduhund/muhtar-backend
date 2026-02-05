@@ -1,14 +1,12 @@
 import { teamService, workRoleService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
+import { resourceRate } from "../../models/WorkRole";
 
 export type NewWorkRole = {
   name: string;
   description?: string;
-  baseRate: {
-    currency: string;
-    amount: number;
-  };
+  baseRates: resourceRate[];
 };
 
 function canAddWorkRole(currentMembership: Membership) {
@@ -21,7 +19,7 @@ function canAddWorkRole(currentMembership: Membership) {
 }
 
 export default async function createWorkRole(
-  { name, description, baseRate }: NewWorkRole,
+  { name, description, baseRates }: NewWorkRole,
   actorMembership: Membership,
 ) {
   const teamId = actorMembership.teamId;
@@ -38,7 +36,7 @@ export default async function createWorkRole(
       teamId,
       name,
       description,
-      baseRate,
+      baseRates,
     },
     actorMembership,
   );
