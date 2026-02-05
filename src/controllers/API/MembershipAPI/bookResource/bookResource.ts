@@ -10,7 +10,8 @@ export default withMembership(async (req) => {
   if (!projectId) throw new InvalidParamsError("projectId is required");
   if (typeof projectId !== "string")
     throw new InvalidParamsError("projectId must be a string");
-  if (period && !["day", "week", "month"].includes(period))
+  if (!period) throw new InvalidParamsError("period is required");
+  if (!["day", "week", "month"].includes(period))
     throw new InvalidParamsError(
       "period must be one of 'day', 'week', or 'month'",
     );

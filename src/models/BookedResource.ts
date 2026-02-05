@@ -13,6 +13,7 @@ export default class BookedResource extends BaseModel<
   teamId: string;
   projectId: string;
   date: string;
+  period: "day" | "week" | "month";
   resource: {
     type: "time";
     value: number;
@@ -25,6 +26,7 @@ export default class BookedResource extends BaseModel<
     teamId,
     projectId,
     date,
+    period,
     resource,
     target,
     isDeleted = false,
@@ -34,6 +36,7 @@ export default class BookedResource extends BaseModel<
     this.teamId = teamId;
     this.projectId = projectId;
     this.date = date;
+    this.period = period;
     this.resource = resource;
     this.target = target;
     this.isDeleted = isDeleted;
