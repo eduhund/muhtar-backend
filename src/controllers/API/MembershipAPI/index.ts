@@ -25,7 +25,7 @@ import { createProject } from "./createProject";
 import { getBookedResources } from "./getBookedResources";
 import { bookResource } from "./bookResource";
 import { updateBoookedResource } from "./updateBoookedResource";
-import { unbookResource } from "./unbookResource";
+import { resetBookedResource } from "./resetBookedResource";
 import { createWorkRole } from "./createWorkRole";
 import { updateMembershipAccessRole } from "./updateMembershipAccessRole";
 
@@ -68,7 +68,7 @@ membershipApiRouter.post("/bookResource", bookResource);
 
 membershipApiRouter.post("/updateBoookedResource", updateBoookedResource);
 
-membershipApiRouter.post("/unbookResource", unbookResource);
+membershipApiRouter.post("/resetBookedResource", resetBookedResource);
 
 membershipApiRouter.post("/createWorkRole", createWorkRole);
 membershipApiRouter.post(

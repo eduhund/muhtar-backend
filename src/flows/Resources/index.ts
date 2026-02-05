@@ -7,7 +7,7 @@ import restoreResourceFlow from "./restoreResource";
 import getBookedResourcesFlow from "./getBookedResources";
 import bookResourceFlow from "./bookResource";
 import updateBoookedResourceFlow from "./updateBoookedResource";
-import unbookResourceFlow from "./unbookResource";
+import resetBookedResourceFlow from "./resetBookedResource";
 
 export {
   getResourceFlow,
@@ -19,5 +19,5 @@ export {
   getBookedResourcesFlow,
   bookResourceFlow,
   updateBoookedResourceFlow,
-  unbookResourceFlow,
+  resetBookedResourceFlow,
 };

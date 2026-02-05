@@ -1,4 +1,4 @@
-import { unbookResourceFlow } from "../../../../flows";
+import { resetBookedResourceFlow } from "../../../../flows";
 import { InvalidParamsError } from "../../../../utils/Rejection";
 import { withMembership } from "../utils";
 
@@ -10,5 +10,5 @@ export default withMembership(async (req) => {
   if (typeof id !== "string")
     throw new InvalidParamsError("id must be a string");
 
-  return unbookResourceFlow(req.body, actorMembership);
+  return resetBookedResourceFlow(req.body, actorMembership);
 });
