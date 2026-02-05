@@ -9,7 +9,6 @@ import { getMe } from "./getMe";
 import { archiveTeam } from "./archiveTeam";
 import { getTeam } from "./getTeam";
 import { getTeams } from "./getTeams";
-import { inviteToTeam } from "./inviteToTeam";
 import { restoreTeam } from "./restoreTeam";
 import { updateTeam } from "./updateTeam";
 
@@ -24,7 +23,6 @@ userApiRouter.post("/createTeam", createTeam);
 userApiRouter.post("/declineInvitation", declineInvitation);
 userApiRouter.get("/getTeams", getTeams);
 userApiRouter.get("/getTeam", getTeam);
-userApiRouter.post("/inviteToTeam", inviteToTeam);
 userApiRouter.post("/updateTeam", updateTeam);
 userApiRouter.post("/archiveTeam", archiveTeam);
 userApiRouter.post("/restoreTeam", restoreTeam);

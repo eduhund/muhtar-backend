@@ -1,7 +1,6 @@
 import { membershipService, userService } from "../../services";
 import Membership from "../../models/Membership";
 import { BusinessError } from "../../utils/Rejection";
-import User from "../../models/User";
 
 type InviteeType = { email: string; accessRole?: string };
 type InviteUsersParams = {
@@ -22,17 +21,10 @@ async function canInvite(teamId: string, currentMembership: Membership) {
 }
 
 export default async function inviteUsers(
-  teamId: string,
   { invitees }: InviteUsersParams,
-  actorUser: User,
+  actorMembership: Membership,
 ) {
-  const actorMembership = await membershipService.getMembership({
-    userId: actorUser.getId(),
-    teamId: teamId,
-  });
-  if (!actorMembership) {
-    throw new BusinessError("FORBIDDEN", "You are not a member of this team");
-  }
+  const teamId = actorMembership.teamId;
 
   await canInvite(teamId, actorMembership);
   for (const invitee of invitees) {

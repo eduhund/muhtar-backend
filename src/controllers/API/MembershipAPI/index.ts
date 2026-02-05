@@ -29,6 +29,7 @@ import { resetBookedResource } from "./resetBookedResource";
 import { createWorkRole } from "./createWorkRole";
 import { updateMembershipAccessRole } from "./updateMembershipAccessRole";
 import { updateWorkRole } from "./updateWorkRole";
+import { inviteToTeam } from "./inviteToTeam";
 
 const membershipApiRouter = Router();
 
@@ -77,5 +78,6 @@ membershipApiRouter.post(
   updateMembershipAccessRole,
 );
 membershipApiRouter.post("/updateWorkRole", updateWorkRole);
+membershipApiRouter.post("/inviteToTeam", inviteToTeam);
 
 export default membershipApiRouter;
