@@ -4,10 +4,7 @@ import { checkUserAuth } from "./utils";
 import { acceptInvitation } from "./acceptInvitation";
 import { changeTeam } from "./changeTeam";
 import { createTeam } from "./createTeam";
-import {
-  declineInvitation,
-  validateDeclineInvitationParams,
-} from "./declineInvitation";
+import { declineInvitation } from "./declineInvitation";
 import { getMe } from "./getMe";
 import { archiveTeam } from "./archiveTeam";
 import { getTeam } from "./getTeam";
@@ -24,11 +21,7 @@ userApiRouter.get("/getMe", getMe);
 userApiRouter.post("/acceptInvitation", acceptInvitation);
 userApiRouter.post("/changeTeam", changeTeam);
 userApiRouter.post("/createTeam", createTeam);
-userApiRouter.post(
-  "/declineInvitation",
-  validateDeclineInvitationParams,
-  declineInvitation,
-);
+userApiRouter.post("/declineInvitation", declineInvitation);
 userApiRouter.get("/getTeams", getTeams);
 userApiRouter.get("/getTeam", getTeam);
 userApiRouter.post("/inviteToTeam", inviteToTeam);
