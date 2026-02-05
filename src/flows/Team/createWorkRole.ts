@@ -31,7 +31,7 @@ export default async function createWorkRole(
     throw new BusinessError("NOT_FOUND", `Team not found`);
   }
 
-  await workRoleService.create(
+  const workRole = await workRoleService.create(
     {
       teamId,
       name,
@@ -41,5 +41,5 @@ export default async function createWorkRole(
     actorMembership,
   );
 
-  return {};
+  return workRole;
 }
