@@ -1,4 +1,4 @@
-import { rebookResourceFlow } from "../../../../flows";
+import { updateBoookedResourceFlow } from "../../../../flows";
 import { InvalidParamsError } from "../../../../utils/Rejection";
 import { withMembership } from "../utils";
 
@@ -13,5 +13,5 @@ export default withMembership(async (req) => {
   if (typeof value !== "number")
     throw new InvalidParamsError("value must be a number");
 
-  return rebookResourceFlow(req.body, actorMembership);
+  return updateBoookedResourceFlow(req.body, actorMembership);
 });

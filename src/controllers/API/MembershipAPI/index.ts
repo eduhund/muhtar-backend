@@ -24,7 +24,7 @@ import { createProjectContract } from "./createProjectContract";
 import { createProject } from "./createProject";
 import { getBookedResources } from "./getBookedResources";
 import { bookResource } from "./bookResource";
-import { rebookResource } from "./rebookResource";
+import { updateBoookedResource } from "./updateBoookedResource";
 import { unbookResource } from "./unbookResource";
 import { createWorkRole } from "./createWorkRole";
 import { updateMembershipAccessRole } from "./updateMembershipAccessRole";
@@ -66,7 +66,7 @@ membershipApiRouter.get("/getBookedResources", getBookedResources);
 
 membershipApiRouter.post("/bookResource", bookResource);
 
-membershipApiRouter.post("/rebookResource", rebookResource);
+membershipApiRouter.post("/updateBoookedResource", updateBoookedResource);
 
 membershipApiRouter.post("/unbookResource", unbookResource);
 

@@ -7,7 +7,7 @@ import {
 } from "../../services";
 import { BusinessError } from "../../utils/Rejection";
 
-async function canRebookResource(
+async function canUpdateBookedResource(
   currentMembership: Membership,
   project: Project,
 ) {
@@ -25,7 +25,7 @@ async function canRebookResource(
   );
 }
 
-export default async function rebookResource(
+export default async function updateBoookedResource(
   { id, value }: { id: string; value: any },
   actorMembership: Membership,
 ) {
@@ -40,7 +40,7 @@ export default async function rebookResource(
   const team = await teamService.getTeamById(actorMembership.teamId);
   if (!team) throw new BusinessError("NOT_FOUND", "Team not found");
 
-  await canRebookResource(actorMembership, project);
+  await canUpdateBookedResource(actorMembership, project);
 
   bookedResource.changeValue(value, actorMembership);
   await bookedResourceService.save(bookedResource);
