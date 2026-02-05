@@ -1,10 +1,7 @@
 import { Router } from "express";
 
 import { checkUserAuth } from "./utils";
-import {
-  acceptInvitation,
-  validateAcceptInvitationParams,
-} from "./acceptInvitation";
+import { acceptInvitation } from "./acceptInvitation";
 import { changeTeam, validateChangeTeamParams } from "./changeTeam";
 import { createTeam, validateCreateTeamParams } from "./createTeam";
 import {
@@ -24,11 +21,7 @@ const userApiRouter = Router();
 userApiRouter.use(checkUserAuth);
 
 userApiRouter.get("/getMe", getMe);
-userApiRouter.post(
-  "/acceptInvitation",
-  validateAcceptInvitationParams,
-  acceptInvitation,
-);
+userApiRouter.post("/acceptInvitation", acceptInvitation);
 userApiRouter.post("/changeTeam", validateChangeTeamParams, changeTeam);
 userApiRouter.post("/createTeam", validateCreateTeamParams, createTeam);
 userApiRouter.post(
@@ -37,10 +30,10 @@ userApiRouter.post(
   declineInvitation,
 );
 userApiRouter.get("/getTeams", getTeams);
-userApiRouter.get("/getTeam/:id", getTeam);
-userApiRouter.post("/inviteToTeam/:id", inviteToTeam);
-userApiRouter.post("/updateTeam/:id", updateTeam);
-userApiRouter.post("/archiveTeam/:id", archiveTeam);
-userApiRouter.post("/restoreTeam/:id", restoreTeam);
+userApiRouter.get("/getTeam", getTeam);
+userApiRouter.post("/inviteToTeam", inviteToTeam);
+userApiRouter.post("/updateTeam", updateTeam);
+userApiRouter.post("/archiveTeam", archiveTeam);
+userApiRouter.post("/restoreTeam", restoreTeam);
 
 export default userApiRouter;
