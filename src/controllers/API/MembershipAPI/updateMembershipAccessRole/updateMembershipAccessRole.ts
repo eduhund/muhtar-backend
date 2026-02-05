@@ -1,11 +1,11 @@
-import { changeMembershipAccessRoleFlow } from "../../../../flows";
+import { updateMembershipAccessRoleFlow } from "../../../../flows";
 import { withMembership } from "../utils";
 
 export default withMembership(async (req) => {
   const { actorMembership } = req.data;
   const { membershipId, accessRole } = req.body;
 
-  await changeMembershipAccessRoleFlow(
+  await updateMembershipAccessRoleFlow(
     { membershipId, accessRole },
     actorMembership,
   );

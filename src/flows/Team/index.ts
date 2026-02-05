@@ -4,7 +4,7 @@ import archiveTeamFlow from "./archiveTeam";
 import restoreTeamFlow from "./restoreTeam";
 import updateTeamFlow from "./updateTeam";
 import inviteUsersFlow from "./inviteUsers";
-import changeMembershipAccessRoleFlow from "./changeMembershipAccessRole";
+import updateMembershipAccessRoleFlow from "./updateMembershipAccessRole";
 import removeMembershipFromTeamFlow from "./removeMembershipFromTeam";
 import createWorkRoleFlow from "./createWorkRole";
 import updateWorkRoleFlow from "./updateWorkRole";
@@ -18,7 +18,7 @@ export {
   restoreTeamFlow,
   updateTeamFlow,
   inviteUsersFlow,
-  changeMembershipAccessRoleFlow,
+  updateMembershipAccessRoleFlow,
   removeMembershipFromTeamFlow,
   createWorkRoleFlow,
   updateWorkRoleFlow,

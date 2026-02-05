@@ -28,7 +28,7 @@ async function canUpdateTeamMembership(
   );
 }
 
-export default async function changeMembershipAccessRole(
+export default async function updateMembershipAccessRole(
   { membershipId, accessRole }: changeTeamMembershipParams,
   actorMembership: Membership,
 ) {
