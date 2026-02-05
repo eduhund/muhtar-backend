@@ -7,7 +7,7 @@ export default withMembership(async (req) => {
   const {
     projectId,
     assignedMembershipId,
-    workRoleKey,
+    workRoleId,
     jobId,
     name,
     startDate,
@@ -34,8 +34,8 @@ export default withMembership(async (req) => {
 
   if (jobId && typeof jobId !== "string" && jobId !== null)
     throw new InvalidParamsError("jobId must be a string or null");
-  if (workRoleKey && typeof workRoleKey !== "string" && workRoleKey !== null)
-    throw new InvalidParamsError("workRoleKey must be a string or null");
+  if (workRoleId && typeof workRoleId !== "string" && workRoleId !== null)
+    throw new InvalidParamsError("workRoleId must be a string or null");
 
   if (startDate && startDate !== null) {
     if (typeof startDate !== "string") {

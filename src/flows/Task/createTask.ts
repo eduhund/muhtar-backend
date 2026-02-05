@@ -24,7 +24,7 @@ type createTaskParams = {
 async function canCreateTask(
   currentMembership: Membership,
   userMembership: Membership | null,
-  project: Project | null
+  project: Project | null,
 ) {
   return true;
 }
@@ -42,7 +42,7 @@ export default async function createTask(
     notes,
     history,
   }: createTaskParams,
-  actorMembership: Membership
+  actorMembership: Membership,
 ) {
   const membership = assignedMembershipId
     ? await membershipService.getMembershipById(assignedMembershipId)
