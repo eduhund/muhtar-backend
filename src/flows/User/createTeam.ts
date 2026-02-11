@@ -10,26 +10,28 @@ export default async function createTeamFlow(
   { name }: { name: string },
   actorUser: User,
 ) {
-  const newTeam = await teamService.create({
+  const team = await teamService.create({
     name,
     ownerId: actorUser.getId(),
   });
 
-  const newMembership = await membershipService.createMembership({
+  const membership = await membershipService.createMembership({
     userId: actorUser.getId(),
-    teamId: newTeam.getId(),
-    role: "owner",
-    name: actorUser.getFullName(),
+    teamId: team.getId(),
+    role: "admin",
+    name,
   });
 
-  actorUser.setActiveMembershipId(newMembership.getId());
+  actorUser.setActiveMembershipId(membership.getId());
   await userService.save(actorUser);
 
-  const membershipAccessToken = newMembership
-    ? authService.generateMembershipToken(newMembership)
+  const membershipAccessToken = membership
+    ? authService.generateMembershipToken(membership)
     : undefined;
 
   return {
+    membership,
+    team,
     tokens: {
       membership: { accessToken: membershipAccessToken },
     },
